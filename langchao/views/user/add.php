@@ -61,7 +61,11 @@
                                 <td>部门</td>
                                 <td>
                                     <div id="departmentdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="部门" name="department" id="department">
+                                    <select name="department" id="department">                                        
+                                       <?php foreach ($department_list as $key => $value) {?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <?php } ?>
+                                    </select>                                        
                                     </div>
                                 </td>
                             </tr>
@@ -78,8 +82,9 @@
                                 <td>
                                     <div id="rolesdiv" class="input-group col-xs-4">
                                     <select name="roles" id="roles">
-                                        <option value="1">总管理员</option>
-                                        <option value="2">部门管理员</option>
+                                       <?php foreach ($role_list as $key => $value) {?>
+                                        <option value="<?php echo $value['role_id']; ?>"><?php echo $value['role_name']; ?></option>
+                                        <?php } ?>
                                     </select>
                                     </div>
                                 </td>
@@ -97,8 +102,9 @@
                                 <td>
                                     <div id="addrdiv" class="input-group col-xs-4">
                                     <select name="addr" id="addr">
-                                        <option value="北京">北京</option>
-                                        <option value="上海">上海</option>
+                                       <?php foreach ($city_list as $key => $value) {?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <?php } ?>
                                     </select>
                                     </div>
                                 </td>
@@ -125,8 +131,9 @@
                                 <td>
                                     <div id="work_timediv" class="input-group col-xs-4">
                                     <select name="work_time" id="work_time">
-                                        <option value="9-18">9-18</option>
-                                        <option value="8-17">8-17</option>
+                                       <?php foreach ($worktime_list as $key => $value) {?>
+                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <?php } ?>
                                     </select>
                                     </div>
                                 </td>
@@ -283,6 +290,7 @@ function check_img(){
 
 function do_add(){
     username = $('#username').val();
+    name = $('#name').val();
     password = $('#password').val();
     mobile = $('#mobile').val();
     short_num = $('#short_num').val();
@@ -305,6 +313,16 @@ function do_add(){
             });
             return false;
         }
+    if (name== '') {
+            $("#namediv").addClass("has-error");
+            var n = noty({
+              text: "请输入姓名",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }        
     if (password == '') {
             $("#passworddiv").addClass("has-error");
             var n = noty({

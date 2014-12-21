@@ -8,6 +8,7 @@ class User extends MY_Controller {
         parent::__construct();
         $this->load->helper('security');
         $this->load->model('User_model');
+         $this->load->model('Role_model');
     }
 	
 	public function index()
@@ -26,7 +27,8 @@ class User extends MY_Controller {
     	if(!$user){
             $redirect_url = 'ctl=user&act=login';
     	}
-    	$status = $this->User_model->check_captcha_msg($user['id'],$data['sms_captcha']);
+    	//$status = $this->User_model->check_captcha_msg($user['id'],$data['sms_captcha']);
+        $status = True;//临时去掉验证码
     	if (!$status){
             $redirect_url = 'ctl=user&act=login';
     	}else{
@@ -49,7 +51,8 @@ class User extends MY_Controller {
     	if(!$user){
     		echo 'fail';
     	}
-    	$status = $this->User_model->check_captcha_msg($user['id'],$data['sms_captcha']);
+    	//$status = $this->User_model->check_captcha_msg($user['id'],$data['sms_captcha']);
+        $status = True;//临时去掉验证码
     	if ($status){
     		echo 'succ';
     	}else{
@@ -172,6 +175,14 @@ class User extends MY_Controller {
     }
 
     public function add(){
+        $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
+        $this->data['city_list'] = $city_list;
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['department_list'] = $department_list;         
+        $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
+        $this->data['worktime_list'] = $worktime_list;        
+        $role_list = $this->Role_model->get_roles(array());
+        $this->data['role_list'] = $role_list;
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('user/add',$this->data);
     }

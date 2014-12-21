@@ -86,7 +86,7 @@
     您打开的网页找不到.
     <br>
     <br>    
-    <a href="<?php echo site_url('?ctl=home&act=index');?>">返回首页</a>
+    <a href="<?php echo site_url('ctl=home&act=index');?>">返回首页</a>
     <br>
     <br>
 </div>

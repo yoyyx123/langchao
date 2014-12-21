@@ -23,9 +23,11 @@
     <link href='<?php echo base_url('/statics/css/jquery.iphone.toggle.css'); ?>' rel='stylesheet'>
     <link href='<?php echo base_url('/statics/css/uploadify.css'); ?>' rel='stylesheet'>
     <link href='<?php echo base_url('/statics/css/animate.min.css'); ?>' rel='stylesheet'>
+    <link href='<?php echo base_url('/statics/css/jquery-ui.css'); ?>' rel='stylesheet'>
 
     <!-- jQuery -->
     <script src="<?php echo base_url('/statics/bower_components/jquery/jquery.min.js'); ?>"></script>
+    <script src="<?php echo base_url('/statics/js/jquery-ui.js'); ?>"></script>
     <script src="<?php echo base_url('/statics/js/ajaxfileupload.js'); ?>"></script>
     <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
