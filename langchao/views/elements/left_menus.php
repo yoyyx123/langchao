@@ -19,15 +19,15 @@
                         <li class="accordion">
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span>客户模块</span></a>
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">客户添加</a></li>
-                                <li><a href="#">客户查询</a></li>
-                                <li><a href="#">客户管理</a></li>
+                                <li><a href="<?php echo site_url('ctl=member&act=add');?>">客户添加</a></li>
+                                <li><a href="<?php echo site_url('ctl=member&act=search');?>">客户查询</a></li>
+                                <li><a href="<?php echo site_url('ctl=member&act=manage');?>">客户管理</a></li>
                             </ul>
                         </li>
                         <li class="accordion">
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span>外勤模块</span></a>
                             <ul class="nav nav-pills nav-stacked">
-                                <li><a href="#">事件开设</a></li>
+                                <li><a href="<?php echo site_url('ctl=event&act=index');?>">事件开设</a></li>
                                 <li><a href="#">工单列表</a></li>
                                 <li><a href="#">事件审核</a></li>
                                 <li><a href="#">费用审核</a></li>
