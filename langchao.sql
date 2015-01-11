@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.9
+-- version phpStudy 2014
 -- http://www.phpmyadmin.net
 --
--- Host: localhost:3306
--- Generation Time: 2014-12-21 16:29:16
--- 服务器版本： 5.5.8-log
--- PHP Version: 5.3.3
+-- 主机: localhost
+-- 生成日期: 2015 年 01 月 11 日 15:04
+-- 服务器版本: 5.5.40
+-- PHP 版本: 5.2.17
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `langchao`
+-- 数据库: `langchao`
 --
 
 -- --------------------------------------------------------
@@ -132,14 +132,49 @@ CREATE TABLE IF NOT EXISTS `ldb_event_list` (
   `display` enum('0','1') NOT NULL DEFAULT '1',
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `ldb_event_list`
 --
 
 INSERT INTO `ldb_event_list` (`id`, `name`, `department_id`, `display`, `sort`) VALUES
-(2, 'aaa', '研发部', '1', NULL);
+(2, '研发项目', 'all', '1', NULL),
+(3, '网络部署', '4', '1', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ldb_member`
+--
+
+CREATE TABLE IF NOT EXISTS `ldb_member` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(50) NOT NULL COMMENT '客户编号',
+  `name` varchar(200) NOT NULL COMMENT '客户全称',
+  `short_name` varchar(200) NOT NULL COMMENT '客户简称',
+  `city` int(11) NOT NULL COMMENT '城市id',
+  `member_type` int(11) NOT NULL COMMENT '客户属性id',
+  `addr` varchar(200) NOT NULL COMMENT '地址',
+  `bus` varchar(500) NOT NULL COMMENT '公交/地铁',
+  `contacts` varchar(200) NOT NULL COMMENT '客户联系人',
+  `mobile` varchar(50) NOT NULL COMMENT '联系电话',
+  `fax` varchar(50) NOT NULL COMMENT '传真',
+  `project_man` varchar(50) NOT NULL COMMENT '工程项目负责人',
+  `project_mobile` varchar(50) NOT NULL COMMENT '工程项目负责人联系电话',
+  `business_man` varchar(50) NOT NULL COMMENT '日常业务负责人',
+  `business_mobile` varchar(50) NOT NULL COMMENT '日常业务负责人联系电话',
+  `addtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- 转存表中的数据 `ldb_member`
+--
+
+INSERT INTO `ldb_member` (`id`, `code`, `name`, `short_name`, `city`, `member_type`, `addr`, `bus`, `contacts`, `mobile`, `fax`, `project_man`, `project_mobile`, `business_man`, `business_mobile`, `addtime`) VALUES
+(1, 'abc', '工行北京支行', '北京支行', 5, 9, '3里屯28号', '一号线3号出口一号线3号出口一号线3号出口一号线3号出口', '张三', '111111', '2342342', '李四', '22222', '王五', '3333', '2015-01-04 07:55:31'),
+(2, '111', '李四', '小李', 6, 10, '1号线', '1号线', '1', '123132123', '1', '1', '123', '1', '1', '2015-01-08 15:09:53');
 
 -- --------------------------------------------------------
 
@@ -151,10 +186,10 @@ CREATE TABLE IF NOT EXISTS `ldb_setting_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `display` enum('0','1') NOT NULL DEFAULT '1',
-  `type` enum('city','custom','department','worktime','performance','filetype') NOT NULL DEFAULT 'city',
+  `type` enum('city','custom','department','worktime','performance','filetype','membertype') NOT NULL DEFAULT 'city',
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `ldb_setting_list`
@@ -167,7 +202,9 @@ INSERT INTO `ldb_setting_list` (`id`, `name`, `display`, `type`, `sort`) VALUES
 (5, '北京市', '1', 'city', NULL),
 (6, '上海市', '1', 'city', NULL),
 (7, '9-12', '1', 'worktime', NULL),
-(8, '6-18', '1', 'worktime', NULL);
+(8, '6-18', '1', 'worktime', NULL),
+(9, '分行', '1', 'membertype', NULL),
+(10, '支行', '1', 'membertype', NULL);
 
 -- --------------------------------------------------------
 
@@ -254,11 +291,11 @@ CREATE TABLE IF NOT EXISTS `ldb_user` (
 --
 
 INSERT INTO `ldb_user` (`id`, `username`, `password`, `name`, `roles`, `mobile`, `short_num`, `department`, `position`, `email`, `addr`, `work_type`, `expenses`, `work_time`, `status`, `img`, `login_time`, `created`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '测试1', '1', '13661850643', '13360', '研发中心', '工程师', 'xxx@126.com', 0, '1', 0, 0, '1', 'user_admin.jpg', '2014-12-03 23:26:47', '2014-12-03 15:26:47'),
-(2, 'test', '098f6bcd4621d373cade4e832627b4f6', 'test', '1', '111', '222', '333', '444', '11@11', 0, '1', 0, 9, '1', '', '0000-00-00 00:00:00', '2014-12-10 16:40:14'),
-(3, '三代富贵 ', '3d70ef0237e5b8ff729cc83277364056', '阿斯顿发', '1', '阿斯顿发', '', '', '', '', 0, '1', 0, 9, '1', 'user_.jpg', '0000-00-00 00:00:00', '2014-12-14 15:46:01'),
-(7, '阿斯顿发生的', '9f10648f089cc3ba57c5ae46ba98e57a', '阿斯顿发生的', '1', '阿斯顿发', '', '阿斯顿发', '', '', 0, '1', 0, 9, '1', 'user_阿斯顿发生的.jpg', '0000-00-00 00:00:00', '2014-12-14 15:55:26'),
-(8, 'test2', 'fb351247ccb4bcaeadb70cf72a957699', '啊', '1', '啊', '啊', '啊', ' 啊', ' 啊', 0, '0', 0, 9, '1', 'user_test2.jpg', '0000-00-00 00:00:00', '2014-12-15 16:27:37');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '测试1', '1', '13661850643', '13360', '研发中心', '工程师', 'xxx@126.com', 0, '1', 0, 0, '1', 'user_admin.jpg', '2014-12-03 23:26:47', '2014-12-03 07:26:47'),
+(2, 'test', '098f6bcd4621d373cade4e832627b4f6', 'test', '1', '111', '222', '333', '444', '11@11', 0, '1', 0, 9, '1', '', '0000-00-00 00:00:00', '2014-12-10 08:40:14'),
+(3, '三代富贵 ', '3d70ef0237e5b8ff729cc83277364056', '阿斯顿发', '1', '阿斯顿发', '', '', '', '', 0, '1', 0, 9, '1', 'user_.jpg', '0000-00-00 00:00:00', '2014-12-14 07:46:01'),
+(7, '阿斯顿发生的', '9f10648f089cc3ba57c5ae46ba98e57a', '阿斯顿发生的', '1', '阿斯顿发', '', '阿斯顿发', '', '', 0, '1', 0, 9, '1', 'user_阿斯顿发生的.jpg', '0000-00-00 00:00:00', '2014-12-14 07:55:26'),
+(8, 'test2', 'fb351247ccb4bcaeadb70cf72a957699', '啊', '1', '啊', '啊', '啊', ' 啊', ' 啊', 0, '0', 0, 9, '1', 'user_test2.jpg', '0000-00-00 00:00:00', '2014-12-15 08:27:37');
 
 -- --------------------------------------------------------
 
