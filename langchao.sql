@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2015 年 01 月 11 日 15:04
+-- 生成日期: 2015 年 01 月 21 日 09:14
 -- 服务器版本: 5.5.40
 -- PHP 版本: 5.2.17
 
@@ -127,6 +127,37 @@ INSERT INTO `ldb_department_list` (`id`, `name`, `display`, `sort`) VALUES
 
 CREATE TABLE IF NOT EXISTS `ldb_event_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL COMMENT '会员id',
+  `department_id` int(11) NOT NULL COMMENT '部门id',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `event_type_id` int(11) NOT NULL COMMENT '事件类型id',
+  `work_type` enum('0','1') NOT NULL DEFAULT '0' COMMENT '0非驻派/1驻派',
+  `desc` varchar(500) NOT NULL COMMENT '描述',
+  `worktime_id` int(11) NOT NULL COMMENT '工作日区间id',
+  `event_time` varchar(255) NOT NULL COMMENT '事件时间',
+  `status` enum('1','2','3') NOT NULL DEFAULT '1' COMMENT '1待添加，2待审核',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=5 ;
+
+--
+-- 转存表中的数据 `ldb_event_list`
+--
+
+INSERT INTO `ldb_event_list` (`id`, `member_id`, `department_id`, `user_id`, `event_type_id`, `work_type`, `desc`, `worktime_id`, `event_time`, `status`, `date`) VALUES
+(1, 1, 4, 7, 2, '0', 'sadfADS', 7, '2015-01-18', '1', '2015-01-17 08:32:50'),
+(2, 2, 4, 7, 2, '0', '撒旦发', 7, '2015-01-20', '1', '2015-01-17 08:34:10'),
+(3, 1, 2, 9, 2, '0', '撒旦发撒旦发', 8, '2015-01-14', '1', '2015-01-17 08:34:32'),
+(4, 1, 2, 2, 3, '1', '驻派测试', 7, '2015-01-20', '1', '2015-01-20 15:56:11');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ldb_event_type_list`
+--
+
+CREATE TABLE IF NOT EXISTS `ldb_event_type_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
   `department_id` varchar(100) NOT NULL,
   `display` enum('0','1') NOT NULL DEFAULT '1',
@@ -135,10 +166,10 @@ CREATE TABLE IF NOT EXISTS `ldb_event_list` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
--- 转存表中的数据 `ldb_event_list`
+-- 转存表中的数据 `ldb_event_type_list`
 --
 
-INSERT INTO `ldb_event_list` (`id`, `name`, `department_id`, `display`, `sort`) VALUES
+INSERT INTO `ldb_event_type_list` (`id`, `name`, `department_id`, `display`, `sort`) VALUES
 (2, '研发项目', 'all', '1', NULL),
 (3, '网络部署', '4', '1', NULL);
 
@@ -284,18 +315,20 @@ CREATE TABLE IF NOT EXISTS `ldb_user` (
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `ldb_user`
 --
 
 INSERT INTO `ldb_user` (`id`, `username`, `password`, `name`, `roles`, `mobile`, `short_num`, `department`, `position`, `email`, `addr`, `work_type`, `expenses`, `work_time`, `status`, `img`, `login_time`, `created`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '测试1', '1', '13661850643', '13360', '研发中心', '工程师', 'xxx@126.com', 0, '1', 0, 0, '1', 'user_admin.jpg', '2014-12-03 23:26:47', '2014-12-03 07:26:47'),
-(2, 'test', '098f6bcd4621d373cade4e832627b4f6', 'test', '1', '111', '222', '333', '444', '11@11', 0, '1', 0, 9, '1', '', '0000-00-00 00:00:00', '2014-12-10 08:40:14'),
-(3, '三代富贵 ', '3d70ef0237e5b8ff729cc83277364056', '阿斯顿发', '1', '阿斯顿发', '', '', '', '', 0, '1', 0, 9, '1', 'user_.jpg', '0000-00-00 00:00:00', '2014-12-14 07:46:01'),
-(7, '阿斯顿发生的', '9f10648f089cc3ba57c5ae46ba98e57a', '阿斯顿发生的', '1', '阿斯顿发', '', '阿斯顿发', '', '', 0, '1', 0, 9, '1', 'user_阿斯顿发生的.jpg', '0000-00-00 00:00:00', '2014-12-14 07:55:26'),
-(8, 'test2', 'fb351247ccb4bcaeadb70cf72a957699', '啊', '1', '啊', '啊', '啊', ' 啊', ' 啊', 0, '0', 0, 9, '1', 'user_test2.jpg', '0000-00-00 00:00:00', '2014-12-15 08:27:37');
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '测试1', '1', '13661850643', '13360', '4', '工程师', 'xxx@126.com', 0, '1', 0, 0, '1', 'user_admin.jpg', '2014-12-03 23:26:47', '2014-12-03 07:26:47'),
+(2, 'test', '098f6bcd4621d373cade4e832627b4f6', 'test', '1', '111', '222', '2', '444', '11@11', 0, '1', 0, 9, '1', '', '0000-00-00 00:00:00', '2014-12-10 08:40:14'),
+(3, '三代富贵 ', '3d70ef0237e5b8ff729cc83277364056', '阿斯顿发', '1', '阿斯顿发', '', '4', '', '', 0, '1', 0, 9, '1', 'user_.jpg', '0000-00-00 00:00:00', '2014-12-14 07:46:01'),
+(7, '阿斯顿发生的', '9f10648f089cc3ba57c5ae46ba98e57a', '阿斯顿发生的', '1', '阿斯顿发', '', '4', '', '', 0, '1', 0, 9, '1', 'user_阿斯顿发生的.jpg', '0000-00-00 00:00:00', '2014-12-14 07:55:26'),
+(8, 'test2', 'fb351247ccb4bcaeadb70cf72a957699', '啊', '1', '啊', '啊', '4', ' 啊', ' 啊', 0, '0', 0, 9, '1', 'user_test2.jpg', '0000-00-00 00:00:00', '2014-12-15 08:27:37'),
+(9, 'wangyi', '40c7bc25c943b9e8977636aafe5d69e9', '王一', '', '1111', '111', '2', '主管', '111@11.com', 6, '1', 99, 7, '1', 'user_wangyi.jpg', '0000-00-00 00:00:00', '2015-01-17 03:09:18'),
+(10, 'wanger', '2aa3f4ba3af7dbb6821c4f0e977610a1', '王二', '', '2222', '222', '2', '员工', '2222@22.com', 5, '0', 0, 8, '1', 'user_wanger.jpg', '0000-00-00 00:00:00', '2015-01-17 03:11:03');
 
 -- --------------------------------------------------------
 
@@ -319,6 +352,26 @@ CREATE TABLE IF NOT EXISTS `ldb_user_roles` (
 INSERT INTO `ldb_user_roles` (`role_id`, `role_name`, `role_memo`, `permission`, `disabled`) VALUES
 (15, '管理员', '有所有权限啊啊', 'a:8:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"4";i:4;s:1:"5";i:5;s:1:"6";i:6;s:1:"7";i:7;s:1:"8";}', 'false'),
 (16, 'test', 'xx', 'a:3:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";}', 'false');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ldb_work_order_list`
+--
+
+CREATE TABLE IF NOT EXISTS `ldb_work_order_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event_id` int(11) NOT NULL COMMENT '事件id',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=3 ;
+
+--
+-- 转存表中的数据 `ldb_work_order_list`
+--
+
+INSERT INTO `ldb_work_order_list` (`id`, `event_id`) VALUES
+(1, 3),
+(2, 3);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
