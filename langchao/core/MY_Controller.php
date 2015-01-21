@@ -133,6 +133,8 @@ class MY_Controller extends CI_Controller {
 		$this->getdata = $_GET;
 		$this->postdata = $_POST;
 		$this->data['getdata'] = $this->security->xss_clean($this->getdata);
+        $username = $this->session->userdata('username');
+
 		/**
         $username = $this->session->userdata('username');
 		if(!isset($this->getdata['act'])){
@@ -143,7 +145,11 @@ class MY_Controller extends CI_Controller {
 		    redirect('ctl=user&act=login');
  	        exit();
 	    }
-	    **/
+		**/
+	if (!isset($this->getdata['act'])||empty($username) && !in_array($this->getdata['act'], array('login', 'do_login','check_login','send_captcha',''))) {
+		    redirect('ctl=user&act=login');
+ 	        exit();
+	    }
         /**
 
 		if(!empty($username)){

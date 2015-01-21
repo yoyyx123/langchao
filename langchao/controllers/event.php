@@ -9,6 +9,8 @@ class Event extends MY_Controller {
         $this->load->helper('security');
         $this->load->model('Member_model');
         $this->load->model('Role_model');
+        $this->load->model('Event_model');
+        $this->load->model('User_model');
     }
 
     public function index(){
@@ -34,53 +36,54 @@ class Event extends MY_Controller {
         $this->load->view('event/add_event',$this->data);
     }
 
-    public function edit(){
-        $data = $this->security->xss_clean($_GET);
-        $id = $_GET['id'];
-        $where = array("id"=>trim($id));
-        $member = $this->Member_model->get_member_info($where);
-        $this->data['user_data'] = $this->session->userdata;
-        $this->data['member'] = $member;
-        $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
-        $this->data['city_list'] = $city_list;
-        $member_type = $this->Role_model->get_setting_list(array("type"=>"membertype"));      
-        $this->data['member_type'] = $member_type;          
-        $this->load->view('member/edit',$this->data);
-    }
-
-    public function do_member_edit(){
+    public function do_add_event(){
         $data = $this->security->xss_clean($_POST);
-        $id = $data['id'];
-        $where = array("id"=>$id);
-        unset($data['id']);
-        $result = $this->Member_model->edit_member_info($where,$data);
-        $redirect_url = 'ctl=member&act=manage';
+        $res = $this->Event_model->add_event_info($data);            
+        $redirect_url = 'ctl=event&act=index';
         redirect($redirect_url);    
     }
 
-    public function search(){
+    public function event_list(){
+        $where = array();
+        $work_order = $this->Event_model->get_event_list($where);
+        $user_list = $this->User_model->get_user_list();
+        $this->data['user_list'] = $user_list;
+        $this->data['work_order_list'] = $work_order;
         $this->data['user_data'] = $this->session->userdata;
-        $this->layout->view('member/search',$this->data);        
+        $this->layout->view('event/event_list',$this->data);        
     }
 
     public function do_search(){
         $data = $this->security->xss_clean($_POST);
-        if(empty($data['short_name'])){
-            unset($data['short_name']);
+        if(isset($data['is_event']) && $data['is_event']==1){
+            $this->data['is_event'] = 1;
+            unset($data['is_event']);
         }
-        if(empty($data['code'])){
-            unset($data['code']);
+        if(empty($data['event_time'])){
+            unset($data['event_time']);
         }
-        if(empty($data['contacts'])){
-            unset($data['contacts']);
+        if(empty($data['status'])){
+            unset($data['status']);
         }
+        $where = array();        
         foreach($data as $k =>$v){
             $where[$k] = trim($v);
         }
-        $member = $this->Member_model->get_member_info($where);
-        $this->data['member'] = $member;
-        //print_r($member);
-        $this->load->view('member/do_search',$this->data);
+        $event_list = $this->Event_model->get_event_list($where);
+        print_r($event_list);
+        $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
+        $this->data['user'] = $user;
+        $this->data['event_list'] = $event_list;
+        $this->load->view('event/do_search',$this->data);
+    }
+
+    public function add_work_order(){
+        $this->data['user_data'] = $this->session->userdata;        
+        $data = $this->security->xss_clean($_POST);
+        $where = array("id"=>trim($data['event_id']));
+        $event = $this->Event_model->get_event_info($where);
+        $this->data['event'] = $event;    
+        $this->load->view('event/add_work_order',$this->data);        
     }
 }
 

@@ -19,7 +19,7 @@ class User_model extends CI_Model {
         return $res;       
     }
 
-    public function get_user_list($where){
+    public function get_user_list($where=array()){
         $query = $this->db->get_where('user', $where);
         $res = $query->result_array();
         return $res; 

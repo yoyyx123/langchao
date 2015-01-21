@@ -244,6 +244,13 @@ class User extends MY_Controller {
         //print_r($users);exit;
         $this->layout->view('user/manage',$this->data);
     }
+
+    public function get_user_list(){
+        $data = $this->security->xss_clean($_POST);
+        $where = array('department'=>$data['department_id']);
+        $users = $this->User_model->get_user_list($where);
+        echo json_encode($users);
+    }
 }
 
 ?>

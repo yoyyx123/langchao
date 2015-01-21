@@ -175,13 +175,13 @@ class Role_model extends CI_Model {
 
 
     public function get_event_list($where){
-        $query = $this->db->get_where('event_list', $where);
+        $query = $this->db->get_where('event_type_list', $where);
         $res = $query->result_array();
         return $res;       	
     }
 
     public function get_event_info($where){
-        $query = $this->db->get_where('event_list', $where);
+        $query = $this->db->get_where('event_type_list', $where);
         $res = $query->row_array();
         return $res;        	
     }

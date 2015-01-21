@@ -1,4 +1,4 @@
-<div>
+<div class="row">
     <ul class="breadcrumb">
         <li>
             <a class="btn btn-primary doadd">添加信息</a>
@@ -38,7 +38,7 @@
                         <a class="btn btn-danger dodelete" setting_id='<?php echo $value['id'];?>'>删除</a>
                     </td>
                 </tr>
-                <div class="clearfix"></div><br>
+                
                 <?php $i++;} ?>
 
             </tbody>

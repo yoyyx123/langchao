@@ -27,18 +27,13 @@
     </div>
 </div>
 
-<div class="row member_info">
+<div class="row member_info" id="member_info">
     <div class="box col-md-12">
         <table class="table table-bordered">
             <thead>
-               
                 <tr>
                     <th>客户列表</th>
-                    <th colspan="3"></th>
-                    <th>搜索</th>
-                    <th>
-                    </th>
-                    <th>查询</th>
+                    <th colspan="7"></th>
                 </tr>                
                 <tr>
                     <th>序号</th>
@@ -118,7 +113,7 @@ $(function() {
                 url: "<?php echo site_url(array('ctl'=>'member', 'act'=>'do_search'))?>",
                 data: "is_event=1&short_name="+short_name+"&code="+code+"&contacts="+contacts,
                 success: function(result){
-                    $(".member_info").html(result);
+                    $("#member_info").html(result);
                 }
              });
         });        

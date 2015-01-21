@@ -1,6 +1,9 @@
 <?if(isset($is_event) && $is_event==1){?>
 
 <div class="box col-md-12">
+    <?php
+    if(isset($member)&&!empty($member)){
+    ?>    
     <table class="table table-bordered">
         <thead>               
             <tr>
@@ -28,7 +31,34 @@
             </tr>
         </tbody>
     </table>
+<?php }else{?>
+<p>查询不到客户信息!</p>
+<?php }?>  
 </div>
+<script type="text/javascript">
+$(function() {
+
+        $(".do_add").click(function() {
+            _self = this;
+            $.ajax({
+                type: "POST",
+                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'add_event'))?>",
+                data: "&id="+$(this).attr('member_id'),
+                success: function(result){
+                    $("#dialog").html(result);
+                    $("#dialog").dialog({
+                        autoOpen : false,
+                        width : 700,
+                        title : ('事件开设'),
+                        modal: true,
+
+                    });
+                    $("#dialog").dialog("open");
+                }
+             });
+        });    
+})
+</script>
 
 <?php }else{?>
 <div class="box col-lg-7 col-md-7">
