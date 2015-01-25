@@ -6,19 +6,21 @@
         <thead>
             <tr>
                 <th>事件列表</th>
-                <th colspan="2">使用人：<?php echo $user['name'];?></th>
+                <th colspan="2"><?if($title=="user"){echo"使用人：".$user['name'];}elseif($title=="member"){echo"客户简称：".$member['short_name'];}?></th>
                 <th colspan="7"></th>
             </tr>                    
             <tr>
                 <th>序号</th>
                 <th>日期、时间</th>
-                <th>客户简称</th>
+                <th>客户简称/使用人</th>
                 <th>事件类型</th>
                 <th>事件描述</th>
-                <th>工单</th>
-                <th>费用</th>
-                <th>有效期</th>
-                <th colspan="2">操作</th>
+                <th>报修症状</th>
+                <th>故障分析</th>
+                <th>解决方案</th>
+                <th>事件状态</th>
+                <th>报销状态</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -29,13 +31,14 @@
             <tr align="center">
                 <td><?php echo $i;?></td>
                 <td><?php echo $value['event_time'];?></td>
-                <td><?php echo $value['short_name'];?></td>
+                <td><?php echo $value['short_name'];?>/<?php echo $value['user_name'];?></td>
                 <td><?php echo $value['event_type_name'];?></td>
                 <td><?php echo $value['desc'];?></td>
-                <td><?php echo $value['work_order_num'];?></td>
                 <td></td>
-                <td><?php echo $value['event_less_time'];?></td>
-                <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=add_work_order')."&event_id=".$value['id'];?>" >添加工单</a></td>
+                <td></td>
+                <td></td>
+                <td><?if($value['status']==1){echo "待添加";}elseif($value['status']==2){echo "待审核";}elseif($value['status']==3){echo "已审核";}?></td>
+                <td></td>                
                 <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=edit_work_order')."&event_id=".$value['id'];?>">查看</a></td>
             </tr>
             <? } ?>

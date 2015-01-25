@@ -44,7 +44,7 @@ $(function() {
         $(".dodelete").click(function() {
          if(confirm("确认删除吗")){
             _self = this;
-            url = "<?php echo site_url(array('ctl'=>'system', 'act'=>'city_delete'))?>"+"&id="+$(this).attr('city_id'),
+            url = "<?php echo site_url(array('ctl'=>'system', 'act'=>'city_delete'))?>"+"&id="+$(this).attr('city_id');
             window.location.href=url;
          }else{
             return;

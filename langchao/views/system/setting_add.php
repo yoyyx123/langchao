@@ -20,6 +20,7 @@
                         <option value="performance">绩效完成率</option>
                         <option value="filetype">文档类型</option>
                         <option value="membertype">客户属性</option>
+                        <option value="traffic">交通方式</option>
                     </select>                    
                 </td>
             </tr>

@@ -25,13 +25,13 @@
                             </ul>
                         </li>
                         <li class="accordion">
-                            <a href="#"><i class="glyphicon glyphicon-plus"></i><span>外勤模块</span></a>
+                            <a href="#"><i class="glyphicon glyphicon-plus event"></i><span>外勤模块</span></a>
                             <ul class="nav nav-pills nav-stacked">
                                 <li><a href="<?php echo site_url('ctl=event&act=index');?>">事件开设</a></li>
                                 <li><a href="<?php echo site_url('ctl=event&act=event_list');?>">工单列表</a></li>
-                                <li><a href="#">事件审核</a></li>
+                                <li><a href="<?php echo site_url('ctl=event&act=event_check');?>">事件审核</a></li>
                                 <li><a href="#">费用审核</a></li>
-                                <li><a href="#">事件查询</a></li>
+                                <li><a href="<?php echo site_url('ctl=event&act=event_search');?>">事件查询</a></li>
                             </ul>
                         </li>
                         <li class="accordion">

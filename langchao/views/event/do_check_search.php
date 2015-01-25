@@ -16,8 +16,8 @@
                 <th>事件类型</th>
                 <th>事件描述</th>
                 <th>工单</th>
-                <th>费用</th>
-                <th>有效期</th>
+                <th>工时</th>
+                <th>状态</th>
                 <th colspan="2">操作</th>
             </tr>
         </thead>
@@ -34,9 +34,8 @@
                 <td><?php echo $value['desc'];?></td>
                 <td><?php echo $value['work_order_num'];?></td>
                 <td></td>
-                <td><?php echo $value['event_less_time'];?></td>
-                <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=add_work_order')."&event_id=".$value['id'];?>" >添加工单</a></td>
-                <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=edit_work_order')."&event_id=".$value['id'];?>">查看</a></td>
+                <td><?php if($value['status']==1){echo "待添加";}elseif($value['status']==2){echo "待审核";}elseif($value['status']==3){echo "已审核";}?></td>
+                <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=check_work_order')."&event_id=".$value['id'];?>">查看</a></td>
             </tr>
             <? } ?>
         </tbody>
