@@ -38,6 +38,8 @@ class Event extends MY_Controller {
 
     public function do_add_event(){
         $data = $this->security->xss_clean($_POST);
+        $event_month = substr($data['event_time'],0,7);
+        $data['event_month'] = $event_month;
         $res = $this->Event_model->add_event_info($data);            
         $redirect_url = 'ctl=event&act=index';
         redirect($redirect_url);    
@@ -88,9 +90,9 @@ class Event extends MY_Controller {
     public function do_add_work_order(){
         $this->data['user_data'] = $this->session->userdata;        
         $data = $this->security->xss_clean($_POST);
-        print_r($data);
         $event_id = $data['event_id'];
         $res = $this->Event_model->save_work_order_info($data);
+        $this->change_event_status($event_id,2);
         $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id;
         redirect($redirect_url); 
     }
@@ -164,7 +166,7 @@ class Event extends MY_Controller {
         $this->data['user_list'] = $user_list;
         $this->data['work_order_list'] = $work_order;
         $this->data['user_data'] = $this->session->userdata;
-        $this->layout->view('event/event_check',$this->data);           
+        $this->layout->view('event/event_check',$this->data);
     }
 
     public function do_check_search(){
@@ -259,7 +261,7 @@ class Event extends MY_Controller {
         $where = array('id'=>$event_id);
         $params = array('status'=>$status);
         $this->Event_model->update_event_info($params,$where);
-    }
+    }   
 
     public function event_search(){
         $user_list = $this->User_model->get_user_list();
@@ -303,6 +305,151 @@ class Event extends MY_Controller {
         $this->data['event_list'] = $event_list;
         $this->load->view('event/do_event_search',$this->data);        
     }
+
+    public function cost_check(){
+        $where = array();
+        $user_list = $this->User_model->get_user_list();
+        $this->data['user_list'] = $user_list;
+        $this->data['user_data'] = $this->session->userdata;
+        $this->layout->view('event/cost_check',$this->data);
+    }
+
+    public function do_event_cost_search(){
+        $data = $this->security->xss_clean($_POST);
+        $where = $data;
+        foreach($where as $key=>$value){
+            if(empty($where[$key])){
+                unset($where[$key]);                
+            }
+        }
+        unset($where['is_event']);
+        $month_list = array();
+        $event_list = $this->Event_model->get_event_list($where);
+        foreach($event_list as $key => $value){
+            list($total,$rel_total) = $this->get_cost_fee($value['id']);
+            $value['total'] = $total;
+            $value['rel_total'] = $rel_total;
+            $month_list[$value['event_month']][] = $value;
+        }
+        foreach ($month_list as $key => $value) {
+            $info = array();
+            $total_fee = 0;
+            $rel_total_fee = 0;
+            foreach($value as $k => $v) {
+                $total_fee += $v['total'];
+                $rel_total_fee += $v['rel_total'];
+            }
+            $info = array(
+                'user_name' =>$v['user_name'], 
+                'user_id' =>$v['user_id'], 
+                'cost_status'=>$v['cost_status'],
+                'total_fee' =>$total_fee,
+                'rel_total_fee' => $rel_total_fee,
+                );
+            $month_list[$key] = $info;
+        }
+        $this->data['month_list'] = $month_list;
+        $this->load->view('event/do_event_cost_search',$this->data);
+    }
+
+    public function get_cost_fee($event_id){
+                $total = 0;
+        $rel_total = 0;
+        $where = array('event_id' => $event_id);
+        $work_order_list = $this->Event_model->get_work_order_list($where);
+        foreach ($work_order_list as $key => $value) {
+            foreach ($value['bill_order_list'] as $k => $val) {
+                $total = $total + $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
+                if($val['status'] == 2){
+                    if($val['rel_fee']){
+                        $rel_total += $val['rel_fee'];
+                    }else{
+                        $rel_total += $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
+                    }
+                }
+            }
+        }
+        $result[] = $total;
+        $result[] = $rel_total;
+        return $result;$total = 0;
+        $rel_total = 0;
+        $where = array('event_id' => $event_id);
+        $work_order_list = $this->Event_model->get_work_order_list($where);
+        foreach ($work_order_list as $key => $value) {
+            foreach ($value['bill_order_list'] as $k => $val) {
+                $total = $total + $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
+                if($val['status'] == 2){
+                    if($val['rel_fee']){
+                        $rel_total += $val['rel_fee'];
+                    }else{
+                        $rel_total = $rel_total + $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
+                    }
+                }
+            }
+        }
+        $result[] = $total;
+        $result[] = $rel_total;
+        return $result;
+    }
+
+    public function get_event_biil_list(){
+        $total = 0;
+        $bill_list = array();
+        $is_cost = 1;
+        $data = $this->security->xss_clean($_GET);
+        $where = array('event_month'=>$data['event_month'],'user_id'=>$data['user_id']);
+        $event_list = $this->Event_model->get_event_simple_list($where);
+        foreach ($event_list as $key => $value) {
+            list($total_tmp,$biil_list_tmp) = $this->get_biil_list($value['id']);
+            $total += $total_tmp;
+            foreach ($biil_list_tmp as $key => $val) {
+                $bill_list[] = $val;
+            }
+            if($value['cost_status'] !=3){
+                $is_cost = 0;
+            }
+        }
+        $user_info = $this->User_model->get_user_info(array('id'=>$data['user_id']));
+        $this->data['is_cost'] = $is_cost;
+        $this->data['total'] = $total;
+        $this->data['bill_list'] = $bill_list;
+        $this->data['event_month'] = $data['event_month'];
+        $this->data['user_info'] = $user_info;
+        $this->data['user_data'] = $this->session->userdata;
+        $this->layout->view('event/get_event_biil_list',$this->data);      
+    }
+
+    public function get_biil_list($event_id){
+        $total = 0;
+        $bill_list = array();
+        $where = array('event_id' => $event_id);
+        $work_order_list = $this->Event_model->get_work_order_list($where);
+        foreach ($work_order_list as $key => $value) {
+            foreach ($value['bill_order_list'] as $k => $val) {
+                $transportation_info = $this->Role_model->get_setting_info(array("id"=>$val['transportation']));
+                $val['transportation_name'] = $transportation_info['name'];
+                if(floatval($val['rel_fee'])){
+                    $total += $val['rel_fee'];
+                }else{
+                    $total = $total+$val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
+                }
+                $bill_total = $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
+                $val['bill_total'] = $bill_total;
+                $bill_list[] = $val;
+            }
+        }
+        $result[] = $total;
+        $result[] = $bill_list;
+        return $result;        
+    }
+
+    public function change_event_cost_status(){
+        $data = $this->security->xss_clean($_POST);
+        $where = array('event_month'=>$data['event_month'],"user_id"=>$data['user_id']);
+        $params = array('cost_status'=>$data['status']);
+        $this->Event_model->update_event_info($params,$where);
+        echo "succ";
+    } 
 }
 
 ?>

@@ -47,6 +47,12 @@ class Event_model extends CI_Model {
         return $res; 
     }
 
+    public function get_event_simple_list($where){
+        $query = $this->db->get_where('event_list', $where);
+        $res = $query->result_array();
+        return $res;      
+    }    
+
     public function update_event_info($params,$where){
         $this->db->where($where);
         $res = $this->db->update('event_list', $params); 
@@ -125,6 +131,8 @@ class Event_model extends CI_Model {
         $res = $this->db->delete('check_event_list');
         return $res;        
     }
+
+
 
 }
 

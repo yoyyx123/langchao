@@ -30,7 +30,7 @@
                                 <li><a href="<?php echo site_url('ctl=event&act=index');?>">事件开设</a></li>
                                 <li><a href="<?php echo site_url('ctl=event&act=event_list');?>">工单列表</a></li>
                                 <li><a href="<?php echo site_url('ctl=event&act=event_check');?>">事件审核</a></li>
-                                <li><a href="#">费用审核</a></li>
+                                <li><a href="<?php echo site_url('ctl=event&act=cost_check');?>">费用审核</a></li>
                                 <li><a href="<?php echo site_url('ctl=event&act=event_search');?>">事件查询</a></li>
                             </ul>
                         </li>

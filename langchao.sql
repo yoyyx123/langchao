@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2015 年 01 月 26 日 01:37
+-- 生成日期: 2015 年 01 月 28 日 02:40
 -- 服务器版本: 5.5.40
 -- PHP 版本: 5.2.17
 
@@ -41,19 +41,23 @@ CREATE TABLE IF NOT EXISTS `ldb_biil_order_list` (
   `other_fee` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '其他费用',
   `memo` varchar(500) NOT NULL COMMENT '备注',
   `bill_no` varchar(255) NOT NULL COMMENT '单据编号',
+  `rel_fee` decimal(10,2) NOT NULL COMMENT '纠正费用',
+  `status` enum('1','2') NOT NULL DEFAULT '1' COMMENT '1未审核/2已审核',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=39 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=41 ;
 
 --
 -- 转存表中的数据 `ldb_biil_order_list`
 --
 
-INSERT INTO `ldb_biil_order_list` (`id`, `work_order_id`, `type`, `go_time`, `arrival_time`, `start_place`, `arrival_place`, `transportation`, `transportation_fee`, `hotel_fee`, `food_fee`, `other_fee`, `memo`, `bill_no`, `date`) VALUES
-(0, 4, '1', '11111', '222', '333', '444', 555, '666.00', '777.00', '888.00', '999.00', 'aaa', 'bbbb', '2015-01-24 13:55:31'),
-(6, 4, '0', '11111', '222', '333', '444', 0, '666.00', '777.00', '888.00', '999.00', 'aaa', 'aaa', '2015-01-24 14:34:00'),
-(34, 4, '0', '11111', '222', '333', '444', 0, '666.00', '777.00', '888.00', '999.00', 'aaa', 'aaaa', '2015-01-24 15:36:12'),
-(38, 4, '1', '11111', '222', '333', '444', 0, '666.00', '777.00', '888.00', '999.00', 'aaa', 'bbbb', '2015-01-24 16:01:49');
+INSERT INTO `ldb_biil_order_list` (`id`, `work_order_id`, `type`, `go_time`, `arrival_time`, `start_place`, `arrival_place`, `transportation`, `transportation_fee`, `hotel_fee`, `food_fee`, `other_fee`, `memo`, `bill_no`, `rel_fee`, `status`, `date`) VALUES
+(0, 4, '1', '11111', '222', '333', '444', 11, '666.00', '777.00', '888.00', '999.00', 'aaa', 'bbbb', '2500.00', '2', '2015-01-24 13:55:31'),
+(6, 4, '0', '11111', '222', '333', '444', 11, '666.00', '777.00', '888.00', '999.00', 'aaa', 'aaa', '0.00', '1', '2015-01-24 14:34:00'),
+(34, 4, '0', '11111', '222', '333', '444', 12, '666.00', '777.00', '888.00', '999.00', 'aaa', 'aaaa', '0.00', '1', '2015-01-24 15:36:12'),
+(38, 4, '1', '11111', '222', '333', '444', 12, '666.00', '777.00', '888.00', '999.00', 'aaa', 'bbbb', '0.00', '1', '2015-01-24 16:01:49'),
+(39, 5, '0', '1', '1', '1', '1', 11, '1.00', '1.00', '1.00', '1.00', '1', '1', '0.00', '1', '2015-01-26 15:05:21'),
+(40, 5, '1', '1', '1', '1', '1', 12, '1.00', '1.00', '1.00', '1.00', '1', '1', '0.00', '1', '2015-01-26 15:05:22');
 
 -- --------------------------------------------------------
 
@@ -195,20 +199,23 @@ CREATE TABLE IF NOT EXISTS `ldb_event_list` (
   `desc` varchar(500) NOT NULL COMMENT '描述',
   `worktime_id` int(11) NOT NULL COMMENT '工作日区间id',
   `event_time` varchar(255) NOT NULL COMMENT '事件时间',
+  `event_month` varchar(20) NOT NULL COMMENT '事件月份',
   `status` enum('1','2','3') NOT NULL DEFAULT '1' COMMENT '1待添加，2待审核，3已审核',
+  `cost_status` enum('1','2','3') NOT NULL DEFAULT '1' COMMENT '1未审核/2待报销/3已报销',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `ldb_event_list`
 --
 
-INSERT INTO `ldb_event_list` (`id`, `member_id`, `department_id`, `user_id`, `event_type_id`, `work_type`, `desc`, `worktime_id`, `event_time`, `status`, `date`) VALUES
-(1, 1, 4, 7, 2, '0', 'sadfADS', 7, '2015-01-18', '3', '2015-01-17 08:32:50'),
-(2, 2, 4, 7, 2, '0', '撒旦发', 7, '2015-01-20', '1', '2015-01-17 08:34:10'),
-(3, 1, 2, 9, 2, '0', '撒旦发撒旦发', 8, '2015-01-14', '1', '2015-01-17 08:34:32'),
-(4, 1, 2, 2, 3, '1', '驻派测试', 7, '2015-01-20', '1', '2015-01-20 15:56:11');
+INSERT INTO `ldb_event_list` (`id`, `member_id`, `department_id`, `user_id`, `event_type_id`, `work_type`, `desc`, `worktime_id`, `event_time`, `event_month`, `status`, `cost_status`, `date`) VALUES
+(1, 1, 4, 7, 2, '0', 'sadfADS', 7, '2015-01-18', '2015-01', '3', '3', '2015-01-17 08:32:50'),
+(2, 2, 4, 7, 2, '0', '撒旦发', 7, '2015-01-20', '2015-01', '2', '3', '2015-01-17 08:34:10'),
+(3, 1, 2, 9, 2, '0', '撒旦发撒旦发', 8, '2015-01-14', '2015-01', '1', '1', '2015-01-17 08:34:32'),
+(4, 1, 2, 2, 3, '1', '驻派测试', 7, '2015-01-20', '2015-01', '1', '1', '2015-01-20 15:56:11'),
+(5, 1, 2, 9, 3, '1', '撒旦飞洒发', 7, '2015-01-27', '2015-01', '1', '1', '2015-01-27 15:47:42');
 
 -- --------------------------------------------------------
 
@@ -442,7 +449,7 @@ CREATE TABLE IF NOT EXISTS `ldb_work_order_list` (
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`),
   KEY `id_3` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `ldb_work_order_list`
@@ -451,7 +458,8 @@ CREATE TABLE IF NOT EXISTS `ldb_work_order_list` (
 INSERT INTO `ldb_work_order_list` (`id`, `event_id`, `custom_department`, `arrive_time`, `back_time`, `symptom`, `failure_mode`, `failure_level`, `failure_analysis`, `risk_profile`, `solution`, `desc`, `schedule`, `memo`) VALUES
 (1, 3, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '0', '0', '', '', '', '', '0', ''),
 (4, 1, '发生大幅', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '萨范德', '0', '1', '阿斯大法萨法是否', '啊撒旦发撒旦发撒旦发萨法上访', '阿斯顿发生', '阿斯顿发', '2', '阿斯顿发送方撒发萨法上访萨芬撒旦发撒旦发'),
-(3, 1, '测试部', '2015-01-15 00:00:00', '2015-01-15 00:00:00', '我额头巍峨', '0', '0', '出大事了', '严重', '换机器', '不行啦', '0', '去问额外确认');
+(3, 1, '测试部', '2015-01-15 00:00:00', '2015-01-15 00:00:00', '我额头巍峨', '0', '0', '出大事了', '严重', '换机器', '不行啦', '0', '去问额外确认'),
+(5, 2, '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '0', '0', '1', '1', '1', '1', '0', '1');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
