@@ -131,7 +131,12 @@ class Event_model extends CI_Model {
         $res = $this->db->delete('check_event_list');
         return $res;        
     }
-
+    
+    public function update_bill_order_status($params,$where){
+        $this->db->where($where);
+        $res = $this->db->update('biil_order_list', $params); 
+        return $res;       
+    }
 
 
 }
