@@ -449,7 +449,16 @@ class Event extends MY_Controller {
         $params = array('cost_status'=>$data['status']);
         $this->Event_model->update_event_info($params,$where);
         echo "succ";
-    } 
+    }
+
+    public function update_bill_order_status(){
+        $data = $this->security->xss_clean($_POST);
+        $id = $data['id'];
+        unset($data['id']);
+        $where = array('id'=>$id);
+        $this->Event_model->update_bill_order_status($data,$where);
+        echo "succ";
+    }    
 }
 
 ?>
