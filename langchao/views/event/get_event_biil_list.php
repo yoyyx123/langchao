@@ -56,15 +56,21 @@
                     <td><?echo $val['other_fee'];?></td>
                     <td><?echo $val['memo'];?></td>
                     <td><?echo $val['bill_no'];?></td>
-                    <td><a class="btn btn-primary do_look"  bill_id="<?echo $val['id'];?>" onclick="do_look(this)">查看</a></td>
+                    <td><a class="btn btn-primary do_look"  bill_id="<?echo $val['id'];?>">查看</a></td>
                     <td><?echo $val['bill_total'];?></td>
-                    <td><input type="text" name="rel_fee"></td>
-                    <td><a class="btn btn-primary do_check" bill_id="<?echo $val['id'];?>" onclick="do_check(this)">审核</a></td>
+                    <td><input type="text" name="rel_fee" id="rel_fee"></td>
+                    <?if($val['status'] !=2){?>
+                        <td><a class="btn btn-info do_check" bill_id="<?echo $val['id'];?>" id="do_check">审核</a></td>
+                    <?}else{?>
+                        <td><a class="btn btn-primary" bill_id="<?echo $val['id'];?>">已审核</a></td>
+                    <?}?>
                 </tr>
                 <? $i++;}?>
                 <tr>
                     <td colspan="15"></td>
-                    <td><a class="btn btn-info do_check" bill_id="<?echo $val['id'];?>" onclick="do_check(this)">一键审核</a></td>
+                    <td><a class="btn btn-info do_check_all" bill_id="<?echo $val['id'];?>" onclick="do_check(this)">一键审核</a></td>
+                    
+   
                 </tr>
             </tbody>
         </table>
@@ -100,34 +106,25 @@ $(function() {
              });
         });
 
-        $(".do_search").click(function() {
+        $(".do_check").click(function() {
             _self = this;
-            short_name = $('#short_name').val();
-            code = $('#code').val();
-            contacts = $('#contacts').val();
-            if (short_name == '' && code == '' && contacts == '' ) {
-                    var n = noty({
-                      text: "三项中必须填写一项",
-                      type: 'error',
-                      layout: 'center',
-                      timeout: 1000,
-                    });
-                    return false;
-                }
+            var id = $(this).attr('bill_id');
+            var rel_fee = $(this).parent().parent().find("#rel_fee").val();
+            var params = "status=2&id="+id;
+            if (rel_fee){
+                params = params+"&rel_fee="+rel_fee;
+            }
             $.ajax({
                 type: "POST",
-                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'change_event_cost_status'))?>",
-                data: "&id="+$(this).attr('member_id'),
+                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'update_bill_order_status'))?>",
+                data: params,
                 success: function(result){
-                    $("#dialog").html(result);
-                    $("#dialog").dialog({
-                        autoOpen : false,
-                        width : 700,
-                        title : ('事件开设'),
-                        modal: true,
-
-                    });
-                    $("#dialog").dialog("open");
+                    if(result=="succ"){
+                        $(_self).parent().find("#do_check").removeClass("do_check");
+                        $(_self).parent().find("#do_check").removeClass("btn-info");
+                        $(_self).parent().find("#do_check").addClass("btn-primary");
+                        $(_self).parent().find("#do_check").html("已审核");
+                    }
                 }
              });
         });        
