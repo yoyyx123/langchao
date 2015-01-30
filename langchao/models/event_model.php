@@ -110,26 +110,26 @@ class Event_model extends CI_Model {
 
     public function insert_check_event_info($params){
         $this->db->set($params);
-        $res = $this->db->insert('check_event_list');
+        $res = $this->db->insert('event_list');
         return $res;          
     }
 
     public function update_check_event_info($params,$where){
         $this->db->where($where);
-        $res = $this->db->update('check_event_list', $params); 
+        $res = $this->db->update('event_list', $params); 
         return $res;         
     }
 
     public function get_check_event_info($where){
-        $query = $this->db->get_where('check_event_list', $where);
+        $query = $this->db->get_where('event_list', $where);
         $res = $query->row_array();
         return $res;
     }
 
     public function delete_check_event_info($where){
         $this->db->where($where);
-        $res = $this->db->delete('check_event_list');
-        return $res;        
+        $res = $this->db->update('event_list', $params); 
+        return $res;          
     }
     
     public function update_bill_order_status($params,$where){

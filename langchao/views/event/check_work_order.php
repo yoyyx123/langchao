@@ -53,8 +53,8 @@
                 <tr align="center">
                     <th>是否生效</th>
                     <td>
-                        是<input type="radio" name="status" id="status" value="1" <?if(isset($check)&&$check['status']==1){echo "checked='checked'";}?>>
-                        否<input type="radio" name="status" id="status" value="0" <?if(isset($check)&&$check['status']==0){echo "checked='checked'";}?>>
+                        是<input type="radio" name="event_status" id="event_status" value="1" <?if(isset($check)&&$check['event_status']==1){echo "checked='checked'";}?>>
+                        否<input type="radio" name="event_status" id="event_status" value="0" <?if(isset($check)&&$check['event_status']==0){echo "checked='checked'";}?>>
                     </td>
                 </tr>
                 <tr align="center">
@@ -100,7 +100,7 @@ $(function () {
 
 function do_add(){
 is_complain = $("#is_complain").val();
-    status = $("#status").val();
+    event_status = $("#event_status").val();
     performance_id = $("#performance_id").val();
     memo = $("#memo").val();
     if (is_complain== '') {
@@ -112,7 +112,7 @@ is_complain = $("#is_complain").val();
         });
         return false;
     }
-    if (status== '') {
+    if (event_status== '') {
         var n = noty({
           text: "请选择是否生效",
           type: 'error',

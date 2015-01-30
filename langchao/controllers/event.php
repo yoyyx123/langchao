@@ -211,8 +211,8 @@ class Event extends MY_Controller {
         }
         //$event['event_less_time'] = $r;
         $this->data['event'] = $event;
-        $check = $this->Event_model->get_check_event_info(array('event_id'=>$data['event_id']));
-        if($check){
+        $check = $this->Event_model->get_check_event_info(array('id'=>$data['event_id']));
+        if($check['performance_id'] !=0){
             $this->data['check'] = $check;            
         }
         $where = array("event_id"=>trim($data['event_id']));
@@ -228,15 +228,10 @@ class Event extends MY_Controller {
         $this->data['user_data'] = $this->session->userdata;        
         $data = $this->security->xss_clean($_POST);
         $event_id = $data['event_id'];
-        if(isset($data['check_id']) && !empty($data['check_id'])){
-            $where = array("id"=>$data['check_id']);
-            unset($data['event_id']);
-            unset($data['check_id']);
-            $work_order_list = $this->Event_model->update_check_event_info($data,$where);
-        }else{
-            unset($data['check_id']);
-            $work_order_list = $this->Event_model->insert_check_event_info($data);
-        }
+        $where = array("id"=>$event_id);
+        unset($data['check_id']);
+        unset($data['event_id']);
+        $work_order_list = $this->Event_model->update_check_event_info($data,$where);
         $this->change_event_status($event_id,3);
         $redirect_url = 'ctl=event&act=check_work_order&event_id='.$event_id;
         redirect($redirect_url);
@@ -246,7 +241,7 @@ class Event extends MY_Controller {
         $this->data['user_data'] = $this->session->userdata;        
         $data = $this->security->xss_clean($_GET);
         if(isset($data['event_id'])&&!empty($data['event_id'])){
-            $where = array('event_id'=>$data['event_id']);
+            $where = array('id'=>$data['event_id']);
             $this->Event_model->delete_check_event_info($where);
             $redirect_url = 'ctl=event&act=check_work_order&event_id='.$data['event_id'];
             $this->change_event_status($data['event_id'],2);          

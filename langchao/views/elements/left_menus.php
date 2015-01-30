@@ -45,8 +45,8 @@
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span>查询模块</span></a>
                             <ul class="nav nav-pills nav-stacked">
                                 <li><a href="#">绩效查询</a></li>
-                                <li><a href="#">业务查询</a></li>
-                                <li><a href="#">数据导出</a></li>
+                                <li><a href="<?php echo site_url('ctl=search&act=data_search');?>">业务查询</a></li>
+                                <li><a href="<?php echo site_url('ctl=search&act=data_export');?>">数据导出</a></li>
                             </ul>
                         </li>
                         <li class="accordion">
