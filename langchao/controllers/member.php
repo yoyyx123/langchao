@@ -46,10 +46,10 @@ class Member extends MY_Controller {
 
     public function manage(){
         $where = array();
-        $member = $this->Member_model->get_member_list($where);
-        $this->data['member_list'] = $member;
+        $member = $this->Member_model->get_member_list($where,$this->per_page);
+        $this->pages_conf($member['count']);
+        $this->data['member_list'] = $member['info'];
         $this->data['user_data'] = $this->session->userdata;
-        //print_r($users);exit;
         $this->layout->view('member/manage',$this->data);
     }
 
@@ -70,8 +70,8 @@ class Member extends MY_Controller {
         $this->data['member'] = $member;
         $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
         $this->data['city_list'] = $city_list;
-        $member_type = $this->Role_model->get_setting_list(array("type"=>"member_type"));      
-        $this->data['member_type'] = $member_type;          
+        $member_type = $this->Role_model->get_setting_list(array("type"=>"membertype"));      
+        $this->data['member_type'] = $member_type;
         $this->load->view('member/edit',$this->data);
     }
 

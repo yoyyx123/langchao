@@ -60,8 +60,12 @@
                     </td>
                 </tr>
                 <?php $i++;} ?>
-
             </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                </tr>
+            </tbody>            
         </table>
     </div>
 </div>
@@ -119,4 +123,17 @@ $(function() {
         });        
 
 })
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url("ctl=event&act=index");?>';
+    var getobj = {};
+    //getobj.from_node_id=$('#from_node_id_searsh').val();
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
 </script>

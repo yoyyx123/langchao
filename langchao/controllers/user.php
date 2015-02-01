@@ -178,7 +178,9 @@ class User extends MY_Controller {
         $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
         $this->data['city_list'] = $city_list;
         $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
-        $this->data['department_list'] = $department_list;         
+        $this->data['department_list'] = $department_list;
+        $position_list = $this->Role_model->get_setting_list(array("type"=>"position"));      
+        $this->data['position_list'] = $position_list;           
         $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
         $this->data['worktime_list'] = $worktime_list;        
         $role_list = $this->Role_model->get_roles(array());
@@ -238,10 +240,10 @@ class User extends MY_Controller {
 
     public function manage(){
         $where = array();
-        $users = $this->User_model->get_user_list($where);
-        $this->data['user_list'] = $users;
+        $users = $this->User_model->get_user_list($where,$this->per_page);
+        $this->pages_conf($users['count']);        
+        $this->data['user_list'] = $users['info'];
         $this->data['user_data'] = $this->session->userdata;
-        //print_r($users);exit;
         $this->layout->view('user/manage',$this->data);
     }
 
@@ -249,7 +251,71 @@ class User extends MY_Controller {
         $data = $this->security->xss_clean($_POST);
         $where = array('department'=>$data['department_id']);
         $users = $this->User_model->get_user_list($where);
-        echo json_encode($users);
+        echo json_encode($users['info']);
+    }
+
+    public function delete_user(){
+        $data = $this->security->xss_clean($_GET);
+        $where = array('id'=>$data['user_id']);
+        $users = $this->User_model->delete_user($where);
+        $redirect_url = 'ctl=user&act=manage';
+        redirect($redirect_url);        
+    }
+
+    public function edit(){
+        $this->data['user_data'] = $this->session->userdata;        
+        $data = $this->security->xss_clean($_GET);
+        $id = $data['id'];
+        $where = array("id"=>trim($id));
+        $user = $this->User_model->get_user_info($where);
+        $this->data['user'] = $user;
+        $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
+        $this->data['city_list'] = $city_list;
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['department_list'] = $department_list;
+        $position_list = $this->Role_model->get_setting_list(array("type"=>"position"));      
+        $this->data['position_list'] = $position_list;        
+        $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
+        $this->data['worktime_list'] = $worktime_list;        
+        $role_list = $this->Role_model->get_roles(array());
+        $this->data['role_list'] = $role_list;
+        if(isset($data['is_search'])&&!empty($data['is_search'])){
+            $this->layout->view('user/edit',$this->data);
+        }else{
+            $this->load->view('user/edit',$this->data);
+        }
+
+    }
+
+    public function do_edit(){
+        $data = $this->security->xss_clean($_POST);
+        $params = $data;
+        if (isset($params['password'])&&!empty($params['password'])){
+            $params['password'] = do_hash($params['password'],"md5");
+        }else{
+            unset($params['password']);
+        }
+        $res = $this->save_user_img($params['username']);
+        if ('succ'==$res['status']){
+            $params['img'] = $res['filename'];
+            $where = array("id"=>$params['id']);
+            unset($params['id']);
+            $res = $this->User_model->update_user_info($where,$params);            
+        }
+        $redirect_url = 'ctl=user&act=manage';
+        redirect($redirect_url);
+    }
+
+    public function do_search(){
+        $data = $this->security->xss_clean($_GET);
+        $where = $data['where'];
+        $res = $this->User_model->search_user_info($where);
+        if($res){
+            $redirect_url = 'ctl=user&act=edit&is_search=1&id='.$res['id'];
+        }else{
+            $redirect_url = 'ctl=user&act=manage';
+        }
+        redirect($redirect_url);
     }
 }
 

@@ -160,10 +160,11 @@ class MY_Controller extends CI_Controller {
 			}
 			$this->data['user_info'] = $user_info;
 		}
+		**/
 
 		$per_page = !empty($this->getdata['per_page']) ? $this->getdata['per_page'] : 0;
+		$this->per_page = $per_page;
 		$this->limit = $per_page . ',' . ROW_SHOW_NUM;
-		**/
 	}
 
 
@@ -197,8 +198,6 @@ class MY_Controller extends CI_Controller {
 		$config['last_link'] = '未页';
 		$config['next_link'] = '下页';
 		$config['prev_link'] = '上页';
-        echo $total_rows;
-        echo ROW_SHOW_NUM;exit;
 		$this->data['page_count'] = ceil($total_rows / ROW_SHOW_NUM);
 		$this->data['total_rows'] = $total_rows;
 		$this->pagination->initialize($config);

@@ -23,8 +23,15 @@ class Member_model extends CI_Model {
         return $res;       
     }
 
-    public function get_member_list($where){
-        $query = $this->db->get_where('member', $where);
+    public function get_member_list($where,$offset=false){
+        $this->db->order_by("id", "desc");
+        if($offset!==false){
+            $query = $this->db->get_where('member', $where,ROW_SHOW_NUM,$offset);
+
+        }else{
+            $query = $this->db->get_where('member', $where);
+        }        
+        //$query = $this->db->get_where('member', $where);
         $res = $query->result_array();
         foreach ($res as $key => $value) {
             $city_id = $value['city'];
@@ -37,7 +44,10 @@ class Member_model extends CI_Model {
             $value['member_type_name'] = $res3['name'];
             $res[$key] = $value;
         }
-        return $res; 
+        $this->db->where($where);
+        $this->db->from('member');
+        $count = $this->db->count_all_results();
+        return array('count'=>$count,"info"=>$res);        
     }
 
     public function edit_member_info($where,$params){

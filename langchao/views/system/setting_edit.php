@@ -19,7 +19,7 @@
                         <option value="performance" <?php if($role['type']=="performance") echo "selected='selected'"; ?>>绩效完成率</option>
                         <option value="filetype" <?php if($role['type']=="filetype") echo "selected='selected'"; ?>>文档类型</option>
                         <option value="membertype" <?php if($role['type']=="membertype") echo "selected='selected'"; ?>>客户属性</option>
-                        
+                        <option value="position" <?php if($role['type']=="position") echo "selected='selected'"; ?>>职位</option>
                     </select>                    
                 </td>
             </tr> 

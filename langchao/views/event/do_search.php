@@ -40,32 +40,58 @@
             </tr>
             <? } ?>
         </tbody>
+        
+        <tbody>
+            <tr>
+                <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+            </tr>
+        </tbody>
+
+        <input type="hidden" name = "user_id" id = "user_id" value="<?echo $user_id;?>">
+        <input type="hidden" name = "event_time" id = "event_time" value="<?echo $event_time;?>"> 
+        <input type="hidden" name = "status" id = "status" value="<?echo $status;?>">     
     </table>
 <?php }else{?>
 <p>查询不到事件信息!</p>
 <?php }?>  
 </div>
 <script type="text/javascript">
+
+var sel_time_data = function (per_page) {
+    user_id = $('#user_id').val();
+    event_time = $('#event_time').val();
+    status = $('#status').val();    
+    var url = '<?php echo site_url('ctl=event&act=do_search');?>'+"&is_event=1&user_id="+user_id+"&event_time="+event_time+"&status="+status;
+    var getobj = {};
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
 $(function() {
 
-        $(".do_add").click(function() {
-            _self = this;
-            $.ajax({
-                type: "POST",
-                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'add_work_order'))?>",
-                data: "event_id="+$(this).attr('event_id'),
-                success: function(result){
-                    $("#dialog").html(result);
-                    $("#dialog").dialog({
-                        autoOpen : false,
-                        width : 700,
-                        title : ('工单信息'),
-                        modal: true,
+    $(".do_add").click(function() {
+        _self = this;
+        $.ajax({
+            type: "POST",
+            url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'add_work_order'))?>",
+            data: "event_id="+$(this).attr('event_id'),
+            success: function(result){
+                $("#dialog").html(result);
+                $("#dialog").dialog({
+                    autoOpen : false,
+                    width : 700,
+                    title : ('工单信息'),
+                    modal: true,
 
-                    });
-                    $("#dialog").dialog("open");
-                }
-             });
-        });    
+                });
+                $("#dialog").dialog("open");
+            }
+         });
+    });
 })
 </script>

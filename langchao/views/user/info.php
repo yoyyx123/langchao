@@ -1,7 +1,7 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo site_url('ctl=home&act=index');?>">首页</a>
+            <a href="<?php echo site_url('ctl=home&act=index');?>" class="btn btn-primary">返回首页</a>
         </li>
     </ul>
 </div>
@@ -42,11 +42,11 @@
                             </tr>                            
                             <tr>
                                 <td>部门</td>
-                                <td><?php echo $user_data['department'];?></td>
+                                <td><?php echo $user_data['department_name'];?></td>
                             </tr>
                             <tr>
                                 <td>职位</td>
-                                <td><?php echo $user_data['position'];?></td>
+                                <td><?php echo $user_data['position_name'];?></td>
                             </tr>                            
                             <tr>
                                 <td>企业邮箱</td>

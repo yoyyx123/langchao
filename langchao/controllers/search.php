@@ -16,26 +16,31 @@ class Search extends MY_Controller {
     public function data_search(){
         $data = $this->security->xss_clean($_GET);
         if(isset($data['is_search']) && $data['is_search']==1){
+            $this->data['is_search'] = 1;
+            $params['user_id'] = $data['user_id'];
+            $params['start_time'] = $data['start_time'];
+            $params['end_time'] = $data['end_time'];
             if(isset($data['short_name'])&&!empty($data['short_name'])){
                 $member = $this->Member_model->get_member_info(array('short_name'=>$data['short_name']));
                 if($member){
                     $member_id = $member['id'];
+                    $params['member_id'] = $member_id;
                 }
             }
-            if(isset($member_id)&&isset($data['user_id']&&!empty($data['use_id']))){
-                 $event_list = $this->Event_model->get_event_list(array('user_id'=>$data['use_id'],"member_id"=>$member_id));
-                 foreach ($event_list as $key => $value) {
-                     
-                 }
+            foreach ($params as $key => $value) {
+                if(empty($params[$key])){
+                    unset($params[$key]);
+                }
             }
-            $this->load->view('event/do_data_search',$this->data);
-        }else{
-            $where = array();
-            $user_list = $this->User_model->get_user_list();
-            $this->data['user_list'] = $user_list;
-            $this->data['user_data'] = $this->session->userdata;
-            $this->layout->view('search/data_search',$this->data);
+            $event_list = $this->Event_model->get_event_search_list($params,$this->per_page);
+            $this->pages_conf($event_list['count']);
+            $this->data['event_list'] = $event_list['info'];
         }
+        $where = array();
+        $user_list = $this->User_model->get_user_list();
+        $this->data['user_list'] = $user_list['info'];
+        $this->data['user_data'] = $this->session->userdata;        
+        $this->layout->view('search/data_search',$this->data);        
 
     }
 }

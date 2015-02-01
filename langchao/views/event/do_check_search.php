@@ -39,6 +39,11 @@
             </tr>
             <? } ?>
         </tbody>
+        <tbody>
+            <tr>
+                <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+            </tr>
+        </tbody>        
     </table>
 <?php }else{?>
 <p>查询不到事件信息!</p>

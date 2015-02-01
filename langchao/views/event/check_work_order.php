@@ -9,27 +9,38 @@
                 <tr align="center">
                     <th>工单数量</th>
                     <td><?php echo $work_order_num;?>件</td>
-                    <td rowspan="7"><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=check_work_order')."&event_id=".$event['id'];?>">查看</a></td>
+                    <td rowspan="7"><a class="btn btn-primary" href="">查看</a></td>
                 </tr>
                 <tr align="center">
                     <th>有效工时</th>
-                    <td><?php echo $work_order_num;?>小时</td>
+                    <td><?php echo $event['worktime_count'];?>小时</td>
                 </tr>
                 <tr align="center">
                     <th>平时加班</th>
-                    <td><?php echo $work_order_num;?>小时</td>
+                    <td><?php echo $event['week_more'];?>小时</td>
                 </tr>
                 <tr align="center">
                     <th>周末加班</th>
-                    <td><?php echo $work_order_num;?>小时</td>
+                    <td><?php echo $event['weekend_more'];?>小时</td>
                 </tr>
                 <tr align="center">
                     <th>节假日加班</th>
-                    <td><?php echo $work_order_num;?>小时</td>
+                    <td><?php echo $event['holiday_more'];?>小时</td>
                 </tr>
                 <tr align="center">
                     <th>事件反馈</th>
-                    <td></td>
+                    <td>
+                        <?foreach ($work_order_list as $key => $value) {
+                            if($value['schedule']==0){
+                                $schedule = "已完成";
+                            }elseif($value['schedule']==1){
+                                $schedule = "部分完成";
+                            }else{
+                                $schedule = "未完成";
+                            }
+                            echo "<a target='_blank' href='".site_url('ctl=event&act=edit_work_order')."&event_id=".$event['id']."&work_order_id=".$value['id']."'>".$schedule."</a>;";
+                        }?>
+                    </td>
                 </tr>
                 <tr align="center">
                     <th>是否超时</th>

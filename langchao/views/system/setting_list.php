@@ -32,7 +32,7 @@
                         if($value['type']=="worktime"){echo "工作时间";}
                         if($value['type']=="performance"){echo "绩效完成率";}
                         if($value['type']=="filetype"){echo "文档类型";}
-
+                        if($value['type']=="position"){echo "职位";}
                      ?></td>
                     <td><a class="btn btn-info doedit" setting_id='<?php echo $value['id'];?>'>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-danger dodelete" setting_id='<?php echo $value['id'];?>'>删除</a>

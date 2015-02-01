@@ -1,7 +1,7 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a class="btn btn-info" href="<?php echo site_url('ctl=event&act=event_list');?>">返回工单列表</a>
+            <a class="btn btn-info" href="<?php echo $back_url;?>">返回</a>
         </li>
     </ul>
 </div>
@@ -25,7 +25,7 @@
             <tr>
                 <th>到达时间(签到)</th>
                 <td>
-                    <input type="text" name="arrive_time" id="arrive_time" class="arrive_time">
+                    <input class="arrive_time" type="text" value="" name="arrive_time" id="arrive_time">
                 </td>
                 <th>离场时间(签退)</th>
                 <td>
@@ -108,6 +108,7 @@
         </tbody>
     </table>
     <input type="hidden" name="event_id" value="<?echo $event['id']; ?>">
+    <input type="hidden" name="back_url" value="<?echo $back_url; ?>">
 </div>
 <div class="col-lg-7 col-md-4">
     <p class="center col-md-12">
@@ -119,6 +120,39 @@
 
 
 <script type="text/javascript">
+
+$(function() {
+
+    $('.arrive_time').datetimepicker({
+        format: "yyyy-mm-dd hh:ii:ss", 
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+
+    });
+
+    $('.back_time').datetimepicker({
+        format: "yyyy-mm-dd hh:ii:ss", 
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1,
+
+    });
+
+})        
+
+
+
 
 function do_add(){
     arrive_time = $('#arrive_time').val();

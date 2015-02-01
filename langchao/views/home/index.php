@@ -1,10 +1,7 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo site_url('ctl=home&act=index');?>">首页</a>
-        </li>
-        <li>
-            <a href="<?php echo site_url('ctl=user&act=info');?>">个人设置</a>
+            <a href="<?php echo site_url('ctl=user&act=info');?>" class="btn btn-primary">个人设置</a>
         </li>
     </ul>
 </div>
@@ -36,9 +33,9 @@
                             </tr>
                             <tr>
                                 <td>部门</td>
-                                <td><?php echo $user_data['department'];?></td>
+                                <td><?php echo $user_data['department_name'];?></td>
                                 <td>职位</td>
-                                <td><?php echo $user_data['position'];?></td>
+                                <td><?php echo $user_data['position_name'];?></td>
                             </tr>
                             <tr>
                                 <td>移动电话</td>
@@ -46,7 +43,7 @@
                                 <td>企业邮箱</td>
                                 <td><?php echo $user_data['email'];?></td>
                             </tr>                              
-                        </tbody>
+                        </tbody>                       
                     </table>
                 </div>
             </div>
@@ -60,7 +57,7 @@
             <thead>
                 <tr>
                     <th>系统提示</th>
-                    <th colspan="6" style="text-align:center;">当前已有**件工单超时，请注意！</th>
+                    <th colspan="6" style="text-align:center;">当前已有<?echo $expire_count;?>件工单超时，请注意！</th>
                 </tr>
                 <tr>
                     <th>待填工单</th>
@@ -78,17 +75,56 @@
                 </tr>
             </thead>
             <tbody>
+                <? $i=1;foreach ($event_list as $key => $value) {
+                    if($value['status'] ==1){
+                ?>
+                    <tr>
+                        <td><?php echo $i;?></td>
+                        <td><?php echo $value['event_time'];?></td>
+                        <td><?php echo $value['short_name'];?></td>
+                        <td><?php echo $value['event_type_name'];?></td>
+                        <td><?php echo $value['user_name'];?></td>
+                        <td><?php echo $value['desc'];?></td>
+                        <td><?php echo $value['event_less_time'];?></td>
+                        <td><a class="btn btn-primary add_work_order" event_id="<?echo $value['id']?>">查看</a></td>
+                    </tr>
+                <?$i++;}}?>
+            </tbody>
+            <tbody>
                 <tr>
-                    <td><?php echo $user_data['username'];?></td>
-                    <td><?php echo $user_data['username'];?></td>
-                    <td><?php echo $user_data['username'];?></td>
-                    <td><?php echo $user_data['username'];?></td>
-                    <td><?php echo $user_data['username'];?></td>
-                    <td><?php echo $user_data['username'];?></td>
-                    <td><?php echo $user_data['username'];?></td>
-                    <td>查看</td>
+                    <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+
+
+<script type="text/javascript">
+$(function() {
+
+        $(".add_work_order").click(function() {
+            _self = this;
+            var event_id = $(this).attr('event_id');
+            var back_url = "<?php echo site_url(array('ctl'=>'home', 'act'=>'index'))?>";
+            var url = "<?php echo site_url(array('ctl'=>'event', 'act'=>'add_work_order'))?>"+"&event_id="+event_id+"&back_url="+escape(back_url);
+            window.location.href=url;
+        });    
+})
+
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url('ctl=home&act=index');?>';
+    var getobj = {};
+    //getobj.from_node_id=$('#from_node_id_searsh').val();
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
+</script>

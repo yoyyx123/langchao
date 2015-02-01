@@ -1,11 +1,5 @@
 <div>
     <ul class="breadcrumb">
-        <li>
-            <a href="<?php echo site_url('ctl=home&act=index');?>">首页</a>
-        </li>
-        <li>
-            <a href="<?php echo site_url('ctl=user&act=info');?>">个人设置</a>
-        </li>
     </ul>
 </div>
 
@@ -19,10 +13,8 @@
                 <tr>
                     <th>账户列表</th>
                     <th colspan="6"></th>
-                    <th>搜索</th>
-                    <th>
-                    </th>
-                    <th>查询</th>
+                    <th>搜索:<input class="form-control" type="text" placeholder="短号或者姓名" name="where" id="where"></th>
+                    <th><a class="btn btn-info do_search">查询</a></th>
                 </tr>                
                 <tr>
                     <th>序号</th>
@@ -44,16 +36,92 @@
                     <td><?php echo $value['username'];?></td>
                     <td><?php echo $value['name'];?></td>
                     <td><?php echo $value['short_num'];?></td>
-                    <td><?php echo $value['department'];?></td>
+                    <td><?php echo $value['department_name'];?></td>
                     <td><?php if('1' == $value['status']){echo "在职";}else{echo "离职";}?></td>
-                    <td><?php echo $value['addr'];?></td>
+                    <td><?php echo $value['addr_name'];?></td>
                     <td><?php if('1' == $value['work_type']){echo "驻场";}else{echo "非驻场";}?></td>
-                    <td><?php echo $value['roles'];?></td>
-                    <td>查看</td>
+                    <td><?php echo $value['roles_name'];?></td>
+                    <td>
+                        <a class="btn btn-primary do_edit" user_id='<?php echo $value['id'];?>'>编辑</a>&nbsp&nbsp
+                        <a class="btn btn-primary do_delete" user_id='<?php echo $value['id'];?>'>删除</a>
+                    </td>
                 </tr>
                 <?php $i++;} ?>
-
             </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                </tr>
+            </tbody>            
         </table>
     </div>
 </div>
+<div id="dialog"></div>
+
+<script type="text/javascript">
+
+$(function() {
+
+    $(".do_delete").click(function() {
+     if(confirm("确认删除吗")){
+        _self = this;
+        url = "<?php echo site_url(array('ctl'=>'user', 'act'=>'delete_user'))?>"+"&user_id="+$(this).attr('user_id');
+        window.location.href=url;
+     }else{
+        return;
+     }
+    });
+
+    $(".do_edit").click(function() {
+        _self = this;
+        $.ajax({
+            type: "POST",
+            url: "<?php echo site_url(array('ctl'=>'user', 'act'=>'edit'))?>"+"&id="+$(this).attr('user_id'),
+            data: "",
+            success: function(result){
+                $("#dialog").html(result);
+                $("#dialog").dialog({
+                    autoOpen : false,
+                    width : 900,
+                    title : ('修改账户信息'),
+                    modal: true,
+
+                });
+                $("#dialog").dialog("open");
+            }
+         });
+    });
+
+        $(".do_search").click(function() {
+            _self = this;
+            where = $('#where').val();
+            if (where == '') {
+                    var n = noty({
+                      text: "请输入查询条件",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    return false;
+                }
+            var url = "<?php echo site_url(array('ctl'=>'user', 'act'=>'do_search'))?>"+"&is_search=1"+"&where="+where;
+            window.location.href=url;
+        });
+
+
+})
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url('ctl=user&act=manage');?>';
+    var getobj = {};
+    //getobj.from_node_id=$('#from_node_id_searsh').val();
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
+</script>

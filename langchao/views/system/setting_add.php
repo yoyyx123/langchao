@@ -1,4 +1,3 @@
-
 <form class="form-horizontal" action="<?php echo site_url('ctl=system&act=do_setting_add');?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8" onsubmit="return do_add();">
 <div class="col-lg-7 col-md-12">
     <table class="table table-bordered">
@@ -16,6 +15,7 @@
                         <option value="city">地区</option>
                         <option value="custom">客户类型</option>
                         <option value="department">部门</option>
+                        <option value="position">职位</option>
                         <option value="worktime">工作时间</option>
                         <option value="performance">绩效完成率</option>
                         <option value="filetype">文档类型</option>

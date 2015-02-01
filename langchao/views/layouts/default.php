@@ -24,12 +24,29 @@
     <link href='<?php echo base_url('/statics/css/uploadify.css'); ?>' rel='stylesheet'>
     <link href='<?php echo base_url('/statics/css/animate.min.css'); ?>' rel='stylesheet'>
     <link href='<?php echo base_url('/statics/css/jquery-ui.css'); ?>' rel='stylesheet'>
+    <link href='<?php echo base_url('/statics/css/jquery-ui.css'); ?>' rel='stylesheet'>
+    <!--<link href='<?php echo base_url('/statics/css/bootstrap-combined.min.css'); ?>' rel='stylesheet'>-->
+
+    <!-- datepicker-css -->
+    <link href='<?php echo base_url('/statics/css/datepicker.css'); ?>' rel='stylesheet'>
+    <link rel="stylesheet/less" type="text/css" href="<?php echo base_url('/statics/css/datepicker.less'); ?>">
+
+    <link href='<?php echo base_url('/statics/css/bootstrap-datetimepicker.min.css'); ?>' rel='stylesheet'>
 
     <!-- jQuery -->
     <script src="<?php echo base_url('/statics/bower_components/jquery/jquery.min.js'); ?>"></script>
     <script src="<?php echo base_url('/statics/js/jquery-ui.js'); ?>"></script>
     <script src="<?php echo base_url('/statics/js/ajaxfileupload.js'); ?>"></script>
-<script src="<?php echo base_url('/statics/js/datepicker/WdatePicker.js');?>"></script>
+
+
+   <script src="<?php echo base_url('/statics/js/bootstrap-datetimepicker.js');?>"></script>
+   <script src="<?php echo base_url('/statics/js/bootstrap-datetimepicker.zh-CN.js');?>"></script>
+
+    <!-- datepicker -->
+    <script src="<?php echo base_url('/statics/js/bootstrap-datepicker.min.js');?>"></script>
+    <script src="<?php echo base_url('/statics/js/bootstrap-datepicker.zh-CN.js');?>"></script>
+    <script src="<?php echo base_url('/statics/js/ace-elements.min.js');?>"></script>
+    <script src="<?php echo base_url('/statics/js/ace.min.js');?>"></script>
 
     
     <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->

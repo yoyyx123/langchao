@@ -1,6 +1,6 @@
-<form class="form-horizontal" action="<?php echo site_url('ctl=event&act=do_add_event');?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<form class="form-horizontal do_add_event" action="<?php echo site_url('ctl=event&act=do_add_event');?>" method="post" onsubmit="return do_add();">
 
-<div class="box col-lg-7 col-md-7">
+<div class="box col-lg-12 col-md-12">
     <table class="table table-bordered">
         <tbody>
             <tr>
@@ -10,7 +10,7 @@
                 </td>
             </tr>
             <tr>
-                <th width="80px">客户简称</th>
+                <th width="120px">客户简称</th>
                 <td colspan="5">
                     <?echo $member['short_name']; ?>
                 </td>
@@ -53,7 +53,7 @@
             <tr>
                 <th>事件描述</th>
                 <td colspan="5">
-                   <textarea name="desc"></textarea>
+                   <textarea name="desc" id="desc"></textarea>
                 </td>
             </tr>
             <tr>
@@ -69,12 +69,22 @@
             <tr>
                 <th>事件时间</th>
                 <td>
-                    <div id="event_timediv" class="input-group col-xs-4">
-                        <input type="text" placeholder="事件时间" name="event_time" id="event_time">
-                        <input type="text" class="inp wdate" name="event_time" id="event_time" onfocus="WdatePicker({startDate:'<?php echo date('Y-m-d');?>', maxDate:'#F{$dp.$D(\'nEndDate\',{d:0});}', minDate:'#F{$dp.$D(\'nEndDate\',{M:-6})}'})" value="<?php echo date('Y-m-d');?>" readonly="readonly" />
-                    </div>                    
-                </td>               
-            </tr>                                                                                                                                                                                                                         
+                    <input class="form_datetime" type="text" value="" name="event_time" id="event_time">             
+                </td>            
+            </tr>
+            <tr>
+                <th>批量开始时间</th>
+                <td>
+                    <input class="form_datetime" type="text" value="" name="event_time_start" id="event_time_start">**批量添加时填写
+                </td>            
+            </tr>
+            <tr>
+                <th>批量结束时间</th>
+                <td>
+                    <input class="form_datetime" type="text" value="" name="event_time_end" id="event_time_end">**批量添加时填写
+                </td>            
+            </tr>
+            <input type="hidden" class="is_all" value="1">
         </tbody>
     </table>
     <input type="hidden" name="member_id" value="<?echo $member['id']; ?>">
@@ -92,24 +102,123 @@
 <script type="text/javascript">
 $(function() {
 
+        $('.form_datetime').datetimepicker({
+            format: "yyyy-mm-dd", 
+            language:  'zh-CN',
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView:2,
+            forceParse: 0,
+            showMeridian: 1,
+
+        });
+
         $(".do_all_add").click(function() {
             _self = this;
-            $.ajax({
-                type: "POST",
-                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'add_event'))?>",
-                data: "&id="+$(this).attr('member_id'),
-                success: function(result){
-                    $("#dialog").html(result);
-                    $("#dialog").dialog({
-                        autoOpen : false,
-                        width : 700,
-                        title : ('事件开设'),
-                        modal: true,
+            department_id = $('#department_id').val();
+            user_id = $('#user_id').val();
+            event_type_id = $('#event_type_id').val();
+            work_type = $('#work_type').val();
+            desc = $('#desc').val();
+            worktime_id = $('#worktime_id').val();
+            event_time = $('#event_time').val();
+            event_time_start = $('#event_time_start').val();
+            event_time_end = $('#event_time_end').val();
 
+
+            if (department_id== '') {
+                    var n = noty({
+                      text: "请选择部门",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
                     });
-                    $("#dialog").dialog("open");
+                    return false;
                 }
-             });
+            if (user_id== '') {
+                    var n = noty({
+                      text: "请选择使用人",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    return false;
+                }        
+            if (event_type_id == '') {
+                    var n = noty({
+                      text: "请选择事件类型",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    return false;
+                }
+            if (work_type == '') {
+                    var n = noty({
+                      text: "请选择是否驻派",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    return false;
+                }
+            if (desc == '') {
+                    var n = noty({
+                      text: "请填写事件描述",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    return false;
+                }
+            if (worktime_id == '') {
+                    var n = noty({
+                      text: "请选择工作日区间",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    return false;
+                }
+            $(".is_all").attr('name', "is_all");
+            $(".is_all").attr('id', "is_all");
+            is_all = $('#is_all').val();
+            if (!is_all && event_time == '') {
+                    var n = noty({
+                      text: "请填写事件时间",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    return false;
+                }            
+            if (is_all && event_time_start == '') {
+                    var n = noty({
+                      text: "请选择批量开始时间",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    $(".is_all").removeAttr("id");
+                    $(".is_all").removeAttr("name");
+                    return false;
+                }        
+            if (is_all && event_time_end == '') {
+                    var n = noty({
+                      text: "请选择批量结束时间",
+                      type: 'error',
+                      layout: 'center',
+                      timeout: 1000,
+                    });
+                    $(".is_all").removeAttr("id");
+                    $(".is_all").removeAttr("name");                    
+                    return false;
+                } 
+
+            $(".do_add_event").submit();
         });
 
         $(".department_id").change(function() {
@@ -128,4 +237,100 @@ $(function() {
              });            
         });        
 })
+
+function do_add(){
+    department_id = $('#department_id').val();
+    user_id = $('#user_id').val();
+    event_type_id = $('#event_type_id').val();
+    work_type = $('#work_type').val();
+    desc = $('#desc').val();
+    worktime_id = $('#worktime_id').val();
+    event_time = $('#event_time').val();
+    event_time_start = $('#event_time_start').val();
+    event_time_end = $('#event_time_end').val();
+    is_all = $('#is_all').val();
+
+
+    if (department_id== '') {
+            var n = noty({
+              text: "请选择部门",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (user_id== '') {
+            var n = noty({
+              text: "请选择使用人",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }        
+    if (event_type_id == '') {
+            var n = noty({
+              text: "请选择事件类型",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (work_type == '') {
+            var n = noty({
+              text: "请选择是否驻派",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (desc == '') {
+            var n = noty({
+              text: "请填写事件描述",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (worktime_id == '') {
+            var n = noty({
+              text: "请选择工作日区间",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (!is_all && event_time == '') {
+            var n = noty({
+              text: "请填写事件时间",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (is_all && event_time_start == '') {
+            var n = noty({
+              text: "请选择批量开始时间",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }        
+    if (is_all && event_time_end == '') {
+            var n = noty({
+              text: "请选择批量结束时间",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }    
+}
 </script>

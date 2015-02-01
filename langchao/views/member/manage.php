@@ -1,7 +1,7 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo site_url('ctl=member&act=add');?>">添加客户</a>
+            <a class="btn btn-primary" href="<?php echo site_url('ctl=member&act=add');?>">添加客户</a>
         </li>
     </ul>
 </div>
@@ -45,8 +45,12 @@
                     </td>
                 </tr>
                 <?php $i++;} ?>
-
             </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                </tr>
+            </tbody>             
         </table>
     </div>
 </div>
@@ -89,4 +93,18 @@ $(function() {
         });
 
 })
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url('ctl=member&act=manage');?>';
+    var getobj = {};
+    //getobj.from_node_id=$('#from_node_id_searsh').val();
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
 </script>

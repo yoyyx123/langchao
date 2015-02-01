@@ -1,11 +1,3 @@
-<div>
-    <ul class="breadcrumb">
-        <li>
-            <a href="<?php echo site_url('ctl=home&act=index');?>">首页</a>
-        </li>
-    </ul>
-</div>
-
 <div class="row">
     <div class="box col-md-12">
         <div class="box-inner">
@@ -13,15 +5,15 @@
                 <h2><i></i></h2>
             </div>
             <div class="box-content row">
-                <form class="form-horizontal" action="<?php echo site_url('ctl=user&act=do_add');?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8" onsubmit="return do_add();">
-                <div class="col-lg-7 col-md-4">
+                <form class="form-horizontal" action="<?php echo site_url('ctl=user&act=do_edit');?>" method="post" enctype="multipart/form-data" accept-charset="UTF-8" onsubmit="return doedit();">
+                <div class="col-lg-7 col-md-8">
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
                                 <td width="80px">帐号</td>
                                 <td>
                                     <div id="userdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="帐号" name="username" id="username">
+                                    <input type="text" placeholder="帐号" name="username" id="username" value="<?echo $user['username'];?>">
                                     </div>
                                 </td>
                             </tr>
@@ -29,7 +21,7 @@
                                 <td>姓名</td>
                                 <td>
                                     <div id="namediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="姓名" name="name" id="name">
+                                    <input type="text" placeholder="姓名" name="name" id="name" value="<?echo $user['name'];?>">
                                     </div>                                    
                                 </td>
                             </tr>
@@ -37,7 +29,7 @@
                                 <td width="80px">密码</td>
                                 <td>
                                     <div id="passworddiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="密码" name="password" id="password">
+                                    <input type="text" placeholder="密码" name="password" id="password" value="">如果不修改密码，请留空！
                                     </div>
                                 </td>
                             </tr>
@@ -45,7 +37,7 @@
                                 <td>移动电话</td>
                                 <td>
                                     <div id="mobilediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="移动电话" name="mobile" id="mobile">
+                                    <input type="text" placeholder="移动电话" name="mobile" id="mobile" value="<?echo $user['mobile'];?>">
                                     </div>
                                 </td>
                             </tr> 
@@ -53,7 +45,7 @@
                                 <td>集团短号</td>
                                 <td>
                                     <div id="short_numdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="集团短号" name="short_num" id="short_num">
+                                    <input type="text" placeholder="集团短号" name="short_num" id="short_num" value="<?echo $user['short_num'];?>">
                                     </div>
                                 </td>
                             </tr>                            
@@ -63,7 +55,7 @@
                                     <div id="departmentdiv" class="input-group col-xs-4">
                                     <select name="department" id="department">                                        
                                        <?php foreach ($department_list as $key => $value) {?>
-                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <option value="<?php echo $value['id']; ?>" <? if($value['id']==$user['department']) echo "selected=selected";?>><?php echo $value['name']; ?></option>
                                         <?php } ?>
                                     </select>                                        
                                     </div>
@@ -75,9 +67,9 @@
                                     <div id="positiondiv" class="input-group col-xs-4">
                                     <select name="position" id="position">                                        
                                        <?php foreach ($position_list as $key => $value) {?>
-                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <option value="<?php echo $value['id']; ?>" <? if($value['id']==$user['position']) echo "selected=selected";?>><?php echo $value['name']; ?></option>
                                         <?php } ?>
-                                    </select>
+                                    </select>                                    
                                     </div>
                                 </td>
                             </tr>
@@ -87,7 +79,7 @@
                                     <div id="rolesdiv" class="input-group col-xs-4">
                                     <select name="roles" id="roles">
                                        <?php foreach ($role_list as $key => $value) {?>
-                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['role_name']; ?></option>
+                                        <option value="<?php echo $value['id']; ?>" <? if($value['id']==$user['roles']) echo "selected=selected";?>><?php echo $value['role_name']; ?></option>
                                         <?php } ?>
                                     </select>
                                     </div>
@@ -97,7 +89,7 @@
                                 <td>企业邮箱</td>
                                 <td>
                                     <div id="emaildiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="企业邮箱" name="email" id="email">
+                                    <input type="text" placeholder="企业邮箱" name="email" id="email" value="<?echo $user['username'];?>">
                                     </div>
                                 </td>
                             </tr>
@@ -107,7 +99,7 @@
                                     <div id="addrdiv" class="input-group col-xs-4">
                                     <select name="addr" id="addr">
                                        <?php foreach ($city_list as $key => $value) {?>
-                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <option value="<?php echo $value['id']; ?>" <? if($value['id']==$user['addr']) echo "selected=selected";?>><?php echo $value['name']; ?></option>
                                         <?php } ?>
                                     </select>
                                     </div>
@@ -117,8 +109,8 @@
                                 <td>工作类型</td>
                                 <td>
                                     <div id="work_typediv" class="input-group col-xs-4">
-                                    非驻场<input type="radio" name="work_type" id="work_type" value="0" checked/>&nbsp&nbsp&nbsp
-                                    驻场<input type="radio" name="work_type" id="work_type" value="1">
+                                    非驻场<input type="radio" name="work_type" id="work_type" value="0" <? if(0==$user['work_type']) echo "checked";?>/>&nbsp&nbsp&nbsp
+                                    驻场<input type="radio" name="work_type" id="work_type" value="1" <? if(1==$user['work_type']) echo "checked";?>>
                                     </div>
                                 </td>
                             </tr>  
@@ -136,7 +128,7 @@
                                     <div id="work_timediv" class="input-group col-xs-4">
                                     <select name="work_time" id="work_time">
                                        <?php foreach ($worktime_list as $key => $value) {?>
-                                        <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
+                                        <option value="<?php echo $value['id']; ?>" <? if($value['id']==$user['work_time']) echo "selected=selected";?>><?php echo $value['name']; ?></option>
                                         <?php } ?>
                                     </select>
                                     </div>
@@ -171,9 +163,10 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" value="<?echo $user['id'];?>" name="id">
                 <div class="col-lg-7 col-md-4">
                     <p class="center col-md-5">
-                        <button type="submit" class="btn btn-primary">添加</button>
+                        <button type="submit" class="btn btn-primary">修改</button>
                     </p>
                 </div> 
             </form>         
@@ -192,90 +185,11 @@ $(function () {
             $("#expenses").removeAttr("disabled");
         }else{
             $("#expenses").attr("disabled", true);
-            $("#expenses").val() = "";
+            $("#expenses").val("");
         }
     });
 
 })
-
-function edit_passwd(){
-
-    old_password = $('#old_password').val();
-    new_password = $('#new_password').val();
-    new_password_confirm = $('#new_password_confirm').val();
-    if (old_password== '') {
-            $("#passworddiv").addClass("has-error");
-            var n = noty({
-              text: "请输入密码",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if (new_password == '') {
-            $("#new_pwddiv").addClass("has-error");
-            var n = noty({
-              text: "请输入新密码",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if (new_password_confirm == '') {
-            $("#cnew_pwddiv").addClass("has-error");
-            var n = noty({
-              text: "请输入确认密码",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if(new_password != new_password_confirm){
-            $("#cnew_pwddiv").addClass("has-error");
-            var n = noty({
-              text: "两次密码输入不一致",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }        
-
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST","<?php echo site_url('ctl=user&act=check_passwd');?>",false);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("passwd="+old_password);
-    var status = xmlhttp.responseText;
-    if ('succ' != status){
-        $("#passworddiv").addClass("has-error");
-        var n = noty({
-          text: "原始密码错误，请确认后输入！",
-          type: 'error',
-          layout: 'center',
-          timeout: 1000,
-        });
-        return false
-    }
-    $.post( 
-        "<?php echo site_url('ctl=user&act=edit_passwd');?>",
-        {old_password:old_password,new_password:new_password},
-        function(result){
-            if (result=='succ'){
-                window.location.reload();
-            }else{
-                var n = noty({
-                  text: "密码修改失败",
-                  type: 'error',
-                  layout: 'center',
-                  timeout: 1000,
-                });
-            }
-    });
-
-}
 
 function previewImg(){
     f = document.getElementById("img").files[0];
@@ -292,10 +206,9 @@ function check_img(){
     }
 }
 
-function do_add(){
+function doedit(){
     username = $('#username').val();
     name = $('#name').val();
-    password = $('#password').val();
     mobile = $('#mobile').val();
     short_num = $('#short_num').val();
     department = $('#department').val();
@@ -321,16 +234,6 @@ function do_add(){
             $("#namediv").addClass("has-error");
             var n = noty({
               text: "请输入姓名",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }        
-    if (password == '') {
-            $("#passworddiv").addClass("has-error");
-            var n = noty({
-              text: "请输入密码",
               type: 'error',
               layout: 'center',
               timeout: 1000,
@@ -457,23 +360,7 @@ function do_add(){
         });
         return false;
     }
-
-    xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST","<?php echo site_url('ctl=user&act=check_username');?>",false);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("username="+username);
-    var status = xmlhttp.responseText;
-    if (false == status){
-        return true;
-    }else{
-        var n = noty({
-          text: "帐号名已存在！",
-          type: 'error',
-          layout: 'center',
-          timeout: 1000,
-        });
-        return false
-    }    
+    return true;    
 }
 
 
