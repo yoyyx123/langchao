@@ -10,10 +10,10 @@
             <div class="input-group">
             <div class="input-group-addon">使用人</div>
               <select  class="form-control" name="user_id" id="user_id">
-                <option value="" selected=selected>无</option>
+                <option value="">无</option>
                 <?php foreach ($user_list as $key => $value) {
                 ?>
-                <option value="<? echo $value['id'];?>"><?echo $value['name'];?></option>
+                <option value="<? echo $value['id'];?>" <?if(isset($user_id)&&$user_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
                 <?php } ?>
               </select>
             </div>
@@ -23,7 +23,7 @@
           <div class="form-group">
             <div class="input-group">
               <div class="input-group-addon">开始时间</div>
-              <input class="form-control form_datetime" type="text" placeholder="" name="start_time" id="start_time">
+              <input class="form-control form_datetime" type="text" value="<?if(isset($start_time)){echo $start_time;}?>" name="start_time" id="start_time">
             </div>
           </div>
         </td>
@@ -34,7 +34,7 @@
           <div class="form-group">
             <div class="input-group">
             <div class="input-group-addon">客户简称</div>
-              <input class="form-control" type="text" placeholder="" name="short_name" id="short_name">
+              <input class="form-control" type="text" value="<?if(isset($short_name)){echo $short_name;}?>" name="short_name" id="short_name">
             </div>
           </div>
         </td>
@@ -42,7 +42,7 @@
           <div class="form-group">
             <div class="input-group">
               <div class="input-group-addon">结束时间</div>
-              <input class="form-control form_datetime" type="text" placeholder="" name="end_time" id="end_time">
+              <input class="form-control form_datetime" type="text" value="<?if(isset($end_time)){echo $end_time;}?>" name="end_time" id="end_time">
             </div>
           </div>
         </td>
@@ -55,7 +55,7 @@
 
 <div class="row event_info" id="event_info">
   <?php
-  if(isset($event_list)&&!empty($event_list)&&isset($is_search)){
+  if(isset($info_list)&&!empty($info_list)&&isset($is_search)){
   ?>    
     <table class="table table-bordered">
         <thead>
@@ -73,17 +73,19 @@
         </thead>
         <tbody>
 
-            <? $i=0; foreach ($event_list as $key => $value) {
+            <? $i=0; foreach ($info_list as $key => $value) {
                 $i+=1
             ?>
             <tr align="center">
                 <td><?php echo $i;?></td>
                 <td><?php echo $value['short_name'];?></td>
-                <td><?php echo $value['event_type_name'];?></td>
-                <td><?php echo $value['desc'];?></td>
-                <td><?php echo $value['work_order_num'];?></td>
-                <td><?echo $value['cost_fee'];?></td>
-                <td><?php echo $value['event_less_time'];?></td>
+                <td><?php echo $value['count'];?></td>
+                <td><?php echo $value['user_name'];?></td>
+                <td><?php echo $value['road_time'];?></td>
+                <td><?echo $value['work_time'];?></td>
+                <td></td>
+                <td><?echo $value['check_num'];?></td>
+                <td><?echo $value['complain_num'];?></td>
             </tr>
             <? } ?>
         </tbody>

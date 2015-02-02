@@ -65,7 +65,7 @@ class Event_model extends CI_Model {
         if(isset($where['member_id'])){
             $where_sql .= " and `member_id`=".$where['member_id'];
         }
-        $where_sql .= " and `event_time`>=".$where['start_time']." and `event_time`<=".$where['end_time'];
+        $where_sql .= " and `event_time`>='".$where['start_time']."' and `event_time`<='".$where['end_time']."'";
         $sql = "select * from ldb_event_list where 1=1 ".$where_sql." order by event_time desc";
         if($offset!==false){
             $sql .= " limit ".$offset.",".ROW_SHOW_NUM;
@@ -77,9 +77,9 @@ class Event_model extends CI_Model {
             $n = strtotime(date("Y-m-d"));
             $r = round(($x+EXPIRE_DATE*24*3600-$n)/(24*3600));
             $value['event_less_time'] = $r;
-            $query2 = $this->db->get_where('work_order_list', array('event_id'=>$value['id']));
-            $res2 = $query2->result_array();
-            $value['work_order_num'] = count($res2);
+            $work_order_list = $this->get_work_order_list(array('event_id'=>$value['id']));
+            $value['work_order_list'] = $work_order_list;
+            $value['work_order_num'] = count($work_order_list);
             $query3 = $this->db->get_where('event_type_list', array('id'=>$value['event_type_id']));
             $res3 = $query3->row_array();
             $value['event_type_name'] = $res3['name'];
@@ -91,10 +91,7 @@ class Event_model extends CI_Model {
             $value['user_name'] = $res4['username'];  
             $res[$key] = $value;
         }
-        $sql2 = "select * from ldb_event_list where 1=1 ".$where_sql;
-        $res2 = $this->db->query($sql2)->result_array();
-        $count = count($res2);
-        return array('count'=>$count,"info"=>$res);         
+        return $res;       
     }
 
     public function get_event_simple_list($where){
