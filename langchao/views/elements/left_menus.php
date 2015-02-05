@@ -58,10 +58,10 @@
                                 <li><a href="<?php echo site_url('ctl=system&act=setting_list');?>">基础信息设置</a></li>
                                 <li><a href="<?php echo site_url('ctl=system&act=event_list');?>">事件类型/故障分类</a></li>
                                 <li><a href="<?php echo site_url('ctl=system&act=time_list');?>">时间设定</a></li>
+                                <li><a href="<?php echo site_url('ctl=system&act=doc_list');?>">文档管理</a></li>
                             </ul>
                         </li>                                                                                                                      
                     </ul>
-                    <label id="for-is-ajax" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax on menu</label>
                 </div>
             </div>
         </div>

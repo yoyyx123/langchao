@@ -6,16 +6,18 @@ class System extends MY_Controller {
     public function __construct()
     {
         parent::__construct();
-        //$this->load->helper('security');
+        $this->load->helper('security');
         $this->load->model('Role_model');
     }
 
+
 	public function role_list()
-	{		
+	{
+		$this->data['user_data'] = $this->session->userdata;		
 		$where = array();
-		$role_list = $this->Role_model->get_roles($where);
-		$this->data['user_data'] = $this->session->userdata;
-		$this->data['role_list'] = $role_list;
+		$role_list = $this->Role_model->get_roles($where,$this->per_page);
+		$this->pages_conf($role_list['count']);
+		$this->data['role_list'] = $role_list['info'];
         $this->layout->view('system/role_list',$this->data);
 	}
 
@@ -50,7 +52,7 @@ class System extends MY_Controller {
 
 	public function role_delete(){
 		$data = $this->security->xss_clean($_GET);
-		$where = array("role_id"=>$data['role_id']);
+		$where = array("id"=>$data['role_id']);
 		$role = $this->Role_model->delete_role($where);
 		$redirect_url = 'ctl=system&act=role_list';
         redirect($redirect_url);
@@ -59,7 +61,7 @@ class System extends MY_Controller {
 	public function role_edit(){
 		$data = $this->security->xss_clean($_GET);
 		$role_id = $_GET['role_id'];
-		$where = array("role_id"=>trim($role_id));
+		$where = array("id"=>trim($role_id));
 		$role = $this->Role_model->edit_role($where);
 		$this->data['user_data'] = $this->session->userdata;
 		$this->data['role'] = $role;
@@ -70,13 +72,13 @@ class System extends MY_Controller {
 		$data = $this->security->xss_clean($_POST);
 		$role_id = $data['role_id'];
 		$permission = serialize($data['ctl']);
-		$where = array("role_id"=>$role_id);
+		$where = array("id"=>$role_id);
 		$data = array("role_name"=>trim($data['role_name']),"role_memo"=>$data['role_memo'],'permission'=>$permission);
 		$result = $this->Role_model->update_role($where,$data);
 		$redirect_url = 'ctl=system&act=role_list';
         redirect($redirect_url); 	
     }
-
+/**
 	public function city_list()
 	{		
 		$where = array();
@@ -206,10 +208,10 @@ class System extends MY_Controller {
 		$redirect_url = 'ctl=system&act=custom_list';
         redirect($redirect_url); 	
     }
+**/
 
 
-/** 部门**/
-
+/**
     public function department_list()
 	{		
 		$where = array();
@@ -274,23 +276,24 @@ class System extends MY_Controller {
         redirect($redirect_url); 	
     }
 
-
+**/
 
 
 /** 事件**/
 
     public function event_list()
-	{		
+	{
+		$this->data['user_data'] = $this->session->userdata;		
 		$where = array();
-		$event_list = $this->Role_model->get_event_list($where);
-		$this->data['user_data'] = $this->session->userdata;
-		$this->data['list'] = $event_list;
+		$event_list = $this->Role_model->get_event_list($where,$this->per_page);
+		$this->pages_conf($event_list['count']);
+		$this->data['list'] = $event_list['info'];
         $this->layout->view('system/event_list',$this->data);
 	}
 
 	public function event_add(){
 		$department_list = $this->Role_model->get_setting_list(array("type"=>"department"));		
-		$this->data['department_list'] = $department_list;
+		$this->data['department_list'] = $department_list['info'];
 		$this->load->view('system/event_add',$this->data);
 	}
 
@@ -329,7 +332,7 @@ class System extends MY_Controller {
 		$where = array("id"=>trim($id));
 		$role = $this->Role_model->get_event_info($where);
 		$department_list = $this->Role_model->get_setting_list(array("type"=>"department"));		
-		$this->data['department_list'] = $department_list;
+		$this->data['department_list'] = $department_list['info'];
 		$this->data['user_data'] = $this->session->userdata;
 		$this->data['role'] = $role;
 		$this->load->view('system/event_edit',$this->data);
@@ -351,11 +354,12 @@ class System extends MY_Controller {
 /** 系统信息配置**/
 
     public function setting_list()
-	{		
+	{
+		$this->data['user_data'] = $this->session->userdata;		
 		$where = array();
-		$setting_list = $this->Role_model->get_setting_list($where);
-		$this->data['user_data'] = $this->session->userdata;
-		$this->data['list'] = $setting_list;
+		$setting_list = $this->Role_model->get_setting_list($where,$this->per_page);
+		$this->pages_conf($setting_list['count']);
+		$this->data['list'] = $setting_list['info'];
         $this->layout->view('system/setting_list',$this->data);
 	}
 
@@ -412,7 +416,94 @@ class System extends MY_Controller {
 		$result = $this->Role_model->update_setting($where,$data);
 		$redirect_url = 'ctl=system&act=setting_list';
         redirect($redirect_url); 	
-    }    
+    }
+
+    public function time_list(){
+		$this->data['user_data'] = $this->session->userdata;		
+		$where = array();
+		$list = $this->Role_model->get_time_list($where,$this->per_page);
+		$this->pages_conf($list['count']);
+		$this->data['list'] = $list['info'];
+        $this->layout->view('system/time_list',$this->data);
+    }
+
+	public function time_add(){
+		$this->data['user_data'] = $this->session->userdata;
+		$this->load->view('system/time_add',$this->data);
+	}
+
+	public function do_time_add(){
+		$data = $this->security->xss_clean($_POST);
+		if($data['name']){
+			$sql = array("name"=>trim($data['name']),"type"=>trim($data['type']),"value"=>trim($data['value']));
+			$result = $this->Role_model->add_time($sql);
+		}
+		$redirect_url = 'ctl=system&act=time_list';
+        redirect($redirect_url);		
+	}
+
+	public function time_delete(){
+		$data = $this->security->xss_clean($_GET);
+		$where = array("id"=>$data['id']);
+		$role = $this->Role_model->delete_time($where);
+		$redirect_url = 'ctl=system&act=time_list';
+        redirect($redirect_url);		
+	}
+
+	public function time_edit(){
+		$this->data['user_data'] = $this->session->userdata;		
+		$data = $this->security->xss_clean($_GET);
+		$id = $_GET['id'];
+		$where = array("id"=>trim($id));
+		$info = $this->Role_model->get_time_info($where);
+		$this->data['info'] = $info;
+		$this->load->view('system/time_edit',$this->data);
+	}
+
+    public function do_time_edit(){
+		$data = $this->security->xss_clean($_POST);
+		$id = $data['id'];
+		$where = array("id"=>$id);
+		$data = array("name"=>trim($data['name']),"type"=>trim($data['type']),"value"=>trim($data['value']));
+		$result = $this->Role_model->update_time($where,$data);
+		$redirect_url = 'ctl=system&act=time_list';
+        redirect($redirect_url); 	
+    }
+
+    public function doc_list(){
+		$this->data['user_data'] = $this->session->userdata;		
+		$where = array();
+		$list = $this->Role_model->get_doc_list($where,$this->per_page);
+		$this->pages_conf($list['count']);
+		$this->data['list'] = $list['info'];
+        $this->layout->view('system/doc_list',$this->data);    	
+    }
+
+    public function doc_delete(){
+		$data = $this->security->xss_clean($_GET);
+		$where = array("id"=>$data['id']);
+		$role = $this->Role_model->delete_doc($where);
+		$redirect_url = 'ctl=system&act=doc_list';
+        redirect($redirect_url);		
+	}
+
+	public function doc_add(){
+		$data = $this->security->xss_clean($_POST);
+		$tp = array("application/msword");
+        $path = "./upload/doc";
+        $name = $data['name'];
+        $type = end(explode(".",$_FILES['file']['name']));
+        //$filename = iconv("UTF-8", "GBK", ($_FILES['file']['name']));
+        $filename = $this->session->userdata['id']."_".time().".".$type;
+        $file = $path."/".$filename;
+        $result = move_uploaded_file($_FILES["file"]["tmp_name"],$file);
+		if($result){
+			$sql = array("name"=>trim($name),"path"=>$file);
+			$result = $this->Role_model->add_doc($sql);
+		}
+		$redirect_url = 'ctl=system&act=doc_list';
+        redirect($redirect_url);		
+	}
 
 }
 

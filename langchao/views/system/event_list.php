@@ -23,7 +23,7 @@
             <tbody>
                 <?php $i=1;foreach ($list as $key => $value) {?>
                 <tr>
-                    <td><?php echo $value['id'];?></td>
+                    <td><?php echo $i;?></td>
                     <td><?php echo $value['name'];?></td>
                     <td><?php echo $value['department_id'];?></td>
                     <td><a class="btn btn-info doedit" event_id='<?php echo $value['id'];?>'>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -34,6 +34,11 @@
                 <?php $i++;} ?>
 
             </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                </tr>
+            </tbody>            
         </table>
     </div>
 </div>
@@ -42,6 +47,20 @@
 </div>
 
 <script type="text/javascript">
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url("ctl=system&act=event_list");?>';
+    var getobj = {};
+    //getobj.from_node_id=$('#from_node_id_searsh').val();
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
 $(function() {
         $(".dodelete").click(function() {
          if(confirm("确认删除吗")){

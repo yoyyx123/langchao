@@ -134,6 +134,7 @@ class MY_Controller extends CI_Controller {
 		$this->postdata = $_POST;
 		$this->data['getdata'] = $this->security->xss_clean($this->getdata);
         $username = $this->session->userdata('username');
+        define('SSS',		2);
 
 		/**
         $username = $this->session->userdata('username');

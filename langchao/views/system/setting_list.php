@@ -23,7 +23,7 @@
             <tbody>
                 <?php $i=1;foreach ($list as $key => $value) {?>
                 <tr>
-                    <td><?php echo $value['id'];?></td>
+                    <td><?php echo $i;?></td>
                     <td><?php echo $value['name'];?></td>                    
                     <td><?php 
                         if($value['type']=="city"){echo "地区";}
@@ -42,6 +42,11 @@
                 <?php $i++;} ?>
 
             </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                </tr>
+            </tbody>
         </table>
     </div>
 </div>
@@ -50,6 +55,20 @@
 </div>
 
 <script type="text/javascript">
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url("ctl=system&act=setting_list");?>';
+    var getobj = {};
+    //getobj.from_node_id=$('#from_node_id_searsh').val();
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
 $(function() {
         $(".dodelete").click(function() {
          if(confirm("确认删除吗")){

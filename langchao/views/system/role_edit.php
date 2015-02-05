@@ -35,6 +35,6 @@
             </tr>
         </tbody>
     </table>
-        <input type="hidden" name="role_id" id="role_id" value="<?php echo $role['role_id']?>">
+        <input type="hidden" name="role_id" id="role_id" value="<?php echo $role['id']?>">
         <button type="submit" class="btn btn-primary">修改</button>
 </form>         

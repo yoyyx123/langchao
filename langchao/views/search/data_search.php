@@ -107,6 +107,26 @@
 </div>
 
 <script type="text/javascript">
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url("ctl=search&act=data_search");?>';
+    var getobj = {};
+    getobj.user_id=$('#user_id').val();
+    getobj.short_name=$('#short_name').val();
+    getobj.start_time=$('#start_time').val();
+    getobj.end_time=$('#end_time').val();
+    getobj.is_search=1;;
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
+
+
 $(function() {
 
         $('.form_datetime').datetimepicker({

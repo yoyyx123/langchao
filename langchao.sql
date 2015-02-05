@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2015 年 02 月 02 日 02:48
+-- 生成日期: 2015 年 02 月 05 日 11:32
 -- 服务器版本: 5.5.40
 -- PHP 版本: 5.2.17
 
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `ldb_biil_order_list` (
 
 INSERT INTO `ldb_biil_order_list` (`id`, `work_order_id`, `type`, `go_time`, `arrival_time`, `start_place`, `arrival_place`, `transportation`, `transportation_fee`, `hotel_fee`, `food_fee`, `other_fee`, `memo`, `bill_no`, `rel_fee`, `status`, `date`) VALUES
 (0, 4, '1', '11111', '222', '333', '444', 11, '666.00', '777.00', '888.00', '999.00', 'aaa', 'bbbb', '2500.00', '2', '2015-01-24 13:55:31'),
-(6, 4, '0', '11111', '222', '333', '444', 11, '666.00', '777.00', '888.00', '999.00', 'aaa', 'aaa', '0.00', '1', '2015-01-24 14:34:00'),
+(6, 4, '0', '11111', '222', '333', '444', 11, '666.00', '777.00', '888.00', '999.00', 'aaa', 'aaa', '0.00', '2', '2015-01-24 14:34:00'),
 (34, 4, '0', '11111', '222', '333', '444', 12, '666.00', '777.00', '888.00', '999.00', 'aaa', 'aaaa', '0.00', '1', '2015-01-24 15:36:12'),
 (38, 4, '1', '11111', '222', '333', '444', 12, '666.00', '777.00', '888.00', '999.00', 'aaa', 'bbbb', '0.00', '1', '2015-01-24 16:01:49'),
 (39, 5, '0', '1', '1', '1', '1', 11, '1.00', '1.00', '1.00', '1.00', '1', '1', '0.00', '1', '2015-01-26 15:05:21'),
@@ -137,15 +137,36 @@ CREATE TABLE IF NOT EXISTS `ldb_date_setting` (
   `value` varchar(50) NOT NULL COMMENT '值',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `ldb_date_setting`
 --
 
 INSERT INTO `ldb_date_setting` (`id`, `type`, `name`, `value`, `date`) VALUES
-(1, 'holiday', '公司假期1', '2015-02-05', '2015-02-01 08:36:28'),
-(2, 'holiday', '公司假期2', '2015-02-03', '2015-02-01 08:36:28');
+(1, 'holiday', '公司假期1', '2015-02-05', '2015-02-01 08:36:28');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ldb_doc_list`
+--
+
+CREATE TABLE IF NOT EXISTS `ldb_doc_list` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '文档名称',
+  `path` varchar(50) NOT NULL COMMENT '文档存放路径',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=7 ;
+
+--
+-- 转存表中的数据 `ldb_doc_list`
+--
+
+INSERT INTO `ldb_doc_list` (`id`, `name`, `path`, `date`) VALUES
+(5, '问题列表', './upload/doc/1_1423101007.doc', '2015-02-05 01:50:07'),
+(6, '登录显示', './upload/doc/1_1423101045.xlsx', '2015-02-05 01:50:45');
 
 -- --------------------------------------------------------
 
@@ -179,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `ldb_event_list` (
 --
 
 INSERT INTO `ldb_event_list` (`id`, `member_id`, `department_id`, `user_id`, `event_type_id`, `work_type`, `desc`, `worktime_id`, `event_time`, `event_month`, `status`, `cost_status`, `is_complain`, `event_status`, `performance_id`, `memo`, `date`) VALUES
-(1, 1, 4, 7, 2, '0', 'sadfADS', 7, '2015-01-18', '2015-01', '3', '1', '0', '1', 15, '十大发生发', '2015-01-17 08:32:50'),
+(1, 1, 4, 7, 2, '0', 'sadfADS', 7, '2015-01-18', '2015-01', '3', '3', '0', '1', 15, '十大发生发', '2015-01-17 08:32:50'),
 (2, 2, 4, 7, 2, '0', '撒旦发', 7, '2015-01-20', '2015-01', '1', '3', '0', '1', 0, '0', '2015-01-17 08:34:10'),
 (3, 1, 2, 1, 2, '0', '撒旦发撒旦发', 8, '2015-01-14', '2015-01', '1', '1', '0', '1', 0, '0', '2015-01-17 08:34:32'),
 (4, 1, 2, 1, 3, '1', '驻派测试', 7, '2015-01-20', '2015-01', '1', '1', '0', '1', 0, '0', '2015-01-20 15:56:11'),
@@ -248,15 +269,15 @@ CREATE TABLE IF NOT EXISTS `ldb_event_type_list` (
   `display` enum('0','1') NOT NULL DEFAULT '1',
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `ldb_event_type_list`
 --
 
 INSERT INTO `ldb_event_type_list` (`id`, `name`, `department_id`, `display`, `sort`) VALUES
-(2, '研发项目', 'all', '1', NULL),
-(3, '网络部署', '4', '1', NULL);
+(3, '网络部署', '信息部', '1', NULL),
+(5, '是否', 'all', '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -313,7 +334,7 @@ CREATE TABLE IF NOT EXISTS `ldb_setting_list` (
 --
 
 INSERT INTO `ldb_setting_list` (`id`, `name`, `display`, `type`, `sort`) VALUES
-(2, '研发部', '1', 'department', NULL),
+(2, '公司假期3', '1', '', NULL),
 (4, '信息部', '1', 'department', NULL),
 (5, '北京市', '1', 'city', NULL),
 (6, '上海市', '1', 'city', NULL),
@@ -416,12 +437,12 @@ CREATE TABLE IF NOT EXISTS `ldb_user` (
 --
 
 INSERT INTO `ldb_user` (`id`, `username`, `password`, `name`, `roles`, `mobile`, `short_num`, `department`, `position`, `email`, `addr`, `work_type`, `expenses`, `work_time`, `status`, `img`, `login_time`, `created`) VALUES
-(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '测试1', 1, '13661850643', '13360', '2', '19', 'admin', 6, '0', 0, 8, '1', 'user_admin.jpg', '2014-12-03 23:26:47', '2014-12-03 07:26:47'),
+(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', '测试1', 1, '13661850643', '13360', '4', '19', 'admin', 6, '0', 0, 8, '1', 'user_admin.jpg', '2014-12-03 23:26:47', '2014-12-03 07:26:47'),
 (2, 'test', '098f6bcd4621d373cade4e832627b4f6', 'test', 1, '111', '222', '2', '17', '11@11', 6, '1', 0, 9, '1', '', '0000-00-00 00:00:00', '2014-12-10 08:40:14'),
 (3, '三代富贵 ', '3d70ef0237e5b8ff729cc83277364056', '阿斯顿发', 1, '阿斯顿发', '', '4', '18', '', 5, '1', 0, 9, '1', 'user_.jpg', '0000-00-00 00:00:00', '2014-12-14 07:46:01'),
-(7, '阿斯顿发生的', '9f10648f089cc3ba57c5ae46ba98e57a', '阿斯顿发生的', 2, '阿斯顿发', '', '4', '18', '', 5, '1', 0, 9, '1', 'user_阿斯顿发生的.jpg', '0000-00-00 00:00:00', '2014-12-14 07:55:26'),
-(8, 'test2', 'fb351247ccb4bcaeadb70cf72a957699', '啊', 2, '啊', '啊', '4', ' 17', ' 啊', 5, '0', 0, 9, '1', 'user_test2.jpg', '0000-00-00 00:00:00', '2014-12-15 08:27:37'),
-(9, 'wangyi', '40c7bc25c943b9e8977636aafe5d69e9', '王一', 2, '1111', '111', '2', '17', '111@11.com', 6, '1', 99, 7, '1', 'user_wangyi.jpg', '0000-00-00 00:00:00', '2015-01-17 03:09:18');
+(7, '阿斯顿发生的', '9f10648f089cc3ba57c5ae46ba98e57a', '阿斯顿发生的', 3, '阿斯顿发', '', '4', '18', '', 5, '1', 0, 9, '1', 'user_阿斯顿发生的.jpg', '0000-00-00 00:00:00', '2014-12-14 07:55:26'),
+(8, 'test2', 'fb351247ccb4bcaeadb70cf72a957699', '啊', 3, '啊', '啊', '4', ' 17', ' 啊', 5, '0', 0, 9, '1', 'user_test2.jpg', '0000-00-00 00:00:00', '2014-12-15 08:27:37'),
+(9, 'wangyi', '40c7bc25c943b9e8977636aafe5d69e9', '王一', 3, '1111', '111', '2', '17', '111@11.com', 6, '1', 99, 7, '1', 'user_wangyi.jpg', '0000-00-00 00:00:00', '2015-01-17 03:09:18');
 
 -- --------------------------------------------------------
 
@@ -436,15 +457,16 @@ CREATE TABLE IF NOT EXISTS `ldb_user_roles` (
   `permission` text,
   `disabled` enum('true','false') NOT NULL DEFAULT 'false',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `ldb_user_roles`
 --
 
 INSERT INTO `ldb_user_roles` (`id`, `role_name`, `role_memo`, `permission`, `disabled`) VALUES
-(1, '管理员', '有所有权限啊啊', 'a:8:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"4";i:4;s:1:"5";i:5;s:1:"6";i:6;s:1:"7";i:7;s:1:"8";}', 'false'),
-(2, 'test', 'xx', 'a:3:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";}', 'false');
+(1, '管理员', '有所有权限啊啊', 'a:9:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"4";i:4;s:1:"5";i:5;s:1:"6";i:6;s:1:"7";i:7;s:1:"8";i:8;s:2:"10";}', 'false'),
+(3, 'test', 'test', 'a:8:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"5";i:4;s:1:"6";i:5;s:1:"8";i:6;s:1:"9";i:7;s:2:"10";}', 'false'),
+(4, '啊付笛声', '完全而', 'a:1:{i:0;s:1:"9";}', 'false');
 
 -- --------------------------------------------------------
 
@@ -467,6 +489,7 @@ CREATE TABLE IF NOT EXISTS `ldb_work_order_list` (
   `desc` text NOT NULL COMMENT '使用人描述',
   `schedule` enum('0','1','2') NOT NULL DEFAULT '0' COMMENT '事件反馈，0已完成;1部分完成;2未完成，默认0',
   `memo` text NOT NULL COMMENT '备注',
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_2` (`id`),
   KEY `id` (`id`),
@@ -477,15 +500,15 @@ CREATE TABLE IF NOT EXISTS `ldb_work_order_list` (
 -- 转存表中的数据 `ldb_work_order_list`
 --
 
-INSERT INTO `ldb_work_order_list` (`id`, `event_id`, `custom_department`, `arrive_time`, `back_time`, `symptom`, `failure_mode`, `failure_level`, `failure_analysis`, `risk_profile`, `solution`, `desc`, `schedule`, `memo`) VALUES
-(1, 3, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '0', '0', '', '', '', '', '0', ''),
-(4, 1, '发生大幅', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '萨范德', '0', '1', '阿斯大法萨法是否', '啊撒旦发撒旦发撒旦发萨法上访', '阿斯顿发生', '阿斯顿发', '2', '阿斯顿发送方撒发萨法上访萨芬撒旦发撒旦发'),
-(3, 1, '测试部', '2015-01-15 00:00:00', '2015-01-15 00:00:00', '我额头巍峨', '0', '0', '出大事了', '严重', '换机器', '不行啦', '0', '去问额外确认'),
-(5, 2, '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '0', '0', '1', '1', '1', '1', '0', '1'),
-(6, 6, '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '0', '1', '1', '1', '1', '1', '0', '1'),
-(7, 5, '运维部', '2015-01-31 10:45:47', '2015-01-31 22:50:31', '机器坏了', '2', '2', '电源线断了', '高', '更换电源线', '问题不大', '2', '缺货'),
-(8, 5, '运维部', '2015-01-31 10:45:47', '2015-01-31 22:50:31', '机器坏了', '2', '2', '电源线断了', '高', '更换电源线', '问题不大', '2', '缺货'),
-(9, 19, '平台部', '2015-02-02 04:30:06', '2015-02-12 23:30:06', '系统错误', '1', '2', '系统错误', '系统错误', '系统错误', '系统错误', '0', '系统错误');
+INSERT INTO `ldb_work_order_list` (`id`, `event_id`, `custom_department`, `arrive_time`, `back_time`, `symptom`, `failure_mode`, `failure_level`, `failure_analysis`, `risk_profile`, `solution`, `desc`, `schedule`, `memo`, `date`) VALUES
+(1, 3, '', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '0', '0', '', '', '', '', '0', '', '0000-00-00 00:00:00'),
+(4, 1, '发生大幅', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '萨范德', '0', '1', '阿斯大法萨法是否', '啊撒旦发撒旦发撒旦发萨法上访', '阿斯顿发生', '阿斯顿发', '2', '阿斯顿发送方撒发萨法上访萨芬撒旦发撒旦发', '0000-00-00 00:00:00'),
+(3, 1, '测试部', '2015-01-15 00:00:00', '2015-01-15 00:00:00', '我额头巍峨', '0', '0', '出大事了', '严重', '换机器', '不行啦', '0', '去问额外确认', '2015-01-26 16:00:00'),
+(5, 2, '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '0', '0', '1', '1', '1', '1', '0', '1', '2015-01-04 16:00:00'),
+(6, 6, '1', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '1', '0', '1', '1', '1', '1', '1', '0', '1', '2015-01-13 16:00:00'),
+(7, 5, '运维部', '2015-01-31 10:45:47', '2015-01-31 22:50:31', '机器坏了', '2', '2', '电源线断了', '高', '更换电源线', '问题不大', '2', '缺货', '2015-01-31 16:00:00'),
+(8, 5, '运维部', '2015-01-31 10:45:47', '2015-01-31 22:50:31', '机器坏了', '2', '2', '电源线断了', '高', '更换电源线', '问题不大', '2', '缺货', '2015-02-01 16:00:00'),
+(9, 19, '平台部', '2015-02-02 04:30:06', '2015-02-12 23:30:06', '系统错误', '1', '2', '系统错误', '系统错误', '系统错误', '系统错误', '0', '系统错误', '2015-02-15 16:00:00');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -646,24 +646,6 @@ class Event extends MY_Controller {
                     if($val['rel_fee']){
                         $rel_total += $val['rel_fee'];
                     }else{
-                        $rel_total += $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
-                    }
-                }
-            }
-        }
-        $result[] = $total;
-        $result[] = $rel_total;
-        return $result;$total = 0;
-        $rel_total = 0;
-        $where = array('event_id' => $event_id);
-        $work_order_list = $this->Event_model->get_work_order_list($where);
-        foreach ($work_order_list as $key => $value) {
-            foreach ($value['bill_order_list'] as $k => $val) {
-                $total = $total + $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
-                if($val['status'] == 2){
-                    if($val['rel_fee']){
-                        $rel_total += $val['rel_fee'];
-                    }else{
                         $rel_total = $rel_total + $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
                     }
                 }

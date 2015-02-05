@@ -48,7 +48,8 @@ class Event_model extends CI_Model {
             $value['short_name'] = $res4['short_name'];
             $query4 = $this->db->get_where('user', array('id'=>$value['user_id']));
             $res4 = $query4->row_array();
-            $value['user_name'] = $res4['username'];  
+            $value['user_name'] = $res4['username'];
+            $value['name'] = $res4['name'];
             $res[$key] = $value;
         }
         $this->db->where($where);
@@ -158,7 +159,22 @@ class Event_model extends CI_Model {
     public function get_bill_order_list($where){
         $query = $this->db->get_where('biil_order_list', $where);
         $res = $query->result_array();
+        foreach ($res as $key => $value) {
+            $value['transportation_name'] = $this->get_setting_name($value['transportation']);
+            $res[$key] = $value;
+        }
         return $res;         
+    }
+
+    public function get_setting_name($id){
+        $where = array('id'=>$id);
+        $query = $this->db->get_where('setting_list', $where);
+        $res = $query->row_array();
+        if($res){
+            return $res['name'];             
+        }else{
+            return $res;
+        }
     }
 
     public function insert_check_event_info($params){

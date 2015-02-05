@@ -6,11 +6,19 @@ class Role_model extends CI_Model {
         $this->load->database();
     }
 
+    public function get_roles($where,$offset=false){
+        $this->db->order_by("id", "desc");
+        if($offset!==false){
+            $query = $this->db->get_where('user_roles', $where,ROW_SHOW_NUM,$offset);
 
-    public function get_roles($where){
-        $query = $this->db->get_where('user_roles', $where);
+        }else{
+            $query = $this->db->get_where('user_roles', $where);
+        }        
         $res = $query->result_array();
-        return $res;
+        $this->db->where($where);
+        $this->db->from('user_roles');
+        $count = $this->db->count_all_results();
+        return array('count'=>$count,"info"=>$res);  
     }
 
 
@@ -169,15 +177,21 @@ class Role_model extends CI_Model {
     public function update_department($where,$data){
     	$res = $this->db->update('department_list', $data,$where); 
         return $res;
-    }    
+    }
 
+    public function get_event_list($where,$offset=false){
+        $this->db->order_by("id", "desc");
+        if($offset!==false){
+            $query = $this->db->get_where('event_type_list', $where,ROW_SHOW_NUM,$offset);
 
-
-
-    public function get_event_list($where){
-        $query = $this->db->get_where('event_type_list', $where);
+        }else{
+            $query = $this->db->get_where('event_type_list', $where);
+        }        
         $res = $query->result_array();
-        return $res;       	
+        $this->db->where($where);
+        $this->db->from('event_type_list');
+        $count = $this->db->count_all_results();
+        return array('count'=>$count,"info"=>$res);
     }
 
     public function get_event_info($where){
@@ -187,12 +201,12 @@ class Role_model extends CI_Model {
     }
     
     public function add_event($data){
-    	$this->db->insert('event_list', $data);     	
+    	$this->db->insert('event_type_list', $data);     	
     }
 
     public function delete_event($data){
     	if (is_array($data)){
-    		$res = $this->db->delete('event_list', $data); 
+    		$res = $this->db->delete('event_type_list', $data); 
     		return $res;
     	}else{
     		return false;
@@ -200,17 +214,23 @@ class Role_model extends CI_Model {
     }
 
     public function update_event($where,$data){
-    	$res = $this->db->update('event_list', $data,$where); 
+    	$res = $this->db->update('event_type_list', $data,$where); 
         return $res;
     }
 
+    public function get_setting_list($where,$offset=false){
+        $this->db->order_by("id", "desc");
+        if($offset!==false){
+            $query = $this->db->get_where('setting_list', $where,ROW_SHOW_NUM,$offset);
 
-
-
-    public function get_setting_list($where){
-        $query = $this->db->get_where('setting_list', $where);
+        }else{
+            $query = $this->db->get_where('setting_list', $where);
+        }
         $res = $query->result_array();
-        return $res;       	
+        $this->db->where($where);
+        $this->db->from('setting_list');
+        $count = $this->db->count_all_results();
+        return array('count'=>$count,"info"=>$res);
     }
 
     public function get_setting_info($where){
@@ -220,7 +240,7 @@ class Role_model extends CI_Model {
     }
     
     public function add_setting($data){
-    	$this->db->insert('setting_list', $data);     	
+    	$this->db->insert('setting_list', $data);
     }
 
     public function delete_setting($data){
@@ -235,10 +255,85 @@ class Role_model extends CI_Model {
     public function update_setting($where,$data){
     	$res = $this->db->update('setting_list', $data,$where); 
         return $res;
-    }  
+    }
 
+    public function get_time_list($where,$offset=false){
+        $this->db->order_by("id", "desc");
+        if($offset!==false){
+            $query = $this->db->get_where('date_setting', $where,ROW_SHOW_NUM,$offset);
 
+        }else{
+            $query = $this->db->get_where('date_setting', $where);
+        }
+        $res = $query->result_array();
+        $this->db->where($where);
+        $this->db->from('date_setting');
+        $count = $this->db->count_all_results();
+        return array('count'=>$count,"info"=>$res);
+    }
 
+    public function add_time($data){
+        $this->db->insert('date_setting', $data);
+    }
+
+    public function delete_time($data){
+        if (is_array($data)){
+            $res = $this->db->delete('date_setting', $data); 
+            return $res;
+        }else{
+            return false;
+        }       
+    }
+
+    public function update_time($where,$data){
+        $res = $this->db->update('date_setting', $data,$where); 
+        return $res;
+    }
+
+    public function get_time_info($where){
+        $query = $this->db->get_where('date_setting', $where);
+        $res = $query->row_array();
+        return $res;            
+    }
+
+    public function get_doc_list($where,$offset=false){
+        $this->db->order_by("id", "desc");
+        if($offset!==false){
+            $query = $this->db->get_where('doc_list', $where,ROW_SHOW_NUM,$offset);
+
+        }else{
+            $query = $this->db->get_where('doc_list', $where);
+        }
+        $res = $query->result_array();
+        $this->db->where($where);
+        $this->db->from('doc_list');
+        $count = $this->db->count_all_results();
+        return array('count'=>$count,"info"=>$res);
+    }
+
+    public function add_doc($data){
+        $this->db->insert('doc_list', $data);
+    }
+
+    public function delete_doc($data){
+        if (is_array($data)){
+            $res = $this->db->delete('doc_list', $data); 
+            return $res;
+        }else{
+            return false;
+        }       
+    }
+
+    public function update_doc($where,$data){
+        $res = $this->db->update('doc_list', $data,$where); 
+        return $res;
+    }
+
+    public function get_doc_info($where){
+        $query = $this->db->get_where('doc_list', $where);
+        $res = $query->row_array();
+        return $res;            
+    }    
 
 
 }

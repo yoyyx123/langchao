@@ -16,8 +16,10 @@ class User_model extends CI_Model {
     public function get_user_info($where){
         $query = $this->db->get_where('user', $where);
         $res = $query->row_array();
-        $res['department_name'] = $this->get_setting_name($res['department']);
-        $res['position_name'] = $this->get_setting_name($res['position']);        
+        if($res){
+            $res['department_name'] = $this->get_setting_name($res['department']);
+            $res['position_name'] = $this->get_setting_name($res['position']);              
+        }
         return $res;       
     }
 
@@ -46,7 +48,11 @@ class User_model extends CI_Model {
         $where = array('id'=>$id);
         $query = $this->db->get_where('setting_list', $where);
         $res = $query->row_array();
-        return $res['name']; 
+        if($res){
+            return $res['name'];             
+        }else{
+            return $res;
+        }
     }
 
     public function get_roles_name($id){

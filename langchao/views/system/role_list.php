@@ -23,17 +23,21 @@
             <tbody>
                 <?php $i=1;foreach ($role_list as $key => $value) {?>
                 <tr>
-                    <td><?php echo $value['role_id'];?></td>
+                    <td><?php echo $i;?></td>
                     <td><?php echo $value['role_name'];?></td>
                     <td><?php echo $value['role_memo'];?></td>
-                    <td><a class="btn btn-info doedit" role_id='<?php echo $value['role_id'];?>'>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-danger dodelete" role_id='<?php echo $value['role_id'];?>'>删除</a>
+                    <td><a class="btn btn-info doedit" role_id='<?php echo $value['id'];?>'>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn-danger dodelete" role_id='<?php echo $value['id'];?>'>删除</a>
                     </td>
                 </tr>
                 <div class="clearfix"></div><br>
                 <?php $i++;} ?>
-
             </tbody>
+            <tbody>
+                <tr>
+                    <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                </tr>
+            </tbody>            
         </table>
     </div>
 </div>
@@ -42,6 +46,20 @@
 </div>
 
 <script type="text/javascript">
+
+var sel_time_data = function (per_page) {
+    var url = '<?php echo site_url("ctl=system&act=role_list");?>';
+    var getobj = {};
+    //getobj.from_node_id=$('#from_node_id_searsh').val();
+    if(per_page>0){
+        getobj.per_page=per_page;
+    }
+    jQuery.each(getobj, function(k,v) {
+        url = url+"&"+k+"="+v;
+    });
+    window.location.href = url;
+}
+
 $(function() {
         $(".dodelete").click(function() {
          if(confirm("确认删除吗")){
