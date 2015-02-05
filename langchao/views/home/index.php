@@ -13,10 +13,10 @@
                 <h2><i></i></h2>
             </div>
             <div class="box-content row">
-                <div class="col-xs-6 col-md-2" style="text-align:center;">
+                <div class="col-lg-3 col-md-2" style="text-align:center;">
                     <img height="150px" src="<?php echo base_url('upload/img/userlogo').'/'.$user_data['img'];?>" />
                 </div>
-                <div class="col-lg-7 col-md-12">
+                <div class="col-lg-9 col-md-10">
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
