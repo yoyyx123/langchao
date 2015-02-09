@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2015 年 02 月 05 日 11:32
+-- 生成日期: 2015 年 02 月 10 日 01:24
 -- 服务器版本: 5.5.40
 -- PHP 版本: 5.2.17
 
@@ -155,6 +155,9 @@ INSERT INTO `ldb_date_setting` (`id`, `type`, `name`, `value`, `date`) VALUES
 CREATE TABLE IF NOT EXISTS `ldb_doc_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL COMMENT '文档名称',
+  `look` int(11) NOT NULL DEFAULT '0' COMMENT '浏览次数',
+  `download` int(11) NOT NULL DEFAULT '0' COMMENT '下载次数',
+  `type` varchar(50) NOT NULL COMMENT '文件类型',
   `path` varchar(50) NOT NULL COMMENT '文档存放路径',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -164,9 +167,9 @@ CREATE TABLE IF NOT EXISTS `ldb_doc_list` (
 -- 转存表中的数据 `ldb_doc_list`
 --
 
-INSERT INTO `ldb_doc_list` (`id`, `name`, `path`, `date`) VALUES
-(5, '问题列表', './upload/doc/1_1423101007.doc', '2015-02-05 01:50:07'),
-(6, '登录显示', './upload/doc/1_1423101045.xlsx', '2015-02-05 01:50:45');
+INSERT INTO `ldb_doc_list` (`id`, `name`, `look`, `download`, `type`, `path`, `date`) VALUES
+(5, '问题列表', 0, 0, '', './upload/doc/1_1423101007.doc', '2015-02-05 01:50:07'),
+(6, '登录显示', 0, 0, '', './upload/doc/1_1423101045.xlsx', '2015-02-05 01:50:45');
 
 -- --------------------------------------------------------
 
@@ -338,8 +341,7 @@ INSERT INTO `ldb_setting_list` (`id`, `name`, `display`, `type`, `sort`) VALUES
 (4, '信息部', '1', 'department', NULL),
 (5, '北京市', '1', 'city', NULL),
 (6, '上海市', '1', 'city', NULL),
-(7, '9-12', '1', 'worktime', NULL),
-(8, '6-18', '1', 'worktime', NULL),
+(7, '09:00-17:00', '1', 'worktime', NULL),
 (9, '分行', '1', 'membertype', NULL),
 (10, '支行', '1', 'membertype', NULL),
 (11, '飞机', '1', 'traffic', NULL),

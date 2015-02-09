@@ -498,7 +498,7 @@ class System extends MY_Controller {
         $file = $path."/".$filename;
         $result = move_uploaded_file($_FILES["file"]["tmp_name"],$file);
 		if($result){
-			$sql = array("name"=>trim($name),"path"=>$file);
+			$sql = array("name"=>trim($name),"path"=>$file,"type"=>$type);
 			$result = $this->Role_model->add_doc($sql);
 		}
 		$redirect_url = 'ctl=system&act=doc_list';

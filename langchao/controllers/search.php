@@ -240,16 +240,7 @@ class Search extends MY_Controller {
         $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$event['id']));
         foreach ($work_order_list as $key => $value) {
             $tmp = strtotime($value['back_time']) - strtotime($value['arrive_time']);
-            $int_tmp =  intval($tmp/3600);
-            $less = $tmp-($int_tmp*3600);
-            $less_int =  intval($less/60);
-            if ($less_int>45){
-                $less_tmp = 1;
-            }elseif($less_int<=45 && $less_int>=15){
-                $less_tmp = 0.5;
-            }else{
-                $less_tmp = 0;
-            }
+            list($int_tmp,$less_tmp) = $this->get_time_format($tmp);
             $date = substr($value['back_time'],0,10);
             $holiday_list = $this->Event_model->get_holiday_list();
             $weekend_list = explode('_', WEEKEND);
@@ -258,12 +249,31 @@ class Search extends MY_Controller {
             }elseif(in_array(date("N",strtotime($date)), $weekend_list)){
                 $weekend_more = $weekend_more+$int_tmp+$less_tmp;
             }else{
+                $tmp_time = $this->Event_model->get_work_time();
+                $start
                 $week_more = $week_more+$int_tmp+$less_tmp;
             }
         }
         $res['week_more'] = $week_more;
         $res['weekend_more'] = $weekend_more;
         $res['holiday_more'] = $holiday_more;
+        return $res;
+    }
+
+    public function get_time_format($tmp){
+        $res = array();
+        $int_tmp =  intval($tmp/3600);
+        $less = $tmp-($int_tmp*3600);
+        $less_int =  intval($less/60);
+        if ($less_int>45){
+            $less_tmp = 1;
+        }elseif($less_int<=45 && $less_int>=15){
+            $less_tmp = 0.5;
+        }else{
+            $less_tmp = 0;
+        }
+        $res[] = $int_tmp;
+        $res[] = $less_tmp;
         return $res;
     }
 
@@ -295,24 +305,30 @@ class Search extends MY_Controller {
         $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
         $this->data['name'] = $user['name'];
         $this->data['department_id'] = $data['department_id'];
-        $this->data['event_month'] = $data['event_month'];        
-        $where = array('user_id'=>$data['user_id'],'event_month'=>$data['event_month']);
-        $result = array();
-        $event_list = $this->Event_model->get_event_list($where);
-        foreach ($event_list['info'] as $key => $value) {
-            $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$value['id']));
-            foreach ($work_order_list as $k => $val) {
-                if($data['data_type']=="work_time"){
-                    $result[] = $this->do_data_export_worktime($val,$data);
-                }elseif($data['data_type']=="fee"){
-                    foreach($val['bill_order_list'] as $m=>$n){
-                        $result[] = $n;                        
+        $this->data['event_month'] = $data['event_month'];
+        if($data['data_type']=="fee"){
+            $where = array('user_id'=>$data['user_id'],'event_month'=>$data['event_month']);
+            $result = array();
+            $event_list = $this->Event_model->get_event_list($where);
+            foreach ($event_list['info'] as $key => $value) {
+                $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$value['id']));
+                foreach ($work_order_list as $k => $val) {
+                    if($data['data_type']=="work_time"){
+                        $result[] = $this->do_data_export_worktime($val,$data);
+                    }elseif($data['data_type']=="fee"){
+                        foreach($val['bill_order_list'] as $m=>$n){
+                            $result[] = $this->format_bill_data($n,$user['name']);
+                        }
                     }
                 }
             }
-        }
-        if (isset($data['is_export']) && $data['is_export']){
-            $this->export_xls($result);
+            if(isset($data['is_export']) && $data['is_export']){
+                $msg[$this->data['name']] = $result;
+                $title = array("使用人","出发时间","到达时间","起始地","目的地","交通费","住宿费","加班餐费","其他费用","备注","单据编号","交通方式","类型");
+                $this->export_xls($msg,$title);  
+            }       
+        }elseif($data['data_type']=="work_time"){
+
         }
         $this->pages_conf(count($result));
         $info_list = array();
@@ -326,7 +342,35 @@ class Search extends MY_Controller {
         $this->layout->view('search/do_data_export',$this->data);
     }
 
-    public function export_xls($msg){
+    public function format_bill_data($msg,$user_name){
+        $format = array(
+            "go_time" => "go_time",
+            "arrival_time"=>"arrival_time",
+            "start_place" => "start_place",
+            "arrival_place"=>"arrival_place",
+            "transportation_fee"=>"transportation_fee",
+            "hotel_fee" =>"hotel_fee",
+            "food_fee"=>"food_fee",
+            "other_fee"=>"other_fee",
+            "memo"=>"memo",
+            "bill_no"=>"bill_no",
+            );
+        $res['user_name'] = $user_name;
+        foreach ($format as $key => $value) {
+            $res[$key] = $msg[$value];
+        }
+        $res['transportation_name'] = $this->Event_model->get_setting_name($msg['transportation']);
+        if($msg['type'] == 0){
+            $res['type'] = "去程";
+        }else{
+            $res['type'] = "返程";
+        }
+        return $res;
+    }
+
+
+
+    public function export_xls($msg,$title){
         require_once dirname(__FILE__) . '/../libraries/PHPExcel.php';
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
@@ -336,36 +380,28 @@ class Search extends MY_Controller {
                                      ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
                                      ->setKeywords("office 2007 openxml php")
                                      ->setCategory("Test result file");
+        $i=0;
+        foreach ($msg as $key => $value) {
+            $objPHPExcel->createSheet($i);            
+            $objPHPExcel->setActiveSheetIndex($i)
+                ->fromArray(
+                    $title,
+                    NULL,
+                    'A1'
+                );            
+            $arrayData = $value;
+            $objPHPExcel->setActiveSheetIndex($i)
+                ->fromArray(
+                    $arrayData,
+                    NULL,
+                    'A2'
+                );
+            // Rename worksheet
+            //$objPHPExcel->getActiveSheet()->setTitle(iconv("UTF-8", "GB2312//IGNORE", $key) );
+            $objPHPExcel->getActiveSheet()->setTitle($key);
+            $i++;
+        }
 
-        $objPHPExcel->createSheet(0);
-        // Add some data
-        /**
-        $objPHPExcel->setActiveSheetIndex(1)
-                    ->setCellValue('A1', 'Hello')
-                    ->setCellValue('B2', 'world!')
-                    ->setCellValue('C1', 'Hello')
-                    ->setCellValue('D2', 'world!');
-
-        **/
-        $arrayData = array(
-            array(NULL, 2010, 2011, 2012),
-            array('Q1',   12,   15,   21),
-            array('Q2',   56,   73,   86),
-            array('Q3',   52,   61,   69),
-            array('Q4',   30,   32,    0),
-        );
-
-        $arrayData = $msg;
-        $objPHPExcel->setActiveSheetIndex(0)
-            ->fromArray(
-                $arrayData,  // The data to set
-                NULL,        // Array values with this value will not be set
-                'A1'         // Top left coordinate of the worksheet range where
-                             //    we want to set these values (default is A1)
-            );
-
-        // Rename worksheet
-        $objPHPExcel->getActiveSheet()->setTitle('sheet');
 
         $objPHPExcel->setActiveSheetIndex(0);
 

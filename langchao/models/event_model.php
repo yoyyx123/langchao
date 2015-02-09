@@ -177,6 +177,16 @@ class Event_model extends CI_Model {
         }
     }
 
+    public function get_work_time(){
+        $query = $this->db->get_where('setting_list',array("type"=>"worktime"));
+        $res = $query->row_array();
+        if($res){
+            return $res['name'];             
+        }else{
+            return $res;
+        }        
+    }
+
     public function insert_check_event_info($params){
         $this->db->set($params);
         $res = $this->db->insert('event_list');

@@ -224,7 +224,7 @@ $(function() {
             data_type = $('#data_type').val();            
             if (event_month == '') {
                     var n = noty({
-                      text: "y月份必填",
+                      text: "月份必填",
                       type: 'error',
                       layout: 'center',
                       timeout: 1000,

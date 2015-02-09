@@ -38,7 +38,7 @@
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span>云模块</span></a>
                             <ul class="nav nav-pills nav-stacked">
                                 <li><a href="#">浪潮云</a></li>
-                                <li><a href="#">文档管理</a></li>
+                                <li><a href="<?php echo site_url('ctl=cloud&act=doc_download');?>">数据下载</a></li>
                             </ul>
                         </li>
                         <li class="accordion">
