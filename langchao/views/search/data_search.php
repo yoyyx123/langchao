@@ -2,7 +2,8 @@
      <h2>工单列表</h2>
 </div>
 <div class="row">
-    <div class="box col-md-8">
+
+    <div class="box col-md-12">
     <table> 
         <tr>
           <td>
@@ -46,10 +47,18 @@
             </div>
           </div>
         </td>
-        <td><a class="btn btn-info do_search">查询</a></td>
+        <td>
+         <div class="form-group">
+            <div class="input-group">
+              <a class="btn btn-info do_search">查询</a>
+            </div>
+          </div>        
+        
+        </td>
         </tr>     
     </table>
-</div>     
+</div>
+
 
 </div>
 

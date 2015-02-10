@@ -250,8 +250,8 @@ class Search extends MY_Controller {
                 $weekend_more = $weekend_more+$int_tmp+$less_tmp;
             }else{
                 $tmp_time = $this->Event_model->get_work_time();
-                $start
-                $week_more = $week_more+$int_tmp+$less_tmp;
+                $week_more_tmp = $this->get_work_more_time($value['arrive_time'],$value['back_time'],$tmp_time);
+                $week_more = $week_more+$week_more_tmp;
             }
         }
         $res['week_more'] = $week_more;
@@ -260,6 +260,45 @@ class Search extends MY_Controller {
         return $res;
     }
 
+    public function get_work_more_time($start,$end,$worktime){
+        $tmp_int = 0;
+        $tmp = explode("_",$worktime);
+        $work_start = $tmp[0];
+        $work_end = $tmp[1];
+        $start_date = substr($start,0,10);
+        $start_time = substr($start,11);
+        $end_date = substr($end,0,10);
+        $end_time = substr($end,11);
+
+        if($start_date==$end_date){
+            if($work_start>$start_time){
+                $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
+            }
+            if($work_end<$end_time){
+                $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
+            }
+        }elseif($end_date>$start_date){
+            if($work_start>$start_time){
+                $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
+            }
+            $tmp_int += strtotime($start_date." 23:59:59") - strtotime($start_date." ".$work_end);
+            if($end_date>$work_start){
+                $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." 00:00:00");
+            }else{
+                $tmp_int += strtotime($start_date." ".$end_date) - strtotime($start_date." 00:00:00");
+            }
+            if($work_end<$end_time){
+                $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
+            }
+            if(floor((strtotime($end_date." "."00:00:00")-strtotime($start_date." "."00:00:00"))/(3600*24))>1){
+                $n = floor((strtotime($end_date." "."00:00:00")-strtotime($start_date." "."00:00:00"))/(3600*24))-1;
+                $tmp_int += (strtotime($start_date." 23:59:59") - strtotime($start_date." ".$work_end))*$n;
+                $tmp_int += (strtotime($start_date." ".$work_start) - strtotime($start_date." 00:00:00"))*$n;
+            }
+        }
+        list($int_tmp,$less_tmp) = $this->get_time_format($tmp_int);  
+        return ($int_tmp+$less_tmp);      
+    }
     public function get_time_format($tmp){
         $res = array();
         $int_tmp =  intval($tmp/3600);
@@ -306,29 +345,30 @@ class Search extends MY_Controller {
         $this->data['name'] = $user['name'];
         $this->data['department_id'] = $data['department_id'];
         $this->data['event_month'] = $data['event_month'];
-        if($data['data_type']=="fee"){
-            $where = array('user_id'=>$data['user_id'],'event_month'=>$data['event_month']);
-            $result = array();
-            $event_list = $this->Event_model->get_event_list($where);
-            foreach ($event_list['info'] as $key => $value) {
-                $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$value['id']));
-                foreach ($work_order_list as $k => $val) {
-                    if($data['data_type']=="work_time"){
-                        $result[] = $this->do_data_export_worktime($val,$data);
-                    }elseif($data['data_type']=="fee"){
-                        foreach($val['bill_order_list'] as $m=>$n){
-                            $result[] = $this->format_bill_data($n,$user['name']);
-                        }
+        
+        $where = array('user_id'=>$data['user_id'],'event_month'=>$data['event_month']);
+        $result = array();
+        $event_list = $this->Event_model->get_event_list($where);
+        foreach ($event_list['info'] as $key => $value) {
+            $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$value['id']));
+            foreach ($work_order_list as $k => $val) {
+                if($data['data_type']=="work_time"){
+                    $result[] = $this->do_data_export_worktime($val,$data,$user['name']);
+                }elseif($data['data_type']=="fee"){
+                    foreach($val['bill_order_list'] as $m=>$n){
+                        $result[] = $this->format_bill_data($n,$user['name']);
                     }
                 }
             }
-            if(isset($data['is_export']) && $data['is_export']){
-                $msg[$this->data['name']] = $result;
-                $title = array("使用人","出发时间","到达时间","起始地","目的地","交通费","住宿费","加班餐费","其他费用","备注","单据编号","交通方式","类型");
-                $this->export_xls($msg,$title);  
-            }       
-        }elseif($data['data_type']=="work_time"){
-
+        }
+        if(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="fee"){
+            $msg[$this->data['name']] = $result;
+            $title = array("使用人","出发时间","到达时间","起始地","目的地","交通费","住宿费","加班餐费","其他费用","备注","单据编号","交通方式","类型");
+            $this->export_xls($msg,$title);  
+        }elseif(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="work_time"){
+            $msg[$this->data['name']] = $result;
+            $title = array("使用人","日期","到场时间","离场时间","事件描述","工时","平时加班","周末加班","节日加班");
+            $this->export_xls($msg,$title);  
         }
         $this->pages_conf(count($result));
         $info_list = array();
@@ -426,14 +466,20 @@ class Search extends MY_Controller {
         exit;        
     }
 
-    public function do_data_export_worktime($work_order,$data){
+    public function do_data_export_worktime($work_order,$data,$user_name){
+        $work = array();
         $worktime_count = $this->do_data_export_worktime_count($work_order);
-        $work_order['worktime_count'] = $worktime_count;
+        $work['user_name'] = $user_name;
+        $work['date'] = $work_order['date'];
+        $work['arrive_time'] = $work_order['arrive_time'];
+        $work['back_time'] = $work_order['back_time'];
+        $work['desc'] = $work_order['desc'];
+        $work['worktime_count'] = $worktime_count;
         list($week_more,$weekend_more,$holiday_more) = $this->do_data_export_worktime_more($work_order);
-        $work_order['week_more'] = $week_more;
-        $work_order['weekend_more'] = $weekend_more;
-        $work_order['holiday_more'] = $holiday_more;
-        return $work_order;
+        $work['week_more'] = $week_more;
+        $work['weekend_more'] = $weekend_more;
+        $work['holiday_more'] = $holiday_more;
+        return $work;
     }
 
     public function do_data_export_worktime_count($work_order){
@@ -477,7 +523,9 @@ class Search extends MY_Controller {
         }elseif(in_array(date("N",strtotime($date)), $weekend_list)){
             $weekend_more = $weekend_more+$int_tmp+$less_tmp;
         }else{
-            $week_more = $week_more+$int_tmp+$less_tmp;
+            $tmp_time = $this->Event_model->get_work_time();
+            $week_more_tmp = $this->get_work_more_time($work_order['arrive_time'],$work_order['back_time'],$tmp_time);
+            $week_more = $week_more+$week_more_tmp;
         }
         $res[] = $week_more;
         $res[] = $weekend_more;

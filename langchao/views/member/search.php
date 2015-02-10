@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="box col-md-8">
+    <div class="box col-md-12">
         <form class="form-inline">
           <div class="form-group">
             <div class="input-group">

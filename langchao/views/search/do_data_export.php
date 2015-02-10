@@ -15,7 +15,7 @@
               <th><?echo $event_month;?></th>
               <th>状态</th>
               <th></th>
-              <th colspan="9"></th>
+              <th colspan="7"></th>
             </tr>          
             <tr>
                 <th>序号</th>
@@ -49,12 +49,12 @@
             </tr>
             <? } ?>
         </tbody>
-        
-        <tbody>
-            <tr>
-                <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
-            </tr>
-        </tbody>
+          <tbody>
+              <tr>
+                  <td colspan="9"><?php $this->load->view('elements/pager'); ?></td>
+                  <td><a class="btn btn-info do_export">导出</a></td>
+              </tr>
+          </tbody>
     </table>
     <?}elseif ($data_type=="fee") {?>
       <table class="table table-bordered">
