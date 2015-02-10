@@ -104,8 +104,8 @@
                             <tr>
                                 <td>工作地点</td>
                                 <td>
-                                    <div id="addrdiv" class="input-group col-xs-4">
-                                    <select name="addr" id="addr">
+                                    <div id="addrdiv" class="input-group col-xs-8">
+                                    <select name="addr" id="addr" class="form-control">
                                        <?php foreach ($city_list as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                         <?php } ?>
@@ -116,7 +116,7 @@
                             <tr>
                                 <td>工作类型</td>
                                 <td>
-                                    <div id="work_typediv" class="input-group col-xs-4">
+                                    <div id="work_typediv" class="input-group col-xs-8">
                                     非驻场<input type="radio" name="work_type" id="work_type" value="0" checked/>&nbsp&nbsp&nbsp
                                     驻场<input type="radio" name="work_type" id="work_type" value="1">
                                     </div>
@@ -125,8 +125,8 @@
                             <tr>
                                 <td>基础报销</td>
                                 <td>
-                                    <div id="expensesdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="基础报销" name="expenses" id="expenses" disabled="disabled">&nbsp&nbsp元
+                                    <div id="expensesdiv" class="input-group col-xs-8">
+                                    <input type="text"  class="form-control" placeholder="基础报销" name="expenses" id="expenses" disabled="disabled">
                                     </div>
                                 </td>
                             </tr>  
@@ -134,7 +134,7 @@
                                 <td>上下班时间</td>
                                 <td>
                                     <div id="work_timediv" class="input-group col-xs-4">
-                                    <select name="work_time" id="work_time">
+                                    <select name="work_time" id="work_time" class="form-control">
                                        <?php foreach ($worktime_list as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                         <?php } ?>

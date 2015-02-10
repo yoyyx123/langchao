@@ -19,32 +19,32 @@
                             <tr>
                                 <td width="110px">客户编号</td>
                                 <td>
-                                    <div id="codediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="客户编号" name="code" id="code">
+                                    <div id="codediv" class="input-group col-xs-8">
+                                    <input type="text"  class="form-control" placeholder="客户编号" name="code" id="code">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>客户全称</td>
                                 <td>
-                                    <div id="namediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="客户全称" name="name" id="name">
+                                    <div id="namediv" class="input-group col-xs-8">
+                                    <input type="text"  class="form-control" placeholder="客户全称" name="name" id="name">
                                     </div>                                    
                                 </td>
                             </tr>
                             <tr>
                                 <td width="80px">客户简称</td>
                                 <td>
-                                    <div id="short_namediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="客户简称" name="short_name" id="short_name">
+                                    <div id="short_namediv" class="input-group col-xs-8">
+                                    <input type="text"  class="form-control" placeholder="客户简称" name="short_name" id="short_name">
                                     </div>
                                 </td>
                             </tr>                          
                             <tr>
                                 <td>客户所属地</td>
                                 <td>
-                                    <div id="citydiv" class="input-group col-xs-4">
-                                    <select name="city" id="city">                                        
+                                    <div id="citydiv" class="input-group col-xs-8">
+                                    <select name="city" id="city" class="form-control">                                        
                                        <?php foreach ($city_list as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                         <?php } ?>
@@ -55,8 +55,8 @@
                             <tr>
                                 <td>客户属性</td>
                                 <td>
-                                    <div id="member_typediv" class="input-group col-xs-4">
-                                    <select name="member_type" id="member_type">
+                                    <div id="member_typediv" class="input-group col-xs-8">
+                                    <select name="member_type" id="member_type"  class="form-control">
                                        <?php foreach ($member_type as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                         <?php } ?>
@@ -67,72 +67,72 @@
                             <tr>
                                 <td>地址</td>
                                 <td>
-                                    <div id="addrdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="地址" name="addr" id="addr">
+                                    <div id="addrdiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="地址" name="addr" id="addr">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>公交/地铁</td>
                                 <td>
-                                    <div id="busdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="公交/地铁" name="bus" id="bus">
+                                    <div id="busdiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="公交/地铁" name="bus" id="bus">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>客户联系人</td>
                                 <td>
-                                    <div id="contactsdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="客户联系人" name="contacts" id="contacts">
+                                    <div id="contactsdiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="客户联系人" name="contacts" id="contacts">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>联系电话</td>
                                 <td>
-                                    <div id="mobilediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="联系电话" name="mobile" id="mobile">
+                                    <div id="mobilediv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="联系电话" name="mobile" id="mobile">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>传真</td>
                                 <td>
-                                    <div id="faxdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="传真" name="fax" id="fax">
+                                    <div id="faxdiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="传真" name="fax" id="fax">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>工程项目负责人</td>
                                 <td>
-                                    <div id="project_mandiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="工程项目负责人" name="project_man" id="project_man">
+                                    <div id="project_mandiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="工程项目负责人" name="project_man" id="project_man">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>联系电话</td>
                                 <td>
-                                    <div id="project_mobilediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="联系电话" name="project_mobile" id="project_mobile">
+                                    <div id="project_mobilediv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="联系电话" name="project_mobile" id="project_mobile">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>日常业务负责人</td>
                                 <td>
-                                    <div id="business_mandiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="日常业务负责人" name="business_man" id="business_man">
+                                    <div id="business_mandiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="日常业务负责人" name="business_man" id="business_man">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>联系电话</td>
                                 <td>
-                                    <div id="business_mobilediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="联系电话" name="business_mobile" id="business_mobile">
+                                    <div id="business_mobilediv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="联系电话" name="business_mobile" id="business_mobile">
                                     </div>
                                 </td>
                             </tr>                                                                                                                                                                                                                              

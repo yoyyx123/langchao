@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="box col-md-12">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th colspan="10" style="text-align:center;"><h4>账户管理</h4></th>

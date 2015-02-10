@@ -4,7 +4,7 @@
     <?php
     if(isset($member)&&!empty($member)){
     ?>    
-    <table class="table table-bordered">
+    <table class="table table-bordered  table-striped">
         <thead>               
             <tr>
                 <th>序号</th>
