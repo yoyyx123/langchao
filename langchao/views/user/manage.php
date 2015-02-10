@@ -13,7 +13,7 @@
                 <tr>
                     <th>账户列表</th>
                     <th colspan="6"></th>
-                    <th>搜索:<input class="form-control" type="text" placeholder="短号或者姓名" name="where" id="where"></th>
+                    <th><input class="form-control" type="text" placeholder="短号或者姓名" name="where" id="where"></th>
                     <th><a class="btn btn-info do_search">查询</a></th>
                 </tr>                
                 <tr>
