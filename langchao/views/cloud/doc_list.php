@@ -20,7 +20,9 @@
                     <td><?php echo $value['name'];?></td>
                     <td><?php echo $value['look'];?></td>
                     <td><?php echo $value['download'];?></td>
-                    <td><a class="btn btn-info doedit" doc_id='<?php echo $value['id'];?>'>预览</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>
+                        <!--<a class="btn btn-info dolook" doc_id='<?php echo $value['id'];?>'>预览</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                        <a class="btn btn-info" href="<?php echo site_url(array('ctl'=>'cloud', 'act'=>'doc_look')).'&id='.$value['id'] ?>" target="_blank" doc_id='<?php echo $value['id'];?>'>预览</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-primary download" doc_id='<?php echo $value['id'];?>'>下载</a>
                     </td>
                 </tr>
@@ -48,12 +50,12 @@ $(function() {
             window.location.href=url;
         });
 
-        $(".doedit").click(function() {
+        $(".dolook").click(function() {
             _self = this;
             $.ajax({
                 type: "POST",
-                url: "<?php echo site_url(array('ctl'=>'member', 'act'=>'edit'))?>"+"&id="+$(this).attr('member_id'),
-                data: "",
+                url: "<?php echo site_url(array('ctl'=>'cloud', 'act'=>'doc_look'))?>",
+                data: "id="+$(this).attr('doc_id'),
                 success: function(result){
                     $("#dialog").html(result);
                     $("#dialog").dialog({

@@ -25,6 +25,22 @@ class Cloud_model extends CI_Model {
         $query = $this->db->get_where('doc_list', $where);
         $res = $query->row_array();      
         return $res;
+    }
+
+    public function add_doc_download_num($where){
+        $query = $this->db->get_where('doc_list', $where);
+        $res = $query->row_array();      
+        $num = $res['download'] + 1;
+        $this->db->where($where);
+        $this->db->update('doc_list', array("download"=>$num));
+    }
+
+    public function add_doc_look_num($where){
+        $query = $this->db->get_where('doc_list', $where);
+        $res = $query->row_array();      
+        $num = $res['look'] + 1;
+        $this->db->where($where);
+        $this->db->update('doc_list', array("look"=>$num));
     }    
 
 

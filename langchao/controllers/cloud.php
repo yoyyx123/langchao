@@ -17,6 +17,7 @@ class Cloud extends MY_Controller {
         $data = $this->security->xss_clean($_GET);
         if(isset($data['type']) && $data['type']=="download"){
             $doc = $this->Cloud_model->get_doc_info(array("id"=>$data['id']));
+            $this->Cloud_model->add_doc_download_num(array("id"=>$data['id']));
             header("location:".$doc['path']);
         }
         $this->data['user_data'] = $this->session->userdata;
@@ -26,9 +27,14 @@ class Cloud extends MY_Controller {
         $this->layout->view('cloud/doc_list',$this->data);        
     }
 
-    public function download(){
-
-        
+    public function doc_look(){
+        $data = $this->security->xss_clean($_GET);
+        $doc = $this->Cloud_model->get_doc_info(array("id"=>$data['id']));
+        $file = $doc['path'];
+        $this->Cloud_model->add_doc_look_num(array("id"=>$data['id']));
+        header('Content-type: application/pdf');
+        header('filename='.$file);
+        readfile($file);
     }
 
 }
