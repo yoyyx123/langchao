@@ -59,7 +59,13 @@
             </div>
           </div>
         </td>        
-        <td><a class="btn btn-info do_search">查询</a></td>
+        <td>
+         <div class="form-group">
+            <div class="input-group">
+              <a class="btn btn-info do_search">查询</a>
+            </div>
+          </div>
+        </td>
         </tr>
     </table>
 </div>     

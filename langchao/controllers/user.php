@@ -270,15 +270,15 @@ class User extends MY_Controller {
         $user = $this->User_model->get_user_info($where);
         $this->data['user'] = $user;
         $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
-        $this->data['city_list'] = $city_list;
+        $this->data['city_list'] = $city_list['info'];
         $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
-        $this->data['department_list'] = $department_list;
+        $this->data['department_list'] = $department_list['info'];
         $position_list = $this->Role_model->get_setting_list(array("type"=>"position"));      
-        $this->data['position_list'] = $position_list;        
+        $this->data['position_list'] = $position_list['info'];        
         $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
-        $this->data['worktime_list'] = $worktime_list;        
+        $this->data['worktime_list'] = $worktime_list['info'];        
         $role_list = $this->Role_model->get_roles(array());
-        $this->data['role_list'] = $role_list;
+        $this->data['role_list'] = $role_list['info'];
         if(isset($data['is_search'])&&!empty($data['is_search'])){
             $this->layout->view('user/edit',$this->data);
         }else{

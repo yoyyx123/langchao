@@ -18,9 +18,9 @@ class Member extends MY_Controller {
 
     public function add(){
         $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
-        $this->data['city_list'] = $city_list;
+        $this->data['city_list'] = $city_list['info'];
         $member_type = $this->Role_model->get_setting_list(array("type"=>"membertype"));      
-        $this->data['member_type'] = $member_type;  
+        $this->data['member_type'] = $member_type['info'];  
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('member/add',$this->data);
     }
@@ -69,9 +69,9 @@ class Member extends MY_Controller {
         $this->data['user_data'] = $this->session->userdata;
         $this->data['member'] = $member;
         $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
-        $this->data['city_list'] = $city_list;
+        $this->data['city_list'] = $city_list['info'];
         $member_type = $this->Role_model->get_setting_list(array("type"=>"membertype"));      
-        $this->data['member_type'] = $member_type;
+        $this->data['member_type'] = $member_type['info'];
         $this->load->view('member/edit',$this->data);
     }
 

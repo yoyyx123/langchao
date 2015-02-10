@@ -150,18 +150,19 @@ class MY_Controller extends CI_Controller {
 		    redirect('ctl=user&act=login');
  	        exit();
 	    }
-        /**
-
+        
+/**
 		if(!empty($username)){
 
 			$user_info =  $this->session->all_userdata();
-			if($user_info['action']!='all'){
-				$user_info['action'] = explode(',',$user_info['action']);
+			print_r($user_info);
+			if($user_info['act']!='all'){
+				$user_info['act'] = explode(',',$user_info['act']);
 			}
 			$this->data['user_info'] = $user_info;
 		}
-		**/
-
+		
+**/
 		$per_page = !empty($this->getdata['per_page']) ? $this->getdata['per_page'] : 0;
 		$this->per_page = $per_page;
 		$this->limit = $per_page . ',' . ROW_SHOW_NUM;
