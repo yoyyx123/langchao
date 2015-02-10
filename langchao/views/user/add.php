@@ -20,15 +20,15 @@
                             <tr>
                                 <td width="80px">帐号</td>
                                 <td>
-                                    <div id="userdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="帐号" name="username" id="username">
+                                    <div id="userdiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="帐号" name="username" id="username">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>姓名</td>
                                 <td>
-                                    <div id="namediv" class="input-group col-xs-4">
+                                    <div id="namediv" class="input-group col-xs-8">
                                     <input type="text" placeholder="姓名" name="name" id="name">
                                     </div>                                    
                                 </td>

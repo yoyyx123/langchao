@@ -176,15 +176,15 @@ class User extends MY_Controller {
 
     public function add(){
         $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));      
-        $this->data['city_list'] = $city_list;
+        $this->data['city_list'] = $city_list['info'];
         $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
-        $this->data['department_list'] = $department_list;
+        $this->data['department_list'] = $department_list['info'];
         $position_list = $this->Role_model->get_setting_list(array("type"=>"position"));      
-        $this->data['position_list'] = $position_list;           
+        $this->data['position_list'] = $position_list['info'];           
         $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
-        $this->data['worktime_list'] = $worktime_list;        
+        $this->data['worktime_list'] = $worktime_list['info'];        
         $role_list = $this->Role_model->get_roles(array());
-        $this->data['role_list'] = $role_list;
+        $this->data['role_list'] = $role_list['info'];
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('user/add',$this->data);
     }
