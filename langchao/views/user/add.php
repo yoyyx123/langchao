@@ -29,39 +29,39 @@
                                 <td>姓名</td>
                                 <td>
                                     <div id="namediv" class="input-group col-xs-8">
-                                    <input type="text" placeholder="姓名" name="name" id="name">
+                                    <input type="text" class="form-control" placeholder="姓名" name="name" id="name">
                                     </div>                                    
                                 </td>
                             </tr>
                             <tr>
                                 <td width="80px">密码</td>
                                 <td>
-                                    <div id="passworddiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="密码" name="password" id="password">
+                                    <div id="passworddiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="密码" name="password" id="password">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td>移动电话</td>
                                 <td>
-                                    <div id="mobilediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="移动电话" name="mobile" id="mobile">
+                                    <div id="mobilediv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="移动电话" name="mobile" id="mobile">
                                     </div>
                                 </td>
                             </tr> 
                             <tr>
                                 <td>集团短号</td>
                                 <td>
-                                    <div id="short_numdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="集团短号" name="short_num" id="short_num">
+                                    <div id="short_numdiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="集团短号" name="short_num" id="short_num">
                                     </div>
                                 </td>
                             </tr>                            
                             <tr>
                                 <td>部门</td>
                                 <td>
-                                    <div id="departmentdiv" class="input-group col-xs-4">
-                                    <select name="department" id="department">                                        
+                                    <div id="departmentdiv" class="input-group col-xs-8">
+                                    <select name="department" id="department" class="form-control">                                        
                                        <?php foreach ($department_list as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                         <?php } ?>
@@ -72,8 +72,8 @@
                             <tr>
                                 <td>职位</td>
                                 <td>
-                                    <div id="positiondiv" class="input-group col-xs-4">
-                                    <select name="position" id="position">                                        
+                                    <div id="positiondiv" class="input-group col-xs-8">
+                                    <select name="position" id="position" class="form-control">                                        
                                        <?php foreach ($position_list as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                                         <?php } ?>
@@ -84,8 +84,8 @@
                             <tr>
                                 <td>访问权限</td>
                                 <td>
-                                    <div id="rolesdiv" class="input-group col-xs-4">
-                                    <select name="roles" id="roles">
+                                    <div id="rolesdiv" class="input-group col-xs-8">
+                                    <select name="roles" id="roles" class="form-control">
                                        <?php foreach ($role_list as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>"><?php echo $value['role_name']; ?></option>
                                         <?php } ?>
@@ -96,8 +96,8 @@
                             <tr>
                                 <td>企业邮箱</td>
                                 <td>
-                                    <div id="emaildiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="企业邮箱" name="email" id="email">
+                                    <div id="emaildiv" class="input-group col-xs-8">
+                                    <input type="text" class="form-control" placeholder="企业邮箱" name="email" id="email">
                                     </div>
                                 </td>
                             </tr>
