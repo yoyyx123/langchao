@@ -42,14 +42,14 @@ class Event_model extends CI_Model {
             $value['work_order_num'] = count($res2);
             $query3 = $this->db->get_where('event_type_list', array('id'=>$value['event_type_id']));
             $res3 = $query3->row_array();
-            $value['event_type_name'] = $res3['name'];
+            @$value['event_type_name'] = $res3['name'];
             $query4 = $this->db->get_where('member', array('id'=>$value['member_id']));
             $res4 = $query4->row_array();
-            $value['short_name'] = $res4['short_name'];
+            @$value['short_name'] = $res4['short_name'];
             $query4 = $this->db->get_where('user', array('id'=>$value['user_id']));
             $res4 = $query4->row_array();
-            $value['user_name'] = $res4['username'];
-            $value['name'] = $res4['name'];
+            @$value['user_name'] = $res4['username'];
+            @$value['name'] = $res4['name'];
             $res[$key] = $value;
         }
         $this->db->where($where);

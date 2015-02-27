@@ -29,9 +29,9 @@ class Event extends MY_Controller {
         $this->data['user_data'] = $this->session->userdata;
         $this->data['member'] = $member;    
         $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
-        $this->data['department_list'] = $department_list;
+        $this->data['department_list'] = $department_list['info'];
         $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
-        $this->data['worktime_list'] = $worktime_list;        
+        $this->data['worktime_list'] = $worktime_list['info'];        
         $event_list = $this->Role_model->get_event_list(array("display"=>"1"));      
         $this->data['event_list'] = $event_list;        
         $this->load->view('event/add_event',$this->data);
@@ -213,7 +213,7 @@ class Event extends MY_Controller {
             $this->data['work_order_id'] = $tmp_order['id'];
         }
         $traffic_list = $this->Role_model->get_setting_list(array("type"=>"traffic"));
-        $this->data['traffic_list'] = $traffic_list;
+        $this->data['traffic_list'] = $traffic_list['info'];
         $this->layout->view('event/edit_work_order',$this->data); 
     }
 
@@ -380,7 +380,7 @@ class Event extends MY_Controller {
         $this->data['work_order_list'] = $work_order_list;
         $this->data['work_order_num'] = count($work_order_list);
         $performance_list = $this->Role_model->get_setting_list(array("type"=>"performance"));
-        $this->data['performance_list'] = $performance_list;
+        $this->data['performance_list'] = $performance_list['info'];
         $this->layout->view('event/check_work_order',$this->data);         
     }
 
