@@ -32,8 +32,36 @@ class Role_model extends CI_Model {
             $rs2 = $query2->result_array();
             $rs[$i]['ctl_child'] = $rs2;
         }
-        //var_dump($rs);exit;
+        //print_r($rs);exit;
         return $rs;
+    }
+
+    public function get_permission_list($where){
+        $query = $this->db->get_where('ctl_list', $where);
+        $rs = $query->result_array();
+        foreach ($rs as $key => $value) {
+            $result[$value['id']] = $value;
+        }
+        return $result;
+    }
+
+    public function get_top_list(){
+        $where = array("pid"=>0,"type"=>"ctl");
+        $query = $this->db->get_where('ctl_list', $where);
+        $rs = $query->result_array();
+        foreach ($rs as $key => $value) {
+            $result[] = $value['id'];
+        }
+        return $result;
+    }
+
+    public function get_child_list($where){
+        $query = $this->db->get_where('ctl_list', $where);
+        $rs = $query->result_array();
+        foreach ($rs as $key => $value) {
+            $result[] = $value['id'];
+        }
+        return $result;        
     }
 
     public function add_role($data){

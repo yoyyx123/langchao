@@ -129,7 +129,7 @@ class MY_Controller extends CI_Controller {
         $this->load->library('pagination');
         $this->load->library('session');
         $this->load->helper('url');
-        //$this->load->model('Admin_model');
+        $this->load->model('Role_model');
 		$this->getdata = $_GET;
 		$this->postdata = $_POST;
 		$this->data['getdata'] = $this->security->xss_clean($this->getdata);
@@ -146,11 +146,14 @@ class MY_Controller extends CI_Controller {
  	        exit();
 	    }
 		**/
-	if (!isset($this->getdata['act'])||empty($username) && !in_array($this->getdata['act'], array('login', 'do_login','check_login','send_captcha',''))) {
-		    redirect('ctl=user&act=login');
- 	        exit();
-	    }
-        
+		if (!isset($this->getdata['act'])||empty($username) && !in_array($this->getdata['act'], array('login', 'do_login','check_login','send_captcha',''))) {
+			    redirect('ctl=user&act=login');
+	 	        exit();
+		    }
+		if(!empty($username)){
+			$menu_list = $this->get_menu_list();
+			$this->data['menu_list'] = $menu_list;
+		}        
 /**
 		if(!empty($username)){
 
@@ -168,6 +171,33 @@ class MY_Controller extends CI_Controller {
 		$this->limit = $per_page . ',' . ROW_SHOW_NUM;
 	}
 
+	public function get_menu_list(){
+		$role_id = $this->session->userdata('roles');
+		//print_r(array("id"=>$role_id));
+		$role_info = $this->Role_model->get_role_info(array("id"=>$role_id));
+		$permission = unserialize($role_info['permission']);
+		//print_r($permission);
+		$top_list = $this->Role_model->get_top_list();
+		$permission_list = $this->Role_model->get_permission_list(array("type"=>"ctl"));
+		foreach ($permission as $key => $value) {
+			if (in_array($value, $top_list)){
+				$res[$value] = $permission_list[$value];
+				//$child_list = $this->Role_model->get_child_list(array('pid'=>$value));
+				unset($permission[$key]);
+			}
+		}
+		foreach ($res as $key => $value) {
+			$child_list = $this->Role_model->get_child_list(array('pid'=>$key));
+			foreach ($permission as $k => $val) {
+				if(in_array($val, $child_list)){
+					$res[$key]['child'][] = $permission_list[$val];
+					unset($permission[$k]);
+				}
+			}
+		}
+		//print_r($res);
+		return $res;
+	}
 
 	public function request_post($url,$params){
 
