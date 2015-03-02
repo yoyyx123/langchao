@@ -33,7 +33,7 @@ class Event extends MY_Controller {
         $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
         $this->data['worktime_list'] = $worktime_list['info'];        
         $event_list = $this->Role_model->get_event_list(array("display"=>"1"));      
-        $this->data['event_list'] = $event_list;        
+        $this->data['event_list'] = $event_list['info'];        
         $this->load->view('event/add_event',$this->data);
     }
 
