@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2015 �?03 �?02 �?03:39
+-- 生成日期: 2015 �?03 �?02 �?08:29
 -- 服务器版本: 5.6.17
 -- PHP 版本: 5.5.12
 
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `ldb_ctl_list` (
   `type` enum('ctl','business') NOT NULL DEFAULT 'ctl',
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=30 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=34 ;
 
 --
 -- 转存表中的数据 `ldb_ctl_list`
@@ -133,7 +133,11 @@ INSERT INTO `ldb_ctl_list` (`id`, `name`, `ctl_file`, `ctl_act`, `pid`, `display
 (26, '事件类型/故障分类', 'system', 'event_list', 23, '1', '0', 'ctl', NULL),
 (27, '时间设定', 'system', 'event_list', 23, '1', '0', 'ctl', NULL),
 (28, '文档管理', 'system', 'doc_list', 23, '1', '0', 'ctl', NULL),
-(29, '首页', 'home', 'index', 1, '1', '0', 'ctl', NULL);
+(29, '首页', 'home', 'index', 1, '1', '0', 'ctl', NULL),
+(30, '客户模块', 'member', NULL, 0, '1', '0', 'ctl', NULL),
+(31, '客户添加', 'member', 'add', 30, '1', '0', 'ctl', NULL),
+(32, '客户查询', 'member', 'search', 30, '1', '0', 'ctl', NULL),
+(33, '客户管理', 'member', 'manage', 30, '1', '0', 'ctl', NULL);
 
 -- --------------------------------------------------------
 
@@ -207,7 +211,7 @@ CREATE TABLE IF NOT EXISTS `ldb_event_list` (
   `memo` varchar(500) NOT NULL COMMENT '备注',
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '添加时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=57 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=gbk AUTO_INCREMENT=58 ;
 
 --
 -- 转存表中的数据 `ldb_event_list`
@@ -268,7 +272,8 @@ INSERT INTO `ldb_event_list` (`id`, `member_id`, `department_id`, `user_id`, `ev
 (53, 3, 2, 1, 3, '1', '正式测试1', 7, '2015-02-06', '2015-02', '1', '3', '0', '1', 0, '', '2015-02-01 16:49:40'),
 (54, 3, 2, 1, 3, '1', '正式测试1', 7, '2015-02-09', '2015-02', '1', '3', '0', '1', 0, '', '2015-02-01 16:49:40'),
 (55, 3, 2, 1, 3, '1', '正式测试1', 7, '2015-02-10', '2015-02', '1', '3', '0', '1', 0, '', '2015-02-01 16:49:40'),
-(56, 3, 2, 1, 3, '1', '正式测试1', 7, '2015-02-11', '2015-02', '1', '3', '0', '1', 0, '', '2015-02-01 16:49:40');
+(56, 3, 2, 1, 3, '1', '正式测试1', 7, '2015-02-11', '2015-02', '1', '3', '0', '1', 0, '', '2015-02-01 16:49:40'),
+(57, 3, 4, 1, 6, '0', '和国际化估计', 7, '2015-03-03', '2015-03', '1', '1', '0', '1', 0, '', '2015-03-02 15:22:50');
 
 -- --------------------------------------------------------
 
@@ -283,7 +288,7 @@ CREATE TABLE IF NOT EXISTS `ldb_event_type_list` (
   `display` enum('0','1') NOT NULL DEFAULT '1',
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
 --
 -- 转存表中的数据 `ldb_event_type_list`
@@ -291,7 +296,8 @@ CREATE TABLE IF NOT EXISTS `ldb_event_type_list` (
 
 INSERT INTO `ldb_event_type_list` (`id`, `name`, `department_id`, `display`, `sort`) VALUES
 (3, '网络部署', '信息部', '1', NULL),
-(5, '是否', 'all', '1', NULL);
+(5, '是否', '信息部', '1', NULL),
+(6, '电脑维修', 'all', '1', NULL);
 
 -- --------------------------------------------------------
 
@@ -482,7 +488,7 @@ INSERT INTO `ldb_user_roles` (`id`, `role_name`, `role_memo`, `permission`, `dis
 (1, '管理员', '有所有权限啊啊', 'a:9:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"4";i:4;s:1:"5";i:5;s:1:"6";i:6;s:1:"7";i:7;s:1:"8";i:8;s:2:"10";}', 'false'),
 (3, 'test', 'test', 'a:8:{i:0;s:1:"1";i:1;s:1:"2";i:2;s:1:"3";i:3;s:1:"5";i:4;s:1:"6";i:5;s:1:"8";i:6;s:1:"9";i:7;s:2:"10";}', 'false'),
 (4, '啊付笛声', '完全而', 'a:1:{i:0;s:1:"9";}', 'false'),
-(5, 'test22', 'test', 'a:23:{i:0;s:1:"1";i:1;s:1:"3";i:2;s:2:"29";i:3;s:1:"4";i:4;s:1:"5";i:5;s:1:"6";i:6;s:2:"12";i:7;s:2:"13";i:8;s:2:"14";i:9;s:2:"15";i:10;s:2:"16";i:11;s:2:"17";i:12;s:2:"18";i:13;s:2:"19";i:14;s:2:"20";i:15;s:2:"21";i:16;s:2:"22";i:17;s:2:"23";i:18;s:2:"24";i:19;s:2:"25";i:20;s:2:"26";i:21;s:2:"27";i:22;s:2:"28";}', 'false');
+(5, 'test22', 'test', 'a:27:{i:0;s:1:"1";i:1;s:1:"3";i:2;s:2:"29";i:3;s:1:"4";i:4;s:1:"5";i:5;s:1:"6";i:6;s:2:"12";i:7;s:2:"13";i:8;s:2:"14";i:9;s:2:"15";i:10;s:2:"16";i:11;s:2:"17";i:12;s:2:"18";i:13;s:2:"19";i:14;s:2:"20";i:15;s:2:"21";i:16;s:2:"22";i:17;s:2:"23";i:18;s:2:"24";i:19;s:2:"25";i:20;s:2:"26";i:21;s:2:"27";i:22;s:2:"28";i:23;s:2:"30";i:24;s:2:"31";i:25;s:2:"32";i:26;s:2:"33";}', 'false');
 
 -- --------------------------------------------------------
 
