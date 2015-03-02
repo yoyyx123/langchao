@@ -152,7 +152,7 @@
                         <div class="caption">
                             <p> </p>
                             <p>&nbsp</p>
-                            <img id="img_input" name="img" height="200px"  src="" />
+                            <img id="img_input" name="img" height="200px"  src="<?php echo base_url('upload/img/userlogo').'/'.$user_data['img'];?>" />
                         </div>
                         <div class="caption">
                             <p> </p>
