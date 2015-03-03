@@ -141,10 +141,10 @@
         </thead>
         <tbody>
             <?if (isset($value['bill_order_list']) && !empty($value['bill_order_list'])){?>
-                <?foreach ($value['bill_order_list'] as $key => $val) {?>
+                <? $i=1; foreach ($value['bill_order_list'] as $key => $val) {?>
                 <?if($val['type']==0){?>
-                <tr align="center" id="1">
-                    <td>1</td>
+                <tr align="center" id="<?echo $i;?>">
+                    <td><?echo$i;?></td>
                     <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
                     <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
                     <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
@@ -162,10 +162,10 @@
                     <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
                     <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                     <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
-                    <td><a class="btn btn-primary" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">保存</a></td>
+                    <td><a class="btn btn-primary" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
                     <td><a class="btn btn-primary" id = "do_delete" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_delete(this)">删除</a></td>
                 </tr>
-                <?}}}else{?>
+                <?}$i++;}}else{?>
                 <!--
                 <tr align="center" id="1">
                     <td>1</td>
@@ -217,11 +217,11 @@
         </thead>
         <tbody>
             <?if (isset($value['bill_order_list']) && !empty($value['bill_order_list'])){?>
-            <?foreach ($value['bill_order_list'] as $key => $val) {
+            <?$n=1;foreach ($value['bill_order_list'] as $key => $val) {
             ?>
             <?if($val['type']==1){?>
-            <tr align="center" id="1">
-                <td>1</td>
+            <tr align="center" id="<?echo $n;?>">
+                <td><?echo $n;?></td>
                 <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
                 <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
                 <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
@@ -239,10 +239,10 @@
                 <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
                 <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                 <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
-                <td><a class="btn btn-primary" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">保存</a></td>
+                <td><a class="btn btn-primary" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
                 <td><a class="btn btn-primary" id = "do_delete" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_delete(this)">删除</a></td>
             </tr>
-            <?}}}else{?>
+            <?}$n++;}}else{?>
             <!--
                 <tr align="center" id="1">
                     <td>1</td>
