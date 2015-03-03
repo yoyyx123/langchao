@@ -168,6 +168,7 @@
                             <p>
                                 <input id="img" type="file" size="45" name="img" class="input" onchange="previewImg()">
                             </p>
+                            <p>*只能上传大小1M以内的jpg/png 图片</p>
                         </div>
                     </div>
                 </div>

@@ -295,13 +295,15 @@ class User extends MY_Controller {
         }else{
             unset($params['password']);
         }
-        $res = $this->save_user_img($params['username']);
-        if ('succ'==$res['status']){
-            $params['img'] = $res['filename'];
-            $where = array("id"=>$params['id']);
-            unset($params['id']);
-            $res = $this->User_model->update_user_info($where,$params);            
+        if($_FILES['img']['size'] !=0){
+            $res = $this->save_user_img($params['username']);
+            if ('succ'==$res['status']){
+                $params['img'] = $res['filename'];           
+            }
         }
+        $where = array("id"=>$params['id']);
+        unset($params['id']);
+        $res = $this->User_model->update_user_info($where,$params);         
         $redirect_url = 'ctl=user&act=manage';
         redirect($redirect_url);
     }

@@ -56,13 +56,13 @@
                     <td><?echo $val['other_fee'];?></td>
                     <td><?echo $val['memo'];?></td>
                     <td><?echo $val['bill_no'];?></td>
-                    <td><a class="btn btn-primary do_look"  bill_id="<?echo $val['id'];?>">查看</a></td>
+                    <td><a class="btn btn-primary do_look"  bill_id="<?echo $val['id'];?>" href="<?php echo site_url('ctl=event&act=edit_work_order&event_id='.$val["event_id"]);?>" target="_blank">查看</a></td>
                     <td><?echo $val['bill_total'];?></td>
                     <td><input type="text" name="rel_fee" id="rel_fee"></td>
                     <?if($val['status'] !=2){?>
                         <td><a class="btn btn-info do_check" bill_id="<?echo $val['id'];?>" id="do_check">审核</a></td>
                     <?}else{?>
-                        <td><a class="btn btn-primary" bill_id="<?echo $val['id'];?>">已审核</a></td>
+                        <td><a class="btn btn-primary do_check" bill_id="<?echo $val['id'];?>" id="do_check">已审核</a></td>
                     <?}?>
                 </tr>
                 <? $i++;}?>
@@ -114,19 +114,44 @@ $(function() {
             if (rel_fee){
                 params = params+"&rel_fee="+rel_fee;
             }
-            $.ajax({
-                type: "POST",
-                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'update_bill_order_status'))?>",
-                data: params,
-                success: function(result){
-                    if(result=="succ"){
-                        $(_self).parent().find("#do_check").removeClass("do_check");
-                        $(_self).parent().find("#do_check").removeClass("btn-info");
-                        $(_self).parent().find("#do_check").addClass("btn-primary");
-                        $(_self).parent().find("#do_check").html("已审核");
-                    }
-                }
-             });
+            var value = $(_self).parent().find("#do_check").html();
+            if ("审核" == value){
+                if(confirm("确认要审核")){
+                    params = params+"&status=2";
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'update_bill_order_status'))?>",
+                        data: params,
+                        success: function(result){
+                            if(result=="succ"){
+                                //$(_self).parent().find("#do_check").removeClass("do_check");
+                                $(_self).parent().find("#do_check").removeClass("btn-info");
+                                $(_self).parent().find("#do_check").addClass("btn-primary");
+                                $(_self).parent().find("#do_check").html("已审核");
+                            }
+                        }
+                     });                
+                }                
+            }
+            if ("已审核" == value){
+                if(confirm("确认要取消审核")){
+                    params = params+"&status=1";
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'update_bill_order_status'))?>",
+                        data: params,
+                        success: function(result){
+                            if(result=="succ"){
+                                //$(_self).parent().find("#do_check").removeClass("do_check");
+                                $(_self).parent().find("#do_check").removeClass("btn-primary");
+                                $(_self).parent().find("#do_check").addClass("btn-info");
+                                $(_self).parent().find("#do_check").html("审核");
+                            }
+                        }
+                     });                
+                }                
+            }            
+
         });        
 
 })

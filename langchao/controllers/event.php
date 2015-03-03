@@ -667,6 +667,7 @@ class Event extends MY_Controller {
             list($total_tmp,$biil_list_tmp) = $this->get_biil_list($value['id']);
             $total += $total_tmp;
             foreach ($biil_list_tmp as $key => $val) {
+                $val['event_id'] = $value['id'];
                 $bill_list[] = $val;
             }
             if($value['cost_status'] !=3){

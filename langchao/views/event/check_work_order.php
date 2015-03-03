@@ -9,7 +9,7 @@
                 <tr align="center">
                     <th>工单数量</th>
                     <td><?php echo $work_order_num;?>件</td>
-                    <td rowspan="7"><a class="btn btn-primary" href="">查看</a></td>
+                    <td rowspan="7"><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=edit_work_order&event_id='.$event["id"]);?>" target="_blank">查看</a></td>
                 </tr>
                 <tr align="center">
                     <th>有效工时</th>
@@ -141,6 +141,7 @@ is_complain = $("#is_complain").val();
         });
         return false;
     }
+    /**
     if (memo== '') {
         var n = noty({
           text: "请输入备注",
@@ -149,7 +150,10 @@ is_complain = $("#is_complain").val();
           timeout: 1000,
         });
         return false;
-    }
+    }**/
+    if (!confirm("确认要审核")) {
+           return false;
+        }
     return true;    
 }
 </script>

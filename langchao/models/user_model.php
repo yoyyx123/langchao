@@ -27,6 +27,7 @@ class User_model extends CI_Model {
     }
 
     public function get_user_list($where=array(),$offset=false){
+        $this->db->order_by("id", "desc");
         if($offset!==false){
             $query = $this->db->get_where('user', $where,ROW_SHOW_NUM,$offset);
 

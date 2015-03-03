@@ -350,6 +350,7 @@ function doedit(){
             });
             return false;
         }
+    /**
     img_status = check_img();
     if(!img_status){
         var n = noty({
@@ -360,6 +361,7 @@ function doedit(){
         });
         return false;
     }
+    **/
     return true;    
 }
 

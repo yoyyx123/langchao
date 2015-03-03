@@ -360,6 +360,7 @@ function do_save(atable){
             return false;
         }
     **/
+    /**
     if (other_fee== '' || isNaN(other_fee)) {
             var n = noty({
               text: "请输入其他费用",
@@ -368,7 +369,8 @@ function do_save(atable){
               timeout: 1000,
             });
             return false;
-        }                   
+        }
+    **/               
     if (go_time== '') {
             var n = noty({
               text: "请输入出发时间",
