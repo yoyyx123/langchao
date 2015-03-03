@@ -17,7 +17,7 @@
                         <?if($is_cost !=1){?>
                             <a class="btn btn-primary change_event_status" id="change_event_status">进行报销</a>
                         <?}else{?>
-                            <a class="btn btn-info" id="change_event_status">已报销</a>
+                            <a class="btn btn-info change_event_status" id="change_event_status">已报销</a>
                         <?}?>
                     </th>
                     <th colspan="9"></th>
@@ -56,7 +56,7 @@
                     <td><?echo $val['other_fee'];?></td>
                     <td><?echo $val['memo'];?></td>
                     <td><?echo $val['bill_no'];?></td>
-                    <td><a class="btn btn-primary do_look"  bill_id="<?echo $val['id'];?>" href="<?php echo site_url('ctl=event&act=edit_work_order&event_id='.$val["event_id"]);?>" target="_blank">查看</a></td>
+                    <td><a class="btn btn-primary do_look"  bill_id="<?echo $val['id'];?>" href="<?php echo site_url('ctl=event&act=look_work_order&event_id='.$val["event_id"]);?>" target="_blank">查看</a></td>
                     <td><?echo $val['bill_total'];?></td>
                     <td><input type="text" name="rel_fee" id="rel_fee"></td>
                     <?if($val['status'] !=2){?>
@@ -68,7 +68,7 @@
                 <? $i++;}?>
                 <tr>
                     <td colspan="15"></td>
-                    <td><a class="btn btn-info do_check_all" bill_id="<?echo $val['id'];?>" onclick="do_check(this)">一键审核</a></td>
+                    <td><a class="btn btn-info do_check_all" bill_id="<?echo $val['id'];?>" id="do_check_all">一键审核</a></td>
                     
    
                 </tr>
@@ -86,24 +86,69 @@
 
 <script type="text/javascript">
 $(function() {
-
+        $(".do_check_all").click(function(){
+            if(!confirm("确定要审核全部")){
+                    return false;
+                }
+            event_month = $('.event_month').val();
+            user_id = $('.user_id').val();
+            xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST","<?php echo site_url('ctl=event&act=check_all_bill_order');?>",false);
+            xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+            xmlhttp.send("event_month="+event_month+"&user_id="+user_id+"&status=2");
+            var result = xmlhttp.responseText;
+            var data = eval("("+result+")");
+            if ("succ" == data.status){
+                var n = noty({
+                  text: "全部审核成功！",
+                  type: 'success',
+                  layout: 'center',
+                  timeout: 1000,
+                });
+                window.location.reload();
+                //return true;
+            }
+        })
         $(".change_event_status").click(function() {
             _self = this;
             event_month = $('.event_month').val();
-            user_id = $('.user_id').val();            
-            $.ajax({
-                type: "POST",
-                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'change_event_cost_status'))?>",
-                data: "event_month="+event_month+"&user_id="+user_id+"&status=3",
-                success: function(result){
-                    if(result="succ"){
-                        $("#change_event_status").removeClass("change_event_status");
-                        $("#change_event_status").removeClass("btn-primary");
-                        $("#change_event_status").addClass("btn-info");
-                        $("#change_event_status").html("已报销");
-                    }
+            user_id = $('.user_id').val();
+            var value = $(".change_event_status").html();
+            if ("报销" == value){
+                if(!confirm("确认要报销")){
+                    return false;
                 }
-             });
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'change_event_cost_status'))?>",
+                    data: "event_month="+event_month+"&user_id="+user_id+"&status=3",
+                    success: function(result){
+                        if(result="succ"){
+                            $("#change_event_status").removeClass("btn-primary");
+                            $("#change_event_status").addClass("btn-info");
+                            $("#change_event_status").html("已报销");
+                        }
+                    }
+                 });                
+            }
+            if ("已报销" == value){
+                if(!confirm("确认要取消报销")){
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'change_event_cost_status'))?>",
+                    data: "event_month="+event_month+"&user_id="+user_id+"&status=2",
+                    success: function(result){
+                        if(result="succ"){
+                            $("#change_event_status").removeClass("btn-info");
+                            $("#change_event_status").addClass("btn-primary");
+                            $("#change_event_status").html("报销");
+                        }
+                    }
+                 });                
+            }
+
         });
 
         $(".do_check").click(function() {
@@ -130,7 +175,7 @@ $(function() {
                                 $(_self).parent().find("#do_check").html("已审核");
                             }
                         }
-                     });                
+                     });
                 }                
             }
             if ("已审核" == value){

@@ -9,7 +9,7 @@
                 <tr align="center">
                     <th>工单数量</th>
                     <td><?php echo $work_order_num;?>件</td>
-                    <td rowspan="7"><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=edit_work_order&event_id='.$event["id"]);?>" target="_blank">查看</a></td>
+                    <td rowspan="7"><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=look_work_order&event_id='.$event["id"]);?>" target="_blank">查看</a></td>
                 </tr>
                 <tr align="center">
                     <th>有效工时</th>
@@ -38,7 +38,7 @@
                             }else{
                                 $schedule = "未完成";
                             }
-                            echo "<a target='_blank' href='".site_url('ctl=event&act=edit_work_order')."&event_id=".$event['id']."&work_order_id=".$value['id']."'>".$schedule."</a>;";
+                            echo "<a target='_blank' href='".site_url('ctl=event&act=look_work_order')."&event_id=".$event['id']."&work_order_id=".$value['id']."'>".$schedule."</a>;";
                         }?>
                     </td>
                 </tr>
@@ -87,9 +87,9 @@
                 </tr>                                                                     
             </tbody>
         </table>
-        <input type="hidden" name="event_id" value="<?echo $event['id']?>;">
-        <input type="hidden" name="check_id" value="<?if(isset($check)){echo $check['id'];}?>">
-        <button type="submit" class="btn btn-primary">审核</button>&nbsp&nbsp&nbsp
+        <input type="hidden" name="event_id" id="event_id" value="<?echo $event['id']?>;">
+        <input type="hidden" name="check_id" id="check_id" value="<?if(isset($check)){echo $check['id'];}?>">
+        <a class="btn btn-primary do_add" onclick="do_add()"><?if($event['status']==3){echo "已审核";}if($event['status']==2){echo "审核";}?></a>&nbsp&nbsp&nbsp
         <a class="btn btn-primary do_delete" event_id='<?php echo $event['id'];?>'>删除</a>        
     </form>
 </div>
@@ -110,10 +110,12 @@ $(function () {
 
 
 function do_add(){
-is_complain = $("#is_complain").val();
+    is_complain = $("#is_complain").val();
     event_status = $("#event_status").val();
     performance_id = $("#performance_id").val();
     memo = $("#memo").val();
+    event_id = $("#event_id").val();
+    check_id = $("#check_id").val();
     if (is_complain== '') {
         var n = noty({
           text: "请选择是否投诉",
@@ -141,19 +143,47 @@ is_complain = $("#is_complain").val();
         });
         return false;
     }
-    /**
-    if (memo== '') {
+
+    var value = $(".do_add").html();
+
+    if ("审核" == value){
+        if (!confirm("确认要审核")) {
+           return false;
+        }
+        status = 3;
+    }
+    if("已审核" == value){
+        if (!confirm("确认要取消审核")) {
+           return false;
+        }
+        status = 2;
+    }
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST","<?php echo site_url('ctl=event&act=add_check_event_info');?>",false);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.send("event_id="+event_id+"&is_complain="+is_complain+"&event_status="+event_status+"&performance_id="+performance_id+"&memo="+memo+"&status="+status);
+    var result = xmlhttp.responseText;
+    var data = eval("("+result+")");
+    if ("succ" == data.status && status==3){
         var n = noty({
-          text: "请输入备注",
-          type: 'error',
+          text: "审核成功！",
+          type: 'success',
           layout: 'center',
           timeout: 1000,
         });
-        return false;
-    }**/
-    if (!confirm("确认要审核")) {
-           return false;
-        }
-    return true;    
+        $(".do_add").html("已审核");
+        return true;
+    }
+
+    if ("succ" == data.status && status==2){
+        var n = noty({
+          text: "已取消审核！",
+          type: 'success',
+          layout: 'center',
+          timeout: 1000,
+        });
+        $(".do_add").html("审核");
+        return true;
+    }    
 }
 </script>

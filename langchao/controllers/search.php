@@ -141,10 +141,12 @@ class Search extends MY_Controller {
             }
             $this->pages_conf(count($info));
             $info_list = array();
+            $i=1;
             foreach ($info as $key => $value) {
-                if($key>=$this->per_page && $key<($this->per_page+ROW_SHOW_NUM)){
+                if($i>=$this->per_page && $i<($this->per_page+ROW_SHOW_NUM)){
                     $info_list[] = $value;
                 }
+                $i++;
             }            
             $this->data['info_list'] = $info_list;
         }

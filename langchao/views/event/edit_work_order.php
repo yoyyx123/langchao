@@ -152,7 +152,7 @@
                     <td>
                         <select name="transportation" id="transportation">
                             <?foreach ($traffic_list as $k => $tmp) {?>
-                            <option value="<?echo $tmp['id'];?>" <?if($val['transportation']==$tmp['id']){echo "checked='checked'";}?>><?echo $tmp['name'];?></option>
+                            <option value="<?echo $tmp['id'];?>" <?if($val['transportation']==$tmp['id']){echo "selected=selected";}?>><?echo $tmp['name'];?></option>
                             <?}?>
                         </select>
                     </td>
@@ -162,7 +162,7 @@
                     <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
                     <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                     <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
-                    <td><a class="btn btn-primary" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
+                    <td><a class="btn btn-primary do_save" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
                     <td><a class="btn btn-primary" id = "do_delete" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_delete(this)">删除</a></td>
                 </tr>
                 <?}$i++;}}else{?>
@@ -229,7 +229,7 @@
                 <td>
                     <select name="transportation" id="transportation">
                         <?foreach ($traffic_list as $k => $tmp) {?>
-                        <option value="<?echo $tmp['id'];?>" <?if($val['transportation']==$tmp['id']){echo "checked='checked'";}?>><?echo $tmp['name'];?></option>
+                        <option value="<?echo $tmp['id'];?>" <?if($val['transportation']==$tmp['id']){echo "selected=selected";}?>><?echo $tmp['name'];?></option>
                         <?}?>
                     </select>
                 </td>
@@ -239,7 +239,7 @@
                 <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
                 <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                 <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
-                <td><a class="btn btn-primary" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
+                <td><a class="btn btn-primary do_save" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
                 <td><a class="btn btn-primary" id = "do_delete" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_delete(this)">删除</a></td>
             </tr>
             <?}$n++;}}else{?>
@@ -292,6 +292,14 @@ $(function() {
         showMeridian: 1,
 
     });
+    <?if(isset($status) && $status=="succ"){?>
+    var n = noty({
+      text: "事件添加成功",
+      type: 'success',
+      layout: 'center',
+      timeout: 1000,
+    });
+    <?}?>
      
 
 })
@@ -305,7 +313,7 @@ function add_td(atable){
         id = 0;
     }
     var NId = parseInt(id)+1;
-    var TrContent = '<tr align="center" id="'+NId+'"><td>'+NId+'</td><td><input type="text" name="go_time" id="go_time" class="format_time"></td><td><input type="text" name="arrival_time" id="arrival_time" class="format_time"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" ><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee"></td><td><input type="text" name="hotel_fee" id="hotel_fee"></td><td><input type="text" name="food_fee" id="food_fee"></td><td><input type="text" name="other_fee" id="other_fee"></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
+    var TrContent = '<tr align="center" id="'+NId+'"><td>'+NId+'</td><td><input type="text" name="go_time" id="go_time" class="format_time"></td><td><input type="text" name="arrival_time" id="arrival_time" class="format_time"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select id="transportation" name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" selected=selected><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee"></td><td><input type="text" name="hotel_fee" id="hotel_fee"></td><td><input type="text" name="food_fee" id="food_fee"></td><td><input type="text" name="other_fee" id="other_fee"></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
     $(atable).parent().parent().parent().parent().find("tbody").append(TrContent);
     $('.format_time').datetimepicker({
         format: "yyyy-mm-dd hh:ii:ss", 
@@ -468,7 +476,8 @@ function do_save(atable){
           type: 'success',
           layout: 'center',
           timeout: 1000,
-        }); 
+        });
+        $(".do_save").html("编辑");
         return true;
     }else{
         var n = noty({

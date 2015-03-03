@@ -183,7 +183,7 @@ class Event extends MY_Controller {
         $res = $this->Event_model->save_work_order_info($data);
         $this->change_event_status($event_id,2);
 
-        $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id."&back_url=".urlencode($back_url);
+        $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id."&back_url=".urlencode($back_url)."&status=succ";
         redirect($redirect_url); 
     }
 
@@ -212,10 +212,46 @@ class Event extends MY_Controller {
             $tmp_order = end($work_order_list);
             $this->data['work_order_id'] = $tmp_order['id'];
         }
+        if(isset($data['status'])){
+            $this->data['status'] = $data['status'];
+        }
         $traffic_list = $this->Role_model->get_setting_list(array("type"=>"traffic"));
         $this->data['traffic_list'] = $traffic_list['info'];
         $this->layout->view('event/edit_work_order',$this->data); 
     }
+
+    public function look_work_order(){
+        $this->data['user_data'] = $this->session->userdata;        
+        $data = $this->security->xss_clean($_GET);
+        if(isset($data['back_url'])&&!empty($data['back_url'])){
+            $back_url = $_GET['back_url'];
+        }else{
+            $back_url = site_url(array('ctl'=>'event', 'act'=>'event_list'));
+        }
+        $this->data['back_url'] = $back_url;        
+        if(isset($data['work_order_id'])){
+            $this->data['work_order_id'] = $data['work_order_id']; 
+        }
+        $where = array("id"=>trim($data['event_id']));
+        $event = $this->Event_model->get_event_info($where);
+        $this->data['event'] = $event; 
+        $where = array("event_id"=>trim($data['event_id']));
+        if(isset($data['work_order_id'])&&!empty($data['work_order_id'])){
+            $where['id'] = $data['work_order_id'];
+        }
+        $work_order_list = $this->Event_model->get_work_order_list($where);
+        $this->data['work_order_list'] = $work_order_list;
+        if(!isset($this->data['work_order_id'])){
+            $tmp_order = end($work_order_list);
+            $this->data['work_order_id'] = $tmp_order['id'];
+        }
+        if(isset($data['status'])){
+            $this->data['status'] = $data['status'];
+        }
+        $traffic_list = $this->Role_model->get_setting_list(array("type"=>"traffic"));
+        $this->data['traffic_list'] = $traffic_list['info'];
+        $this->layout->view('event/look_work_order',$this->data); 
+    }    
 
     public function do_edit_work_order(){
         $this->data['user_data'] = $this->session->userdata;        
@@ -423,13 +459,16 @@ class Event extends MY_Controller {
         $this->data['user_data'] = $this->session->userdata;        
         $data = $this->security->xss_clean($_POST);
         $event_id = $data['event_id'];
+        $status = $data['status'];
         $where = array("id"=>$event_id);
         unset($data['check_id']);
         unset($data['event_id']);
+        unset($data['status']);
         $work_order_list = $this->Event_model->update_check_event_info($data,$where);
-        $this->change_event_status($event_id,3);
-        $redirect_url = 'ctl=event&act=check_work_order&event_id='.$event_id;
-        redirect($redirect_url);
+        $this->change_event_status($event_id,$status);
+        //$redirect_url = 'ctl=event&act=check_work_order&event_id='.$event_id;
+        //redirect($redirect_url);
+        echo json_encode(array("status"=>"succ"));
     }
 
     public function delete_check_event(){
@@ -682,6 +721,23 @@ class Event extends MY_Controller {
         $this->data['user_info'] = $user_info;
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('event/get_event_biil_list',$this->data);      
+    }
+
+    public function check_all_bill_order(){
+        $data = $this->security->xss_clean($_POST);
+        $where = array('event_month'=>$data['event_month'],'user_id'=>$data['user_id']);
+        $event_list = $this->Event_model->get_event_simple_list($where);
+        foreach ($event_list as $key => $value) {
+            $sql = array('event_id' => $value['id']);
+            $work_order_list = $this->Event_model->get_work_order_list($sql);
+            foreach ($work_order_list as $k => $val) {
+                $ww = array("work_order_id"=>$val['id']);
+                $data = array("status"=>$data['status']);
+                $this->Event_model->update_bill_order_status($data,$ww);
+            }          
+        }
+        echo json_encode(array('status'=>'succ'));
+
     }
 
     public function get_biil_list($event_id){
