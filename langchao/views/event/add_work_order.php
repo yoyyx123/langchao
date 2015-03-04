@@ -159,7 +159,8 @@ function do_add(){
     back_time = $('#back_time').val();
     failure_mode = $('#failure_mode').val();
     desc = $('#desc').val();
-    schedule = $('#schedule').val();
+    schedule = $('input[name="schedule"]:checked').val();
+    memo = $('#memo').val();
     if (arrive_time== '') {
             var n = noty({
               text: "请输入到达时间",
@@ -205,6 +206,15 @@ function do_add(){
             });
             return false;
         }
-    return true;                             
+    if (memo== '' &&(schedule=='1'||schedule=='2')) {
+            var n = noty({
+              text: "备注必填",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }        
+    return false;                             
 }
 </script>

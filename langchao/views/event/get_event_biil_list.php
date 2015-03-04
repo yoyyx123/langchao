@@ -58,7 +58,7 @@
                     <td><?echo $val['bill_no'];?></td>
                     <td><a class="btn btn-primary do_look"  bill_id="<?echo $val['id'];?>" href="<?php echo site_url('ctl=event&act=look_work_order&event_id='.$val["event_id"]);?>" target="_blank">查看</a></td>
                     <td><?echo $val['bill_total'];?></td>
-                    <td><input type="text" name="rel_fee" id="rel_fee"></td>
+                    <td><input type="text" name="rel_fee" id="rel_fee" value="<?echo $val['rel_fee'];?>"></td>
                     <?if($val['status'] !=2){?>
                         <td><a class="btn btn-info do_check" bill_id="<?echo $val['id'];?>" id="do_check">审核</a></td>
                     <?}else{?>
@@ -114,7 +114,7 @@ $(function() {
             event_month = $('.event_month').val();
             user_id = $('.user_id').val();
             var value = $(".change_event_status").html();
-            if ("报销" == value){
+            if ("进行报销" == value){
                 if(!confirm("确认要报销")){
                     return false;
                 }
@@ -143,7 +143,7 @@ $(function() {
                         if(result="succ"){
                             $("#change_event_status").removeClass("btn-info");
                             $("#change_event_status").addClass("btn-primary");
-                            $("#change_event_status").html("报销");
+                            $("#change_event_status").html("进行报销");
                         }
                     }
                  });                

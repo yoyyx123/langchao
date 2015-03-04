@@ -31,6 +31,8 @@
             </tr>
         </tbody>
     </table>
+
+  
 <?php }else{?>
 <p>查询不到客户信息!</p>
 <?php }?>  
@@ -144,6 +146,41 @@ $(function() {
             </tr>                                                                                                                                                                                                                           
         </tbody>
     </table>
+
+
+    <table class="table table-bordered  table-striped">
+        <thead>
+            <tr>
+                <th>近期事件</th>
+                <th colspan="7"></th>
+            </tr>                    
+            <tr>
+                <th>序号</th>
+                <th>日期</th>
+                <th>事件类型</th>
+                <th>事件描述</th>
+                <th>工单使用人</th>
+                <th>事件状态</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <? $i=0; foreach ($event_list as $key => $value) {
+                $i+=1
+            ?>
+            <tr align="center">
+                <td><? echo $i;?></td>
+                <td><? echo $value['event_time'];?></td>
+                <td><? echo $value['event_type_name'];?></td>
+                <td><? echo $value['desc'];?></td>
+                <td><? echo $value['name'];?></td>
+                <td><?if($value['status']==1){echo "待添加";}if($value['status']==2){echo "待审核";}?></td>
+                <td><a class="btn btn-primary" target="_blank" href="<?php echo site_url('ctl=event&act=look_work_order')."&event_id=".$value['id'];?>">查看</a></td>
+            </tr>
+            <? } ?>
+        </tbody>
+    </table>      
 <?php }else{?>
 <p>查询不到客户信息!</p>
 <?php }?>

@@ -471,7 +471,11 @@ class System extends MY_Controller {
     }
 
     public function doc_list(){
-		$this->data['user_data'] = $this->session->userdata;		
+		$this->data['user_data'] = $this->session->userdata;	
+		$data = $this->security->xss_clean($_GET);
+		if(isset($data['status'])){
+			$this->data['status'] = $data['status'];
+		}	
 		$where = array();
 		$list = $this->Role_model->get_doc_list($where,$this->per_page);
 		$this->pages_conf($list['count']);
@@ -479,11 +483,31 @@ class System extends MY_Controller {
         $this->layout->view('system/doc_list',$this->data);    	
     }
 
-    public function doc_delete(){
+    public function delete_doc(){
 		$data = $this->security->xss_clean($_GET);
-		$where = array("id"=>$data['id']);
+		$where = array("id"=>$data['setting_id']);
 		$role = $this->Role_model->delete_doc($where);
-		$redirect_url = 'ctl=system&act=doc_list';
+		$redirect_url = 'ctl=system&act=doc_list&status=删除成功';
+        redirect($redirect_url);		
+	}
+
+	public function edit_doc(){
+        $this->data['user_data'] = $this->session->userdata;        
+        $data = $this->security->xss_clean($_GET);
+        $id = $data['id'];
+        $where = array("id"=>trim($id));
+        $doc_info = $this->Role_model->get_doc_info($where);
+        $this->data['doc_info'] = $doc_info;
+        $this->load->view('system/edit_doc',$this->data);
+	}
+
+	public function do_edit_doc(){
+        $data = $this->security->xss_clean($_POST);
+        $params = $data;
+        $where = array("id"=>$params['id']);
+        unset($params['id']);
+        $res = $this->Role_model->update_doc($where,$params);         
+        $redirect_url = 'ctl=system&act=doc_list&status=修改成功';
         redirect($redirect_url);		
 	}
 
@@ -503,6 +527,33 @@ class System extends MY_Controller {
 		}
 		$redirect_url = 'ctl=system&act=doc_list';
         redirect($redirect_url);		
+	}
+
+	public function expire_date(){
+		$this->data['user_data'] = $this->session->userdata;
+		$where = array();
+		$tmp = $this->Role_model->get_expire_date();
+		if(!$tmp){
+			$expire_date = 0;
+		}else{
+			$expire_date = $tmp['name'];
+		}
+		$this->data['expire_date'] = $expire_date;
+        $this->layout->view('system/expire_date',$this->data);
+	}
+
+	public function edit_expire_date(){
+		$data = $this->security->xss_clean($_POST);
+		$expire_date = $this->Role_model->get_expire_date();
+		if($expire_date){
+			$where = array("type"=>"expire_date");
+			$params = array('name'=>$data['expire_date']);
+			$this->Role_model->update_expire_date($where,$params);
+		}else{
+			$params = array("type"=>"expire_date",'name'=>$data['expire_date']);
+			$this->Role_model->add_expire_date($params);
+		}
+		echo "succ";
 	}
 
 }

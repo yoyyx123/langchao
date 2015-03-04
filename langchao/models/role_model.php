@@ -361,7 +361,21 @@ class Role_model extends CI_Model {
         $query = $this->db->get_where('doc_list', $where);
         $res = $query->row_array();
         return $res;            
-    }    
+    }
+
+    public function get_expire_date(){
+        $query = $this->db->get_where('setting_list', array('type'=>'expire_date'));
+        $res = $query->row_array();
+        return $res;
+    }
+
+    public function update_expire_date($where,$params){
+        $res = $this->db->update('setting_list', $params,$where); 
+    }
+
+    public function add_expire_date($params){
+        $this->db->insert('setting_list', $params);
+    }
 
 
 }

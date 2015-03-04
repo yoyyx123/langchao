@@ -261,7 +261,7 @@ class Event extends MY_Controller {
         unset($data['work_order_id']);
         $where = array("id"=>$work_order_id);
         $res = $this->Event_model->update_work_order_info($data,$where);
-        $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id;
+        $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id."&status=succ";
         redirect($redirect_url);         
     }
 

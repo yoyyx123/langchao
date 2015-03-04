@@ -23,6 +23,24 @@ class Member_model extends CI_Model {
         return $res;       
     }
 
+    public function get_member_info_like($where){
+        $this->db->like($where);
+        $this->db->from('member');
+        $query = $this->db->get();
+        $res = $query->row_array();
+        if($res){
+            $city_id = $res['city'];
+            $query2 = $this->db->get_where('setting_list', array('id'=>$city_id));
+            $res2 = $query2->row_array();
+            $res['city_name'] = $res2['name'];
+            $member_type = $res['member_type'];
+            $query3 = $this->db->get_where('setting_list', array('id'=>$member_type));
+            $res3 = $query3->row_array();
+            $res['member_type_name'] = $res3['name'];
+        }
+        return $res;        
+    }    
+
     public function get_member_list($where,$offset=false){
         $this->db->order_by("id", "desc");
         if($offset!==false){

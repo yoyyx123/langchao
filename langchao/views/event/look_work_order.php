@@ -169,7 +169,7 @@
         <table class="table-bordered table-striped table-condensed" width="300">
         <thead>
             <tr class="CaseRow">
-                <th align="center" colspan="14">去程费用</th>
+                <th align="center" colspan="14">返程费用</th>
             </tr>                    
             <tr class="CaseRow">
                 <th>序号</th>

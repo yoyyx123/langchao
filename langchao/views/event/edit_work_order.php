@@ -113,7 +113,7 @@
 </div>
 <div class="col-lg-7 col-md-4">
     <p class="center col-md-12">
-        <button type="submit" class="btn btn-primary">保存</button>&nbsp&nbsp&nbsp
+        <button type="submit" class="btn btn-primary">编辑</button>&nbsp&nbsp&nbsp
     </p>
 </div>
 </form>
@@ -197,7 +197,7 @@
         <table class="table-bordered table-striped table-condensed" width="300">
         <thead>
             <tr class="CaseRow">
-                <th align="center" colspan="14">去程费用</th>
+                <th align="center" colspan="14">返程费用</th>
             </tr>                    
             <tr class="CaseRow">
                 <th>序号</th>

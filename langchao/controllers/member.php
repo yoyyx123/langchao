@@ -9,6 +9,8 @@ class Member extends MY_Controller {
         $this->load->helper('security');
         $this->load->model('Member_model');
         $this->load->model('Role_model');
+        $this->load->model('Event_model');
+        
     }
 	
 	public function index()
@@ -109,8 +111,12 @@ class Member extends MY_Controller {
         foreach($data as $k =>$v){
             $where[$k] = trim($v);
         }
-        $member = $this->Member_model->get_member_info($where);
+        $member = $this->Member_model->get_member_info_like($where);
         $this->data['member'] = $member;
+        $event_time = date("Y-m-d",time()-7*24*3600);
+        $ww = array("member_id ="=>$member['id'], 'event_time >=' => $event_time);
+        $event_list = $this->Event_model->get_member_event_list($ww);
+        $this->data['event_list'] = $event_list;
         $this->load->view('member/do_search',$this->data);
     }
 }

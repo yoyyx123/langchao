@@ -118,7 +118,7 @@
                                 <td>基础报销</td>
                                 <td>
                                     <div id="expensesdiv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="基础报销" name="expenses" id="expenses" disabled="disabled">&nbsp&nbsp元
+                                    <input type="text" placeholder="基础报销" name="expenses" id="expenses" <? if(0==$user['work_type']){?>disabled='disabled' value="0"<?}else{?> value="<?echo $user['expenses'];}?>">&nbsp&nbsp元
                                     </div>
                                 </td>
                             </tr>  

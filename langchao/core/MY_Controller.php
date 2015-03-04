@@ -134,6 +134,12 @@ class MY_Controller extends CI_Controller {
 		$this->postdata = $_POST;
 		$this->data['getdata'] = $this->security->xss_clean($this->getdata);
         $username = $this->session->userdata('username');
+        $expire_date = $this->Role_model->get_expire_date();
+        if(!$expire_date){
+        	$expire_date = array('name'=>0);
+        }
+        define('EXPIRE_DATE', $expire_date['name']); // 事件过期时间
+
 
 		/**
         $username = $this->session->userdata('username');

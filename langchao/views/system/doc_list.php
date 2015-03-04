@@ -57,6 +57,50 @@
 
 <script type="text/javascript">
 
+$(function() {
+    <?if (isset($status)){?>
+        var n = noty({
+          text: "<?echo $status;?>",
+          type: 'success',
+          layout: 'center',
+          timeout: 1000,
+        });
+    <?}?>
+
+
+    $(".dodelete").click(function() {
+     if(confirm("确认删除吗")){
+        _self = this;
+        url = "<?php echo site_url(array('ctl'=>'system', 'act'=>'delete_doc'))?>"+"&setting_id="+$(this).attr('setting_id');
+        window.location.href=url;
+     }else{
+        return;
+     }
+    });
+
+    $(".doedit").click(function() {
+        _self = this;
+        $.ajax({
+            type: "POST",
+            url: "<?php echo site_url(array('ctl'=>'system', 'act'=>'edit_doc'))?>"+"&id="+$(this).attr('setting_id'),
+            data: "",
+            success: function(result){
+                $("#dialog").html(result);
+                $("#dialog").dialog({
+                    autoOpen : false,
+                    width : 900,
+                    title : ('修改文档信息'),
+                    modal: true,
+
+                });
+                $("#dialog").dialog("open");
+            }
+         });
+    });    
+
+})
+
+
 var sel_time_data = function (per_page) {
     var url = '<?php echo site_url("ctl=system&act=doc_list");?>';
     var getobj = {};
