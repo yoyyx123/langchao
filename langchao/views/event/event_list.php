@@ -9,9 +9,14 @@
             <div class="input-group-addon">使用人</div>
               <select  class="form-control" name="user_id" id="user_id">
                 <?php foreach ($user_list as $key => $value) {
+                 if($user_data['position2']!=1 &&$user_data['position2']!=2){
                 ?>
-                <option value="<? echo $value['id'];?>" <?if(isset($user_id)&&$user_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
-                <?php } ?>
+                    <option value="<? echo $value['id'];?>" <?if(isset($user_id)&&$user_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
+                <?}else if($user_data['position2']==1 && $user_data['id'] == $value['id']){?>
+                    <option value="<? echo $value['id'];?>" <?if(isset($user_id)&&$user_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
+                <?}else if($user_data['position2']==2 && $user_data['department'] == $value['department']){?>
+                    <option value="<? echo $value['id'];?>" <?if(isset($user_id)&&$user_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
+                <?php }} ?>
               </select>
             </div>
           </div>&nbsp&nbsp

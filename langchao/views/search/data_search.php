@@ -1,5 +1,5 @@
 <div class="row" style="text-align:center;">
-     <h2>工单列表</h2>
+     <h2>业务查询</h2>
 </div>
 <div class="row">
 
@@ -157,7 +157,8 @@ $(function() {
             user_id = $('#user_id').val();
             short_name = $('#short_name').val();
             start_time = $('#start_time').val();
-            end_time = $('#end_time').val();            
+            end_time = $('#end_time').val();
+            /**
             if (start_time == '' || end_time == '') {
                     var n = noty({
                       text: "开始结束时间必填",
@@ -167,6 +168,7 @@ $(function() {
                     });
                     return false;
                 }
+             **/
             if (user_id == '' && short_name == '') {
                     var n = noty({
                       text: "使用人或者客户必填一个",
