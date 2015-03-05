@@ -16,6 +16,7 @@
                 <tr>
                     <th>序号</th>
                     <th>名称</th>
+                    <th>身份</th>
                     <th>备注</th>
                     <th>操作</th>
                 </tr>
@@ -25,6 +26,15 @@
                 <tr>
                     <td><?php echo $i;?></td>
                     <td><?php echo $value['role_name'];?></td>
+                    <td>
+                    <? 
+                     if($value['position2']=='1'){echo "员工";}
+                     if($value['position2']=='2'){echo "部门经理";}
+                     if($value['position2']=='3'){echo "总经理";}
+                     if($value['position2']=='4'){echo "管理员";}
+                    ?>
+
+                    </td>
                     <td><?php echo $value['role_memo'];?></td>
                     <td><a class="btn btn-info doedit" role_id='<?php echo $value['id'];?>'>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-danger dodelete" role_id='<?php echo $value['id'];?>'>删除</a>

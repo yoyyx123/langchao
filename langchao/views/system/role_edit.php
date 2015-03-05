@@ -9,6 +9,17 @@
                 </td>
             </tr>
             <tr>
+                <th width="80px">角色身份</th>
+                <td>
+                    <select type="text" name="position2" id="position2">
+                        <option value="1" <? if($role['position2']=='1'){echo "selected=selected";}?>>员工</option>
+                        <option value="2" <? if($role['position2']=='2'){echo "selected=selected";}?>>部门经理</option>
+                        <option value="3" <? if($role['position2']=='3'){echo "selected=selected";}?>>总经理</option>
+                        <option value="4" <? if($role['position2']=='4'){echo "selected=selected";}?>>管理员</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <th>角色简介</th>
                 <td>
                     <textarea type="text" placeholder="角色简介" name="role_memo" id="role_memo"><?php echo $role['role_memo']?></textarea>

@@ -69,7 +69,7 @@
                                        <?php foreach ($position_list as $key => $value) {?>
                                         <option value="<?php echo $value['id']; ?>" <? if($value['id']==$user['position']) echo "selected=selected";?>><?php echo $value['name']; ?></option>
                                         <?php } ?>
-                                    </select>                                    
+                                    </select>
                                     </div>
                                 </td>
                             </tr>

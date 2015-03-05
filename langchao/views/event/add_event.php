@@ -21,8 +21,9 @@
                     <select name="department_id" id="department_id" class="department_id">
                             <option value="">请选择</option>
                         <?php foreach ($department_list as $key => $value) {?>
+                            <?if($user_data['position2']!=1 || $user_data['department']==$value['id']){?>
                             <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
-                        <?php } ?>
+                        <?php }} ?>
                     </select>
                 </td>
             </tr>
@@ -234,7 +235,7 @@ $(function() {
                         $(".user_id").append('<option value="'+value['id']+'">'+value['name']+'</option>');
                     });
                 }
-             });            
+             });
         });        
 })
 

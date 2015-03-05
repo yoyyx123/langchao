@@ -256,8 +256,14 @@ class User extends MY_Controller {
 
     public function get_user_list(){
         $data = $this->security->xss_clean($_POST);
+        $this->data['user_data'] = $this->session->userdata;
         $where = array('department'=>$data['department_id']);
         $users = $this->User_model->get_user_list($where);
+        foreach($users['info'] as $key=>$value){
+            if ($this->data['user_data']['position2']=='1' && $this->data['user_data']['id'] !=$value['id']){
+                unset($users['info'][$key]);
+            }
+        }
         echo json_encode($users['info']);
     }
 

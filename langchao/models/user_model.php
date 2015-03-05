@@ -21,6 +21,7 @@ class User_model extends CI_Model {
             $res['position_name'] = $this->get_setting_name($res['position']);
             $query2 = $this->db->get_where('user_roles', array("id"=>$res['roles']));
             $rs = $query2->row_array();
+            $res['position2'] = $rs['position2'];
             $res['act'] = unserialize($rs['permission']);
         }
         return $res;       

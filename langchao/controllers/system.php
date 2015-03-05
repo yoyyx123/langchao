@@ -32,7 +32,7 @@ class System extends MY_Controller {
 		$data = $this->security->xss_clean($_POST);
 		if($data['role_name']){
 			$permission = serialize($data['ctl']);
-			$sql = array("role_name"=>trim($data['role_name']),"role_memo"=>$data['role_memo'],'permission'=>$permission);
+			$sql = array("role_name"=>trim($data['role_name']),"position2"=>trim($data['position2']),"role_memo"=>$data['role_memo'],'permission'=>$permission);
 			$result = $this->Role_model->add_role($sql);
 		}
 		$redirect_url = 'ctl=system&act=role_list';
@@ -73,7 +73,7 @@ class System extends MY_Controller {
 		$role_id = $data['role_id'];
 		$permission = serialize($data['ctl']);
 		$where = array("id"=>$role_id);
-		$data = array("role_name"=>trim($data['role_name']),"role_memo"=>$data['role_memo'],'permission'=>$permission);
+		$data = array("role_name"=>trim($data['role_name']),"position2"=>trim($data['position2']),"role_memo"=>$data['role_memo'],'permission'=>$permission);
 		$result = $this->Role_model->update_role($where,$data);
 		$redirect_url = 'ctl=system&act=role_list';
         redirect($redirect_url); 	

@@ -8,7 +8,7 @@
                     <ul class="nav nav-pills nav-stacked main-menu">
                         <li >
                             <a href="<?php echo site_url('ctl=home&act=index');?>"><span>首页</span></a>
-                        </li>                        
+                        </li>
                         <? foreach ($menu_list as $key => $value) {?>                        
                         <li class="accordion">
                             <a href="#"><i class="glyphicon glyphicon-plus"></i><span><?echo $value['name'];?></span></a>

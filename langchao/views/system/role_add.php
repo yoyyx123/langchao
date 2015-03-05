@@ -24,6 +24,17 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th width="80px">角色身份</th>
+                                <td>
+                                    <select type="text" name="position2" id="position2">
+                                        <option value="1">员工</option>
+                                        <option value="2">部门经理</option>
+                                        <option value="3">总经理</option>
+                                        <option value="4">管理员</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <th>角色简介</th>
                                 <td>
                                     <textarea type="text" placeholder="角色简介" name="role_memo" id="role_memo"></textarea>
