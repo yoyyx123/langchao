@@ -61,6 +61,15 @@
 <script type="text/javascript">
 
 $(function() {
+    <?if(isset($status)){?>
+    var n = noty({
+      text: "<?echo $status;?>",
+      type: 'success',
+      layout: 'center',
+      timeout: 1000,
+    });
+
+    <?}?>
 
     $(".do_delete").click(function() {
      if(confirm("确认删除吗")){

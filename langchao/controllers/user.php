@@ -33,6 +33,9 @@ class User extends MY_Controller {
             $redirect_url = 'ctl=user&act=login';
     	}else{
     		$this->session->set_userdata($user);
+            $ww = array("id"=>$user['id']);
+            $params = array("login_time"=>date("Y-m-d h:i:s"));
+            $this->User_model->edit_user_info($ww,$params);
     		$redirect_url = 'ctl=home&act=index';
     	}
         redirect($redirect_url);
@@ -198,7 +201,7 @@ class User extends MY_Controller {
             $params['img'] = $res['filename'];
             $res = $this->User_model->save_user_info($params);            
         }
-        $redirect_url = 'ctl=user&act=manage';
+        $redirect_url = 'ctl=user&act=manage&status=添加成功';
         redirect($redirect_url);
     }
 
@@ -239,6 +242,10 @@ class User extends MY_Controller {
     }
 
     public function manage(){
+        $data = $this->security->xss_clean($_GET);
+        if(isset($data['status'])){
+            $this->data['status'] = $data['status'];
+        }
         $where = array();
         $users = $this->User_model->get_user_list($where,$this->per_page);
         $this->pages_conf($users['count']);        
@@ -258,7 +265,7 @@ class User extends MY_Controller {
         $data = $this->security->xss_clean($_GET);
         $where = array('id'=>$data['user_id']);
         $users = $this->User_model->delete_user($where);
-        $redirect_url = 'ctl=user&act=manage';
+        $redirect_url = 'ctl=user&act=manage&status=删除成功';
         redirect($redirect_url);        
     }
 
@@ -304,7 +311,7 @@ class User extends MY_Controller {
         $where = array("id"=>$params['id']);
         unset($params['id']);
         $res = $this->User_model->update_user_info($where,$params);         
-        $redirect_url = 'ctl=user&act=manage';
+        $redirect_url = 'ctl=user&act=manage&status=修改成功';
         redirect($redirect_url);
     }
 
