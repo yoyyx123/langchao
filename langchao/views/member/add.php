@@ -20,7 +20,7 @@
                                 <td width="110px">客户编号</td>
                                 <td>
                                     <div id="codediv" class="input-group col-xs-8">
-                                    <input type="text"  class="form-control" placeholder="客户编号" name="code" id="code">
+                                    <input type="text"  class="form-control" placeholder="客户编号" disabled=disabled name="code" id="code" value="<?echo $code;?>">
                                     </div>
                                 </td>
                             </tr>

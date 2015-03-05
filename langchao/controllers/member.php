@@ -24,6 +24,20 @@ class Member extends MY_Controller {
         $member_type = $this->Role_model->get_setting_list(array("type"=>"membertype"));      
         $this->data['member_type'] = $member_type['info'];  
         $this->data['user_data'] = $this->session->userdata;
+        $last_member = $this->Member_model->get_last_member();
+        if($last_member){
+            $last_num = intval($last_member['code']);
+            $code = $last_num+1;
+            $len = strlen(intval($code));
+            if($len<3){
+                for($i=0;$i<(3-$len);$i++){
+                    $code = "0".$code;
+                }
+            }
+        }else{
+            $code = '001';
+        }
+        $this->data['code'] = $code;
         $this->layout->view('member/add',$this->data);
     }
 

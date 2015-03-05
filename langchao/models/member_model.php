@@ -39,7 +39,15 @@ class Member_model extends CI_Model {
             $res['member_type_name'] = $res3['name'];
         }
         return $res;        
-    }    
+    }
+
+    public function get_last_member(){
+        $this->db->order_by("code", "desc");
+        $this->db->from('member');
+        $query = $this->db->get();
+        $res = $query->row_array();
+        return $res;
+    }
 
     public function get_member_list($where,$offset=false){
         $this->db->order_by("id", "desc");

@@ -8,7 +8,7 @@
                                 <td width="110px">客户编号</td>
                                 <td>
                                     <div id="codediv" class="input-group col-xs-4">
-                                    <input type="text" placeholder="客户编号" name="code" id="code" value="<?echo $member['code']; ?>">
+                                    <input type="text" placeholder="客户编号" name="code" id="code" disabled=disabled value="<?echo $member['code']; ?>">
                                     </div>
                                 </td>
                             </tr>
