@@ -22,6 +22,12 @@ class Event_model extends CI_Model {
         return $res;
     }
 
+    public function delete_event($where){
+        $this->db->where($where);
+        $res = $this->db->delete('event_list');
+        return $res;
+    }
+
     public function get_member_event_list($where){
         $this->db->order_by("event_time", "desc");
         $this->db->from('event_list');
@@ -85,7 +91,12 @@ class Event_model extends CI_Model {
         if(isset($where['member_id'])){
             $where_sql .= " and `member_id`=".$where['member_id'];
         }
-        $where_sql .= " and `event_time`>='".$where['start_time']."' and `event_time`<='".$where['end_time']."'";
+        if(isset($where['start_time'])){
+            $where_sql .= " and `event_time`>='".$where['start_time'];            
+        }
+        if(isset($where['end_time'])){
+            $where_sql .= "' and `event_time`<='".$where['end_time']."'";            
+        }        
         $sql = "select * from ldb_event_list where 1=1 ".$where_sql." order by event_time desc";
         if($offset!==false){
             $sql .= " limit ".$offset.",".ROW_SHOW_NUM;

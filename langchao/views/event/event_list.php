@@ -49,7 +49,7 @@
             <tr>
                 <th>事件列表</th>
                 <th colspan="2">使用人：<?php echo $user['name'];?></th>
-                <th colspan="7"></th>
+                <th colspan="9"></th>
             </tr>                    
             <tr>
                 <th>序号</th>
@@ -60,7 +60,7 @@
                 <th>工单</th>
                 <th>费用</th>
                 <th>有效期</th>
-                <th colspan="2">操作</th>
+                <th colspan="4">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -79,6 +79,10 @@
                 <td><?php echo $value['event_less_time'];?></td>
                 <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=add_work_order')."&event_id=".$value['id']."&back_url=".urlencode($back_url);?>" >添加工单</a></td>
                 <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=edit_work_order')."&event_id=".$value['id']."&back_url=".urlencode($back_url);;?>">查看</a></td>
+                <?if($user_data['position2']==4 || $user_data['position2']==3){?>
+                    <td><a class="btn btn-primary edit_event" event_id="<?echo $value['id'];?>">编辑</a></td>
+                    <td><a class="btn btn-info delete_event" event_id="<?echo $value['id'];?>">删除</a></td>
+                <?}?>
             </tr>
             <? } ?>
         </tbody>
@@ -102,7 +106,7 @@
 var sel_time_data = function (per_page) {
     user_id = $('#user_id').val();
     event_month = $('#event_month').val();
-    status = $('#status').val();    
+    status = $('#status').val();
     var url = '<?php echo site_url("ctl=event&act=event_list");?>'+"&is_event=1&user_id="+user_id+"&event_month="+event_month+"&status="+status;
     var getobj = {};
     if(per_page>0){
@@ -115,6 +119,16 @@ var sel_time_data = function (per_page) {
 }
 
 $(function() {
+
+        <?if(isset($res_status)){?>
+        var n = noty({
+          text: "<?echo $res_status;?>",
+          type: 'success',
+          layout: 'center',
+          timeout: 1000,
+        });
+        <?}?>
+
         $('.date-picker').datepicker({
             format: 'yyyy-mm',
             autoclose:true,
@@ -122,6 +136,40 @@ $(function() {
             language:"zh-CN",
             minViewMode:"months"
           })
+
+        $(".delete_event").click(function(){
+             if(confirm("确认删除吗")){
+                _self = this;
+                user_id = $('#user_id').val();
+                event_month = $('#event_month').val();
+                status = $('#status').val();                
+                url = "<?php echo site_url(array('ctl'=>'event', 'act'=>'delete_event'))?>"+"&event_id="+$(this).attr('event_id')+"&is_event=1&user_id="+user_id+"&event_month="+event_month+"&status="+status;
+                window.location.href=url;
+             }else{
+                return;
+             }
+        })
+
+        $(".edit_event").click(function() {
+            _self = this;
+            event_month = $('#event_month').val();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'edit_event'))?>",
+                data: "&id="+$(this).attr('event_id')+"&is_event=1&&event_month="+event_month,
+                success: function(result){
+                    $("#dialog").html(result);
+                    $("#dialog").dialog({
+                        autoOpen : false,
+                        width : 700,
+                        title : ('修改事件'),
+                        modal: true,
+
+                    });
+                    $("#dialog").dialog("open");
+                }
+             });
+        });        
 
         $(".do_search").click(function() {
             _self = this;

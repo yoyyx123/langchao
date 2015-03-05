@@ -33,8 +33,40 @@ class Event extends MY_Controller {
         $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
         $this->data['worktime_list'] = $worktime_list['info'];        
         $event_list = $this->Role_model->get_event_list(array("display"=>"1"));      
-        $this->data['event_list'] = $event_list['info'];        
+        $this->data['event_list'] = $event_list['info'];
         $this->load->view('event/add_event',$this->data);
+    }
+
+    public function edit_event(){
+        $this->data['user_data'] = $this->session->userdata;        
+        $data = $this->security->xss_clean($_POST);
+        $this->data['event_month'] = $data['event_month'];
+        $where = array("id"=>trim($data['id']));
+        $event = $this->Event_model->get_event_info($where);
+        $this->data['event'] = $event;
+        $member = $this->Member_model->get_member_info(array('id'=>$event['member_id']));
+        $this->data['member'] = $member;
+        $user = $this->User_model->get_user_info(array("id"=>$event['user_id']));
+        $this->data['user'] = $user;        
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['department_list'] = $department_list['info'];
+        $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
+        $this->data['worktime_list'] = $worktime_list['info'];
+        $event_list = $this->Role_model->get_event_list(array("display"=>"1"));      
+        $this->data['event_list'] = $event_list['info'];
+        $this->load->view('event/edit_event',$this->data);
+    }
+
+    public function do_edit_event(){
+        $data = $this->security->xss_clean($_POST);
+        $where = array("id"=>trim($data['id']));
+        $params = $data;
+        unset($params['id']);
+        unset($params['event_month']);        
+        $event = $this->Event_model->update_event_info($params,$where);
+        
+        $redirect_url = 'ctl=event&act=event_list&is_event=1&user_id='.$data['user_id']."&event_month=".$data['event_month']."&status=1&res_status=修改成功";
+        redirect($redirect_url);
     }
 
     public function do_add_event(){
@@ -78,11 +110,23 @@ class Event extends MY_Controller {
         }
     }
 
+    public function delete_event(){
+        $data = $this->security->xss_clean($_GET);
+        $event_id = $data['event_id'];
+        $this->Event_model->delete_event(array('id'=>$event_id));
+        $redirect_url = 'ctl=event&act=event_list&is_event='.$data['is_event']."&user_id=".$data['user_id']."&event_month=".$data['event_month']."&status=".$data['status']."&res_status=删除成功";
+        redirect($redirect_url);
+    }
+
     public function event_list(){
         $data = $this->security->xss_clean($_GET);
         $this->data['back_url'] = "index.php?".http_build_query($data);
         if(isset($data['is_event']) && $data['is_event']==1){
             $this->data['is_event'] = 1;
+            if(isset($data['res_status'])){
+                $this->data['res_status'] = $data['res_status'];
+                unset($data['res_status']);
+            }            
             unset($data['is_event']);
             unset($data['ctl']);
             unset($data['act']);
@@ -104,10 +148,9 @@ class Event extends MY_Controller {
             }
             $this->pages_conf($event_list['count']);
             $this->data['event_list'] = $event_list['info'];        
-            $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));        
+            $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
             $this->data['user'] = $user;            
         }
-        
 
         //$where = array();
         //$work_order = $this->Event_model->get_event_list($where);
