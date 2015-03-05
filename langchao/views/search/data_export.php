@@ -12,9 +12,12 @@
               <select  class="form-control department_id" name="department_id" id="department_id">
                 <option value="">无</option>
                 <?php foreach ($department_list as $key => $value) {
+                if(($user_data['position2']==1||$user_data['position2']==2)&&$user_data['department']==$value['id']){
                 ?>
-                <option value="<? echo $value['id'];?>" <?if(isset($department_id)&&$department_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
-                <?php } ?>
+                    <option value="<? echo $value['id'];?>" <?if(isset($department_id)&&$department_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
+               <?}elseif($user_data['position2']==3||$user_data['position2']==4){?>
+                    <option value="<? echo $value['id'];?>" <?if(isset($department_id)&&$department_id==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>
+                <?php }} ?>
               </select>
             </div>
           </div>
