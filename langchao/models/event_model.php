@@ -47,6 +47,18 @@ class Event_model extends CI_Model {
         return $res;
     }
 
+    public function get_event_list_sql($sql){
+        $query = $this->db->query($sql);
+        $res = $query->result_array();
+        foreach ($res as $key => $value) {
+            $query4 = $this->db->get_where('member', array('id'=>$value['member_id']));
+            $res4 = $query4->row_array();
+            @$value['short_name'] = $res4['short_name'];
+            $res[$key] = $value;
+        }        
+        return $res;
+    }
+
     public function get_event_list($where,$offset=false){
         $this->db->order_by("event_time", "desc");
         if($offset!==false){

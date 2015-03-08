@@ -13,6 +13,80 @@ class Search extends MY_Controller {
         $this->load->model('User_model');
     }
 
+    public function performance_search(){
+        $data = $this->security->xss_clean($_GET);
+        if(isset($data['is_search']) && $data['is_search']==1){
+            $this->data['is_search'] = 1;
+            $this->data['user_id'] = $data['user_id'];
+            $user = $this->User_model->get_user_info(array('id'=>$data['user_id']));
+            if($data['user_id'] == 'all'){
+                $this->data['name'] = "全部"; 
+            }else{
+                $this->data['name'] = $user['name'];                
+            }
+            $this->data['start_time'] = $data['start_time'];
+            $this->data['end_time'] = $data['end_time'];
+            $this->data['short_name'] = $data['short_name'];
+            $this->data['department_id'] = $data['department_id'];
+            $sql = "select * from ldb_event_list where `event_time` >'".$data['start_time']."' and `event_time`<'".$data['end_time']."'";
+            if($data['user_id'] != 'all'){
+                $sql = $sql." and `user_id` =".$member['user_id'];
+            }
+            if(isset($data['short_name']) && !empty($data['short_name'])){
+                $member = $this->Member_model->get_member_info_like(array("short_name"=>$data['short_name']));
+                if($member){
+                    $sql = $sql." and `member_id` =".$member['id'];
+                }   
+            }
+            $type_list = explode(",",$data['event_type']);
+            $in_sql = " and `event_type_id` in(";
+            foreach($type_list as $key=>$val){
+                if($val !=""){
+                    $in_sql = $in_sql.$val.",";                    
+                }
+            }
+            $in_sql = substr($in_sql,0,-1);
+            $sql = $sql.$in_sql.")";
+            $res = $this->Event_model->get_event_list_sql($sql);
+            $info_list = array();
+            foreach ($res as $key => $value) {
+                $info_list[$value['short_name']][] = $value;
+            }
+            $count = 0;
+            foreach ($info_list as $key => $value) {
+                $info[$key] = count($value);
+                $count += count($value);
+            }
+            $this->data['info_list'] = $info;
+            $this->data['count'] = $count;
+        }
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
+        $this->data['department_list'] = $department_list['info'];        
+        $this->data['user_data'] = $this->session->userdata;        
+        $this->layout->view('search/performance_search',$this->data);
+    }
+
+    public function get_department_change_result(){
+        $data = $this->security->xss_clean($_POST);
+        $this->data['user_data'] = $this->session->userdata;
+        $where = array('department'=>$data['department_id']);
+        $users = $this->User_model->get_user_list($where);
+        foreach($users['info'] as $key=>$value){
+            if ($this->data['user_data']['position2']=='1' && $this->data['user_data']['id'] !=$value['id']){
+                unset($users['info'][$key]);
+            }
+        }
+        $user_list = $users['info'];
+        $event_list = $this->Role_model->get_event_list(array('department_id'=>$data['department_id']));
+        $event_list2 = $this->Role_model->get_event_list(array('department_id'=>'all'));
+        $list = array_merge($event_list['info'],$event_list2['info']);
+        $result = array('user_list'=>$user_list,'event_list'=>$list);        
+        if($list){
+            $result['event_list']=$list;
+        }
+        echo json_encode($result);
+    }
+
     public function data_search(){
         $data = $this->security->xss_clean($_GET);
         if(isset($data['is_search']) && $data['is_search']==1){

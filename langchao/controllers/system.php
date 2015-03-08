@@ -342,8 +342,8 @@ class System extends MY_Controller {
 		$data = $this->security->xss_clean($_POST);
 		$id = $data['id'];
 		$where = array("id"=>$id);
-		$data = array("name"=>trim($data['name']),"department_id"=>$data['department_id']);
-		$result = $this->Role_model->update_event($where,$data);
+		$sql = array("name"=>trim($data['name']),"department_id"=>$data['department_id']);
+		$result = $this->Role_model->update_event($where,$sql);
 		$redirect_url = 'ctl=system&act=event_list';
         redirect($redirect_url); 	
     }

@@ -216,6 +216,17 @@ class Role_model extends CI_Model {
             $query = $this->db->get_where('event_type_list', $where);
         }        
         $res = $query->result_array();
+        foreach ($res as $key => $value) {
+            if($value['department_id'] !='all'){
+                $department_info = $this->get_setting_info(array('id'=>$value['department_id']));
+                $value['department_name'] = $department_info['name'];
+                $res[$key] = $value;
+            }else{
+                $value['department_name'] = '全部部门';
+                $res[$key] = $value;                
+            }
+
+        }
         $this->db->where($where);
         $this->db->from('event_type_list');
         $count = $this->db->count_all_results();

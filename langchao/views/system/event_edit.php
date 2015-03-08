@@ -14,7 +14,7 @@
                     <select name="department_id" id="department_id">
                         <option value="all">全部</option>
                         <?php foreach ($department_list as $key => $value) {?>
-                        <option "<?php echo "value='".$value['id']."'"; if($role['department_id']==$value['id'])echo "selected='selected'"; ?>"><?php echo $value['name']?></option>
+                        <option <?php echo "value='".$value['id']."'"; if($role['department_id']==$value['id'])echo "selected='selected'"; ?>><?php echo $value['name']?></option>
                         <?php } ?>
                     </select>                    
                 </td>

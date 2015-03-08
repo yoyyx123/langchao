@@ -25,7 +25,7 @@
                 <tr>
                     <td><?php echo $i;?></td>
                     <td><?php echo $value['name'];?></td>
-                    <td><?php echo $value['department_id'];?></td>
+                    <td><?php echo $value['department_name'];?></td>
                     <td><a class="btn btn-info doedit" event_id='<?php echo $value['id'];?>'>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-danger dodelete" event_id='<?php echo $value['id'];?>'>删除</a>
                     </td>
