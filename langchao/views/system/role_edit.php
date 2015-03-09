@@ -31,11 +31,11 @@
                     <div class="box-content">
                         <?php foreach ($role['ctl'] as $key => $value) {?>
                            <div class="checkbox-group">
-                                <input class="sel-handle" type="checkbox" value="<?echo $value['id']?>" <?php if ($value['sel']=="1") echo "checked"; ?> name="ctl[]">
+                                <input class="sel-handle f_radio_all" type="checkbox" value="<?echo $value['id']?>" <?php if ($value['sel']=="1") echo "checked"; ?> name="ctl[]">
                                 <?php echo $value['name']?>
                                 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <?php foreach ($value['ctl_child'] as $k => $v) {?>
-                                    <input type="checkbox" value="<?echo $v['id']?>" <?php if ($v['sel']=="1") echo "checked"; ?> name="ctl[]"><?echo $v['name']?>
+                                    <input class="f_radio_one" type="checkbox" value="<?echo $v['id']?>" <?php if ($v['sel']=="1") echo "checked"; ?> name="ctl[]"><?echo $v['name']?>
                                 <?php }?>
                                 <br>
                                 <hr>
@@ -49,3 +49,23 @@
         <input type="hidden" name="role_id" id="role_id" value="<?php echo $role['id']?>">
         <button type="submit" class="btn btn-primary">修改</button>
 </form>         
+
+<script type="text/javascript">
+$(function() {
+    $(".f_radio_all").click(function(){
+        if($(this).prop("checked")){
+           $(this).parent().children('input[type="checkbox"]').prop("checked",true); 
+        }else{
+            $(this).parent().children('input[type="checkbox"]').prop("checked",false);
+        }
+        
+        //$('input[type="checkbox"]').prop("checked",true);
+    })
+    $(".f_radio_one").click(function(){
+        if($(this).prop("checked")){
+           $(this).parent().children('input[class="sel-handle f_radio_all"]').prop("checked",true); 
+        }
+    })
+
+})
+</script>

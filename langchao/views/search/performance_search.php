@@ -226,7 +226,7 @@ $(function() {
         })
         $(".f_radio_one").click(function(){
           $('input[type="checkbox"]').prop("checked",false);
-        })        
+        })
 
         $(".department_id").change(function() {
             _self = this;

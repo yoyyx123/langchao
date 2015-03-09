@@ -46,11 +46,11 @@
                                     <div class="box-content">
                                         <?php foreach ($ctl_list as $key => $value) {?>
                                            <div class="checkbox-group">
-                                                <input class="sel-handle" type="checkbox" value="<?echo $value['id']?>" name="ctl[]">
+                                                <input class="sel-handle f_radio_all" type="checkbox" value="<?echo $value['id']?>" name="ctl[]">
                                                 <?php echo $value['name']?>
                                                 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <?php foreach ($value['ctl_child'] as $k => $v) {?>
-                                                    <input type="checkbox" value="<?echo $v['id']?>" name="ctl[]"><?echo $v['name']?>
+                                                    <input class="f_radio_one" type="checkbox" value="<?echo $v['id']?>" name="ctl[]"><?echo $v['name']?>
                                                 <?php }?>
                                                 <br>
                                                 <hr>
@@ -77,6 +77,24 @@
 
 
 <script type="text/javascript">
+
+$(function() {
+    $(".f_radio_all").click(function(){
+        if($(this).prop("checked")){
+           $(this).parent().children('input[type="checkbox"]').prop("checked",true); 
+        }else{
+            $(this).parent().children('input[type="checkbox"]').prop("checked",false);
+        }
+        
+        //$('input[type="checkbox"]').prop("checked",true);
+    })
+    $(".f_radio_one").click(function(){
+        if($(this).prop("checked")){
+           $(this).parent().children('input[class="sel-handle f_radio_all"]').prop("checked",true); 
+        }
+    })
+
+})
 
 
 function do_add(){
