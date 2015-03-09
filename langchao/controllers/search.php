@@ -202,8 +202,14 @@ class Search extends MY_Controller {
 
             $where = array('event_month'=>$data['event_month']);
             if($data['user_id'] != "all"){
-                $where['user_id'] = $data['user_id'];
+                $where['where_in']['value'][] = $data['user_id'];
+            }else{
+                $user_list = $this->User_model->get_user_list(array('department'=>$data['department_id']));
+                foreach ($user_list['info'] as $key => $value) {
+                    $where['where_in']['value'][] = $value['id'];
+                }
             }
+            $where['where_in']['key'] = 'user_id';
             $result = array();
             $event_list = $this->Event_model->get_event_list($where);
             foreach($event_list['info'] as $key=>$val){
