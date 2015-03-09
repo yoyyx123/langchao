@@ -189,6 +189,30 @@ var sel_time_data = function (per_page) {
     window.location.href = url;
 }
 
+
+<?if(isset($department_id)){?>
+    $.ajax({
+        type: "POST",
+        url: "<?php echo site_url(array('ctl'=>'user', 'act'=>'get_user_list'))?>",
+        data: "&department_id="+<?echo $department_id;?>,
+        success: function(result){
+            var data = eval("("+result+")");
+            $(".user_id").empty();
+            if(result){
+              $(".user_id").append('<option value="all">全部</option>');
+            }
+            $.each(data, function(key,value){
+                if(value['id']==<?echo$user_id;?>){
+                $(".user_id").append('<option value="'+value['id']+'" selected=selected>'+value['name']+'</option>');
+                }else{
+                $(".user_id").append('<option value="'+value['id']+'">'+value['name']+'</option>');                  
+                }
+            });
+        }
+     });   
+
+<?}?>
+
 $(function() {
 
         $('.form_datetime').datetimepicker({

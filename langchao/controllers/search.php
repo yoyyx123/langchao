@@ -30,7 +30,7 @@ class Search extends MY_Controller {
             $this->data['department_id'] = $data['department_id'];
             $sql = "select * from ldb_event_list where `event_time` >'".$data['start_time']."' and `event_time`<'".$data['end_time']."'";
             if($data['user_id'] != 'all'){
-                $sql = $sql." and `user_id` =".$member['user_id'];
+                $sql = $sql." and `user_id` =".$data['user_id'];
             }
             if(isset($data['short_name']) && !empty($data['short_name'])){
                 $member = $this->Member_model->get_member_info_like(array("short_name"=>$data['short_name']));
@@ -53,6 +53,7 @@ class Search extends MY_Controller {
                 $info_list[$value['short_name']][] = $value;
             }
             $count = 0;
+            $info=array();
             foreach ($info_list as $key => $value) {
                 $info[$key] = count($value);
                 $count += count($value);

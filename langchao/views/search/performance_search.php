@@ -169,6 +169,42 @@ var sel_time_data = function (per_page) {
     window.location.href = url;
 }
 
+<?if(isset($department_id)){?>
+            $.ajax({
+                type: "POST",
+                url: "<?php echo site_url(array('ctl'=>'search', 'act'=>'get_department_change_result'))?>",
+                data: "&department_id="+<?echo $department_id;?>,
+                success: function(result){
+                    var data = eval("("+result+")");
+                    $(".user_id").empty();
+                    if(data['user_list']){
+                      $(".user_id").append('<option value="all">全部</option>');
+                    }
+                    $.each(data['user_list'], function(key,value){
+                      if(value['id']==<?echo$user_id;?>){
+                        $(".user_id").append('<option value="'+value['id']+'" selected=selected>'+value['name']+'</option>');
+                      }else{
+                        $(".user_id").append('<option value="'+value['id']+'">'+value['name']+'</option>');                  
+                      }
+                    });
+                    if(data['event_list']){
+                        $(".event_type").css('display', '1');                      
+                    }
+                    //var start = '<div class="box-content"><div class="checkbox-group">';
+                    //var end = '</div></div>';
+                    start ='';
+                    end='';
+                    var content = '';
+                    $.each(data['event_list'], function(key,value){
+                        content = content+"<input type='checkbox' id='event_type' class='event_type' value='"+value['id']+"' name='event_type'>"+value['name'];
+                      });
+                    $("#event_type_list").empty();
+                    $("#event_type_list").append(start+content+end);
+                }
+             });  
+
+<?}?>
+
 $(function() {
 
         $('.form_datetime').datetimepicker({
@@ -222,7 +258,7 @@ $(function() {
                     $("#event_type_list").empty();
                     $("#event_type_list").append(start+content+end);
                 }
-             });            
+             });
         });              
 
         $(".do_search").click(function() {
