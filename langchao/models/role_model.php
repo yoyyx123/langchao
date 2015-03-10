@@ -259,6 +259,11 @@ class Role_model extends CI_Model {
 
     public function get_setting_list($where,$offset=false){
         $this->db->order_by("id", "desc");
+        if(isset($where['where_like'])){
+            $this->db->like($where['where_like']['key'], $where['where_like']['value']);
+            $where_like = $where['where_like'];
+            unset($where['where_like']);
+        }
         if($offset!==false){
             $query = $this->db->get_where('setting_list', $where,ROW_SHOW_NUM,$offset);
 
@@ -267,6 +272,9 @@ class Role_model extends CI_Model {
         }
         $res = $query->result_array();
         $this->db->where($where);
+        if(isset($where_like) && !empty($where_like)){
+            $this->db->like($where_like['key'], $where_like['value']);
+        }
         $this->db->from('setting_list');
         $count = $this->db->count_all_results();
         return array('count'=>$count,"info"=>$res);

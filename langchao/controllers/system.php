@@ -79,6 +79,7 @@ class System extends MY_Controller {
         redirect($redirect_url); 	
     }
 /**
+
 	public function city_list()
 	{		
 		$where = array();
@@ -142,7 +143,6 @@ class System extends MY_Controller {
 		$redirect_url = 'ctl=system&act=city_list';
         redirect($redirect_url); 	
     }
-
 
 
 	public function custom_list()
@@ -355,8 +355,19 @@ class System extends MY_Controller {
 
     public function setting_list()
 	{
-		$this->data['user_data'] = $this->session->userdata;		
+		$data = $this->security->xss_clean($_GET);
+		$this->data['user_data'] = $this->session->userdata;
 		$where = array();
+		if(isset($data['type'])&&!empty($data['type'])){
+			$this->data['type'] = $data['type'];
+		}		
+		if(isset($data['type'])&&($data['type'] !="all")){
+			$where = array("type"=>$data['type']);
+		}
+		if(isset($data['is_search'])){
+			$where['where_like']['value'] = $data['search'];
+			$where['where_like']['key'] = 'name';
+		}
 		$setting_list = $this->Role_model->get_setting_list($where,$this->per_page);
 		$this->pages_conf($setting_list['count']);
 		$this->data['list'] = $setting_list['info'];
