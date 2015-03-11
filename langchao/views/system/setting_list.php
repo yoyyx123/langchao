@@ -32,6 +32,8 @@
                             <option value="performance" <?if(isset($type)&&$type=='performance'){echo "selected=selected";}?>>绩效完成率</option>
                             <option value="filetype" <?if(isset($type)&&$type=='filetype'){echo "selected=selected";}?>>文档类型</option>
                             <option value="position" <?if(isset($type)&&$type=='position'){echo "selected=selected";}?>>职位</option>
+                            <option value="membertype" <?if(isset($type)&&$type=='membertype'){echo "selected=selected";}?>>客户属性</option>
+                            <option value="traffic" <?if(isset($type)&&$type=='traffic'){echo "selected=selected";}?>>交通方式</option>
                         </select>
                     </th>
                     <th>
@@ -59,6 +61,8 @@
                                 if($value['type']=="performance"){echo "绩效完成率";}
                                 if($value['type']=="filetype"){echo "文档类型";}
                                 if($value['type']=="position"){echo "职位";}
+                                if($value['type']=="membertype"){echo "客户属性";}
+                                if($value['type']=="traffic"){echo "交通方式";}                                
                              ?>
                         </div>
                     </td>
