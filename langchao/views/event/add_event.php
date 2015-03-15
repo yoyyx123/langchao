@@ -37,10 +37,12 @@
             <tr>
                 <th>事件类型</th>
                 <td>
-                    <select name="event_type_id" id="event_type_id">                                        
+                    <select name="event_type_id" id="event_type_id" class="event_type_id">
+                    <!--                                       
                         <?php foreach ($event_list as $key => $value) {?>
                             <option value="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></option>
                         <?php } ?>
+                      -->
                     </select>
                 </td>  
             </tr>
@@ -226,13 +228,18 @@ $(function() {
             _self = this;
             $.ajax({
                 type: "POST",
-                url: "<?php echo site_url(array('ctl'=>'user', 'act'=>'get_user_list'))?>",
+                url: "<?php echo site_url(array('ctl'=>'event', 'act'=>'get_info_by_department'))?>",
                 data: "&department_id="+$(this).val(),
                 success: function(result){
                     var data = eval("("+result+")");
-                    $(".user_id").empty();                    
-                    $.each(data, function(key,value){
+                    $(".user_id").empty();
+                    $(".event_type_id").empty();
+                    
+                    $.each(data['user'], function(key,value){
                         $(".user_id").append('<option value="'+value['id']+'">'+value['name']+'</option>');
+                    });
+                    $.each(data['event'], function(key,value){
+                        $(".event_type_id").append('<option value="'+value['id']+'">'+value['name']+'</option>');
                     });
                 }
              });

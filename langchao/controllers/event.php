@@ -37,6 +37,25 @@ class Event extends MY_Controller {
         $this->load->view('event/add_event',$this->data);
     }
 
+    public function get_info_by_department(){
+        $data = $this->security->xss_clean($_POST);
+        $this->data['user_data'] = $this->session->userdata;
+        $where = array('department'=>$data['department_id']);
+        $users = $this->User_model->get_user_list($where);
+        foreach($users['info'] as $key=>$value){
+            if ($this->data['user_data']['position2']=='1' && $this->data['user_data']['id'] !=$value['id']){
+                unset($users['info'][$key]);
+            }
+        }
+        $result['user'] = $users['info'];
+        $sql = array('department_id'=>$data['department_id']);
+        $event = $this->Role_model->get_event_list($sql);
+        $sql2 = array('department_id'=>'all');
+        $event2 = $this->Role_model->get_event_list($sql2);
+        $result['event'] = array_merge($event['info'],$event2['info']);
+        echo json_encode($result);        
+    }
+
     public function edit_event(){
         $this->data['user_data'] = $this->session->userdata;        
         $data = $this->security->xss_clean($_POST);

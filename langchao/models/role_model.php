@@ -214,7 +214,7 @@ class Role_model extends CI_Model {
 
         }else{
             $query = $this->db->get_where('event_type_list', $where);
-        }        
+        }
         $res = $query->result_array();
         foreach ($res as $key => $value) {
             if($value['department_id'] !='all'){
