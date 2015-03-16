@@ -50,7 +50,6 @@ if($last_code){
     $code = '001';
 }
 
-echo $code;
 $filePath = 'member.xlsx'; 
 
 $PHPExcel = new PHPExcel(); 
@@ -66,22 +65,18 @@ return ;
 } 
 
 $PHPExcel = $PHPReader->load($filePath); 
+
+
 /**读取excel文件中的第一个工作表*/ 
 $currentSheet = $PHPExcel->getSheet(0); 
-/**取得最大的列号*/ 
 $allColumn = $currentSheet->getHighestColumn();
-/**取得一共有多少行*/ 
 $allRow = $currentSheet->getHighestRow();
-/**从第二行开始输出，因为excel表中第一行为列名*/ 
 for($currentRow = 2;$currentRow <= $allRow;$currentRow++){ 
-    /**从第A列开始输出*/ 
     for($currentColumn= 'C';$currentColumn<= $allColumn; $currentColumn++){ 
     $val = $currentSheet->getCellByColumnAndRow(ord($currentColumn) - 65,$currentRow)->getValue();/**ord()将字符转为十进制数*/ 
 
-    //echo $val; 
-    /**如果输出汉字有乱码，则需将输出内容用iconv函数进行编码转换，如下将gb2312编码转为utf-8编码输出*/
-    //echo @iconv('utf-8','gb2312', str_replace('\n','',$val))."\t";
-    $content[$currentRow][] = @iconv('utf-8','gb2312', str_replace('\n','',$val));
+    //$content[$currentRow][] = @iconv('utf-8','gb2312', str_replace('\n','',$val));
+    $content[$currentRow][] = str_replace('\n','',$val);
     }
 }
 $err = "会员写入开始code：".$code."\n";
@@ -104,4 +99,10 @@ foreach($content as $key=>$value){
 }
 $err = "会员写入结束code：".$code."\n";
 error_log($err,3,'result.log');
+
+
+
+
+
+
 mysql_close($con);
