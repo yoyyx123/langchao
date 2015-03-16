@@ -47,7 +47,7 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $i=1;foreach ($list as $key => $value) {?>
+                <?php $i=1;foreach ($list as $key => $value) { if($value['type'] !='expire_date'){?>
                 <tr>
                     <td><?php echo $i;?></td>
                     <td><?php echo $value['name'];?></td>
@@ -71,7 +71,7 @@
                     </td>
                 </tr>
                 
-                <?php $i++;} ?>
+                <?php $i++;}} ?>
 
             </tbody>
             <tbody>
