@@ -79,8 +79,6 @@ for($currentRow = 2;$currentRow <= $allRow;$currentRow++){
     $content[$currentRow][] = str_replace('\n','',$val);
     }
 }
-$err = "会员写入开始code：".$code."\n";
-error_log($err,3,'result.log');
 foreach($content as $key=>$value){
     $name = $value[0];
     $short_name = $value[1];
@@ -94,11 +92,12 @@ foreach($content as $key=>$value){
     $sql = "insert into ldb_member (`code`,`name`,`short_name`,`city`,`member_type`,`addr`) values ('".$code."','".$name."','".$short_name."','".$city."','".$member_type."','".$addr."')";
     mysql_query($sql);
     $code = get_code($code);
-    echo $sql;
+    echo $sql."/n";
+    $err = $sql."/n";
+    error_log($err,3,'member.log');
+
 
 }
-$err = "会员写入结束code：".$code."\n";
-error_log($err,3,'result.log');
 
 
 
