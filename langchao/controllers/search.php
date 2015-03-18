@@ -295,8 +295,10 @@ class Search extends MY_Controller {
             $weekend_more = 0;
             $holiday_more = 0;
             $worktime_count = 0;
+            $work_time = 0;
             foreach ($value as $k => $v) {
                 $more_work = $this->get_event_worktime_more($v);
+                $work_time += $more_work['work_time'];
                 $week_more += $more_work['week_more'];
                 $weekend_more += $more_work['weekend_more'];
                 $holiday_more += $more_work['holiday_more'];
@@ -304,6 +306,7 @@ class Search extends MY_Controller {
             }
             
             $info[$key]['worktime_count'] =  $worktime_count;
+            $info[$key]['work_time'] = $work_time;
             $info[$key]['week_more'] = $week_more;
             $info[$key]['weekend_more'] = $weekend_more;
             $info[$key]['holiday_more'] = $holiday_more;
@@ -315,35 +318,60 @@ class Search extends MY_Controller {
         return $info;
     }
 
-    public function get_event_worktime_more($event){
+   public function get_event_worktime_more($event){
+        $arrive = True;
+        $back = True;
         $week_more = 0;
         $weekend_more = 0;
         $holiday_more = 0;
+        $work_time = 0;
 
         $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$event['id']));
         foreach ($work_order_list as $key => $value) {
-            $tmp = strtotime($value['back_time']) - strtotime($value['arrive_time']);
-            list($int_tmp,$less_tmp) = $this->get_time_format($tmp);
-            $date = substr($value['back_time'],0,10);
+            $back_date = substr($value['back_time'],0,10);
+            $arrive_date = substr($value['arrive_time'],0,10);
+            $day = (strtotime($back_date." 00:00:00") - strtotime($arrive_date." 00:00:00"))/(3600*24);
             $holiday_list = $this->Event_model->get_holiday_list();
             $weekend_list = explode('_', WEEKEND);
-            if (in_array($date, $holiday_list)){
-                $holiday_more = $holiday_more+$int_tmp+$less_tmp;
-            }elseif(in_array(date("N",strtotime($date)), $weekend_list)){
-                $weekend_more = $weekend_more+$int_tmp+$less_tmp;
-            }else{
-                $tmp_time = $this->Event_model->get_work_time();
-                $week_more_tmp = $this->get_work_more_time($value['arrive_time'],$value['back_time'],$tmp_time);
-                $week_more = $week_more+$week_more_tmp;
+            if (in_array($arrive_date, $holiday_list)){
+                $arrive_tmp = strtotime($arrive_date." 00:00:00") + (3600*24) -strtotime($value['arrive_time']);
+                list($arrive_int_tmp,$arrive_less_tmp) = $this->get_time_format($arrive_tmp);
+                $holiday_more = $holiday_more+$arrive_int_tmp+$arrive_less_tmp;
+                $arrive = False;
             }
+            if (in_array($back_date, $holiday_list)){
+                $back_tmp = strtotime($value['back_time']) - strtotime($back_date." 00:00:00");
+                list($abackint_tmp,$back_less_tmp) = $this->get_time_format($back_tmp);
+                $holiday_more = $holiday_more+$back_int_tmp+$back_less_tmp;
+                $back = False;
+            }            
+            if(in_array(date("N",strtotime($back_date)), $weekend_list)){
+                $back_tmp = strtotime($value['back_time']) - strtotime($back_date." 00:00:00");
+                list($back_int_tmp,$back_less_tmp) = $this->get_time_format($back_tmp);
+                $weekend_more = $weekend_more+$back_int_tmp+$back_less_tmp;
+                $back = False;
+            }
+            if(in_array(date("N",strtotime($arrive_date)), $weekend_list)){
+                $arrive_tmp = strtotime($arrive_date." 00:00:00") + (3600*24) -strtotime($value['arrive_time']);
+                list($arrive_int_tmp,$arrive_less_tmp) = $this->get_time_format($arrive_tmp);
+                $weekend_more = $weekend_more+$arrive_int_tmp+$arrive_less_tmp;
+                $arrive = False;
+            }
+            $tmp_time = $this->Event_model->get_work_time();
+            $week_more_tmp = $this->get_work_more_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
+            $week_more = $week_more+$week_more_tmp;
+            $work_time_tmp = $this->get_work_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
+            $work_time = $work_time+$work_time_tmp;
         }
+        $res['work_time'] = $work_time;
         $res['week_more'] = $week_more;
         $res['weekend_more'] = $weekend_more;
         $res['holiday_more'] = $holiday_more;
         return $res;
     }
 
-    public function get_work_more_time($start,$end,$worktime){
+
+    public function get_work_time($start,$end,$astatus,$bstatus,$worktime){
         $tmp_int = 0;
         $tmp = explode("_",$worktime);
         $work_start = $tmp[0];
@@ -352,36 +380,103 @@ class Search extends MY_Controller {
         $start_time = substr($start,11);
         $end_date = substr($end,0,10);
         $end_time = substr($end,11);
+        if($day>1){
+            $tmp_int += ($day-1)*(strtotime($start_date." ".$work_end) - strtotime($start_date." ".$work_start));
+        }        
+        if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time<=$work_end) ){
+            $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_start);
+        }
+        if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time>$work_end) ){
+            $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$work_start);
+        }
+        if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time<$work_end) && ($end_time<$work_end) ){
+            $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$start_time);
+        }
+        if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time<$work_end) && ($end_time>$work_end) ){
+            $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$start_time);
+        }
 
-        if($start_date==$end_date){
-            if($work_start>$start_time){
-                $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
-            }
-            if($work_end<$end_time){
-                $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
-            }
-        }elseif($end_date>$start_date){
-            if($work_start>$start_time){
-                $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
-            }
-            $tmp_int += strtotime($start_date." 23:59:59") - strtotime($start_date." ".$work_end);
-            if($end_date>$work_start){
-                $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." 00:00:00");
-            }else{
-                $tmp_int += strtotime($start_date." ".$end_date) - strtotime($start_date." 00:00:00");
-            }
-            if($work_end<$end_time){
-                $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
-            }
-            if(floor((strtotime($end_date." "."00:00:00")-strtotime($start_date." "."00:00:00"))/(3600*24))>1){
-                $n = floor((strtotime($end_date." "."00:00:00")-strtotime($start_date." "."00:00:00"))/(3600*24))-1;
-                $tmp_int += (strtotime($start_date." 23:59:59") - strtotime($start_date." ".$work_end))*$n;
-                $tmp_int += (strtotime($start_date." ".$work_start) - strtotime($start_date." 00:00:00"))*$n;
-            }
+
+
+        if($astatus && ($start_date <$end_date) && ($start_time <$work_start)){
+            $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$work_start);
+        }
+
+        if($astatus && ($start_date <$end_date) && ($start_time >=$work_start)  && ($start_time <=$work_end)){
+            $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$start_time);
+
+        }
+
+        if($bstatus && ($start_date < $end_date) && ($end_time>$work_start)&& ($end_time<$work_end)){
+            $tmp_int += strtotime($end_date." ".$end_time) - strtotime($end_date." ".$work_start);
+        }elseif($bstatus && ($start_date < $end_date) && ($end_time>$work_end)){
+            $tmp_int += strtotime($end_date." ".$work_end) - strtotime($end_date." ".$work_start);
+        }
+        list($int_tmp,$less_tmp) = $this->get_time_format($tmp_int);  
+        return ($int_tmp+$less_tmp);        
+
+    }
+
+    public function get_work_more_time($start,$end,$astatus,$bstatus,$worktime){
+        $tmp_int = 0;
+        $tmp = explode("_",$worktime);
+        $work_start = $tmp[0];
+        $work_end = $tmp[1];
+        $start_date = substr($start,0,10);
+        $start_time = substr($start,11);
+        $end_date = substr($end,0,10);
+        $end_time = substr($end,11);
+        if($day>1){
+            $tmp_int += ($day-1)*(strtotime($start_date." ".$work_start) - strtotime($start_date." 00:00:00"));
+            $tmp_int += ($day-1)*(3600*24 + strtotime($start_date." 00:00:00") - strtotime($start_date." ".$work_end));
+        }        
+        if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time<=$work_end) ){
+            $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
+        }
+        if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time<$work_start)){
+            $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$start_time);
+        }
+
+        if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>$work_end)){
+            $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
+            $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
+        }
+
+        if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time <=$work_end) && ($end_time >$work_end)){
+            $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
+        }
+        if($astatus && ($start_date ==$end_date) && ($start_time >$work_end)){
+            $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$start_time);
+        }
+
+
+        if($astatus && ($start_date <$end_date) && ($start_time <$work_start)){
+            $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
+            $tmp_int += 24*3600 + strtotime($start_date." 00:00:00") - strtotime($start_date." ".$work_end);
+
+        }
+
+        if($astatus && ($start_date <$end_date) && ($start_time >=$work_start)  && ($start_time <=$work_end)){
+            $tmp_int += 24*3600 + strtotime($start_date." 00:00:00") - strtotime($start_date." ".$work_end);
+
+        }
+        if($astatus && ($start_date <$end_date) &&($start_time >$work_end)){
+            $tmp_int += 24*3600 + strtotime($start_date." 00:00:00") - strtotime($start_date." ".$start_time);
+        }             
+
+        if($bstatus && ($start_date < $end_date) && ($end_time<=$work_start)){
+            $tmp_int += strtotime($end_date." ".$end_time) - strtotime($end_date." 00:00:00");
+        }elseif($bstatus && ($start_date < $end_date) && ($end_time>$work_start) && ($end_time<=$work_end)){
+            $tmp_int += strtotime($end_date." ".$work_start) - strtotime($end_date." 00:00:00");
+        }
+        if($bstatus && ($start_date < $end_date) && ($end_time>$work_end)){
+            $tmp_int += strtotime($end_date." ".$work_start) - strtotime($end_date." 00:00:00");
+            $tmp_int += strtotime($end_date." ".$end_time) - strtotime($end_date." ".$work_end);
         }
         list($int_tmp,$less_tmp) = $this->get_time_format($tmp_int);  
         return ($int_tmp+$less_tmp);      
     }
+
     public function get_time_format($tmp){
         $res = array();
         $int_tmp =  intval($tmp/3600);

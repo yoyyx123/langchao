@@ -104,7 +104,7 @@
                 <td><?php echo $value['event_month'];?></td>
                 <td><?php echo $value['name'];?></td>
                 <td></td>
-                <td><?php echo $value['worktime_count'];?></td>
+                <td><?php echo $value['work_time'];?></td>
                 <td><?echo $value['week_more'];?></td>
                 <td><?echo $value['weekend_more'];?></td>
                 <td><?echo $value['holiday_more'];?></td>
