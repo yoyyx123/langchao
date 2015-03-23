@@ -559,7 +559,7 @@ class Event extends MY_Controller {
                 $arrive = False;
             }
             $tmp_where = array("id"=>$event['worktime_id']);
-            $tmp_time = $this->Event_model->get_work_time();
+            $tmp_time = $this->Event_model->get_work_time($tmp_where);
             $week_more_tmp = $this->get_work_more_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
             $week_more = $week_more+$week_more_tmp;
             $work_time_tmp = $this->get_work_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
