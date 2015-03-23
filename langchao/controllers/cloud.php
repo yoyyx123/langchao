@@ -42,7 +42,7 @@ class Cloud extends MY_Controller {
         $this->Cloud_model->add_doc_look_num(array("id"=>$data['id']));
         if($doc['type'] === 'pdf'){
             header('Content-type: application/pdf');
-            header('Content-Disposition: attachment;filename='.$file);
+            header('filename='.$file);
             readfile($file);            
         }elseif ($doc['type'] == 'xlsx') {
             require_once dirname(__FILE__) . '/../libraries/PHPExcel/IOFactory.php';
