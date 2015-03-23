@@ -124,7 +124,7 @@
 $(function() {
 
     $('.arrive_time').datetimepicker({
-        format: "yyyy-mm-dd hh:ii:ss", 
+        format: "yyyy-mm-dd hh:ii:00", 
         language:  'zh-CN',
         weekStart: 1,
         todayBtn:  1,
@@ -137,7 +137,7 @@ $(function() {
     });
 
     $('.back_time').datetimepicker({
-        format: "yyyy-mm-dd hh:ii:ss", 
+        format: "yyyy-mm-dd hh:ii:00", 
         language:  'zh-CN',
         weekStart: 1,
         todayBtn:  1,

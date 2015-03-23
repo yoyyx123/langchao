@@ -223,8 +223,8 @@ class Event_model extends CI_Model {
         }
     }
 
-    public function get_work_time(){
-        $query = $this->db->get_where('setting_list',array("type"=>"worktime"));
+    public function get_work_time($where){
+        $query = $this->db->get_where('setting_list',$where);
         $res = $query->row_array();
         if($res){
             return $res['name'];             

@@ -558,6 +558,7 @@ class Event extends MY_Controller {
                 $weekend_more = $weekend_more+$arrive_int_tmp+$arrive_less_tmp;
                 $arrive = False;
             }
+            $tmp_where = array("id"=>$event['worktime_id']);
             $tmp_time = $this->Event_model->get_work_time();
             $week_more_tmp = $this->get_work_more_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
             $week_more = $week_more+$week_more_tmp;
@@ -582,7 +583,7 @@ class Event extends MY_Controller {
         $end_time = substr($end,11);
         if($day>1){
             $tmp_int += ($day-1)*(strtotime($start_date." ".$work_end) - strtotime($start_date." ".$work_start));
-        }        
+        }
         if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time<=$work_end) ){
             $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_start);
         }
@@ -604,6 +605,7 @@ class Event extends MY_Controller {
 
         if($astatus && ($start_date <$end_date) && ($start_time >=$work_start)  && ($start_time <=$work_end)){
             $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$start_time);
+            echo $tmp_int;
 
         }
 
