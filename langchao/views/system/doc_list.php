@@ -1,15 +1,23 @@
 <div class="row">
     <div class="box col-md-5">
     <form action="<?php echo site_url(array('ctl'=>'system', 'act'=>'doc_add'))?>" method="post" enctype="multipart/form-data" onsubmit="return do_upload();" accept-charset="utf-8">
-        <table class="table table-bordered">
+        <table class="table table-bordered">            
             <tr>
                 <th>选择文件</th>
                 <th>文档名称</th>
+                <th>所属部门</th>
                 <th>操作</th>
             </tr>
             <tr>
                 <td><input type="file" name="file" id="file" /></td>
                 <td><input type="text" name="name" id="name"></td>
+                <td>
+                    <select name="department">
+                        <?foreach ($department_list as $key => $value) {?>
+                            <option value = "<?echo $value['id'];?>"><?echo $value['name'];?></option>
+                        <?}?>
+                    </select>
+                </td>
                 <td><input class="btn btn-primary" type="submit" name="submit" value="上传" /></td>
             <tr>
         </table>
@@ -24,10 +32,24 @@
             <thead>
                 <tr>
                     <th colspan="10" style="text-align:center;"><h4>文档管理</h4></th>
-                </tr>               
+                </tr>
+                <tr>
+                    <th colspan="2">选择部门：</th>
+                    <th>
+                        <select class="form-control department" name="department">
+                            <option value="all">全部</option>
+                            <?foreach ($department_list as $key => $value) {?>
+                                <option value = "<?echo $value['id'];?>" <?if(isset($department)&&($department==$value['id'])){echo "selected=selected";}?>><?echo $value['name'];?></option>
+                            <?}?>
+                        </select>                        
+                    </th>
+                    <th>
+                    </th>
+                </tr>                
                 <tr>
                     <th>序号</th>
                     <th>名称</th>
+                    <th>所属部门</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -36,6 +58,7 @@
                 <tr>
                     <td><?php echo $i;?></td>
                     <td><?php echo $value['name'];?></td>
+                    <td><?php echo $value['department_name'];?></td>                    
                     <td><a class="btn btn-info doedit" setting_id='<?php echo $value['id'];?>'>编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-danger dodelete" setting_id='<?php echo $value['id'];?>'>删除</a>
                     </td>
@@ -67,6 +90,12 @@ $(function() {
         });
     <?}?>
 
+        $(".department").change(function(){
+            _self = this;
+            var url = '<?php echo site_url("ctl=system&act=doc_list");?>';
+            url = url+"&department="+$('.department').val();
+            window.location.href = url;
+        })
 
     $(".dodelete").click(function() {
      if(confirm("确认删除吗")){

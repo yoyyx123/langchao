@@ -18,13 +18,21 @@ class Cloud extends MY_Controller {
         if(isset($data['type']) && $data['type']=="download"){
             $doc = $this->Cloud_model->get_doc_info(array("id"=>$data['id']));
             $this->Cloud_model->add_doc_download_num(array("id"=>$data['id']));
-            header("location:".$doc['path']);
+            $file = $doc['path'];
+            $name = $doc['name'].".".$doc['type'];
+            header('Content-type: application/pdf');
+            header('Content-Disposition: attachment;filename='.$name);
+            readfile($file);
         }
         $this->data['user_data'] = $this->session->userdata;
-        $doc_list = $this->Cloud_model->get_doc_list(array(),$this->per_page);
+        $where = array();
+        if($this->data['user_data']['position2'] == '1'){
+            $where = array("department"=>$this->data['user_data']['department']);
+        }
+        $doc_list = $this->Cloud_model->get_doc_list($where,$this->per_page);
         $this->pages_conf($doc_list['count']);
         $this->data['doc_list'] = $doc_list['info'];
-        $this->layout->view('cloud/doc_list',$this->data);        
+        $this->layout->view('cloud/doc_list',$this->data);
     }
 
     public function doc_look(){
@@ -32,9 +40,21 @@ class Cloud extends MY_Controller {
         $doc = $this->Cloud_model->get_doc_info(array("id"=>$data['id']));
         $file = $doc['path'];
         $this->Cloud_model->add_doc_look_num(array("id"=>$data['id']));
-        header('Content-type: application/pdf');
-        header('filename='.$file);
-        readfile($file);
+        if($doc['type'] === 'pdf'){
+            header('Content-type: application/pdf');
+            header('Content-Disposition: attachment;filename='.$file);
+            readfile($file);            
+        }elseif ($doc['type'] == 'xlsx') {
+            require_once dirname(__FILE__) . '/../libraries/PHPExcel/IOFactory.php';
+            $objPHPExcel = PHPExcel_IOFactory::load($file);
+            $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
+            $objWriter->setSheetIndex(0);
+            $objWriter->save(str_replace('.xlsx', '.htm', $file));
+            //$look_file = str_replace('.xlsx', '.htm', $file);
+            $this->data['path'] = $file;
+            $this->load->view('cloud/doc_look',$this->data);
+        }
+
     }
 
 }

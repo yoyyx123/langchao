@@ -14,9 +14,21 @@
                                 <td>
                                     <div id="namediv" class="input-group col-xs-4">
                                     <input type="text" placeholder="姓名" name="name" id="namex" value="<?echo $doc_info['name'];?>">
-                                    </div>                                    
+                                    </div>
                                 </td>
                             </tr>
+                            <tr>
+                                <td>所属部门</td>
+                                <td>
+                                    <div id="departmentdiv" class="input-group col-xs-4">
+                                        <select name="department">
+                                            <?foreach ($department_list as $key => $value) {?>
+                                                <option value = "<?echo $value['id'];?>" <?if($value['id']==$doc_info['department']){echo "selected=selected";}?>><?echo $value['name'];?></option>
+                                            <?}?>                                            
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>                            
                         </tbody>
                     </table>
                 </div>

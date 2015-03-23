@@ -486,11 +486,23 @@ class System extends MY_Controller {
 		$data = $this->security->xss_clean($_GET);
 		if(isset($data['status'])){
 			$this->data['status'] = $data['status'];
-		}	
+		}
 		$where = array();
+		if(isset($data['department']) && $data['department'] != 'all'){
+			$where['department'] = $data['department'];
+			$this->data['department'] = $data['department'];
+		}
 		$list = $this->Role_model->get_doc_list($where,$this->per_page);
 		$this->pages_conf($list['count']);
-		$this->data['list'] = $list['info'];
+		$department_list = $this->Role_model->get_setting_list(array("type"=>"department"));		
+		$this->data['department_list'] = $department_list['info'];
+		$list = $list['info'];
+		foreach ($list as $key => $value) {
+			$department = $this->Role_model->get_setting_info(array('id'=>$value['department']));
+			$value['department_name'] = @$department['name'];
+			$list[$key] = $value;
+		}
+		$this->data['list'] = $list;
         $this->layout->view('system/doc_list',$this->data);    	
     }
 
@@ -509,6 +521,8 @@ class System extends MY_Controller {
         $where = array("id"=>trim($id));
         $doc_info = $this->Role_model->get_doc_info($where);
         $this->data['doc_info'] = $doc_info;
+		$department_list = $this->Role_model->get_setting_list(array("type"=>"department"));		
+		$this->data['department_list'] = $department_list['info'];        
         $this->load->view('system/edit_doc',$this->data);
 	}
 
@@ -517,7 +531,7 @@ class System extends MY_Controller {
         $params = $data;
         $where = array("id"=>$params['id']);
         unset($params['id']);
-        $res = $this->Role_model->update_doc($where,$params);         
+        $res = $this->Role_model->update_doc($where,$params);
         $redirect_url = 'ctl=system&act=doc_list&status=修改成功';
         redirect($redirect_url);		
 	}
@@ -527,13 +541,14 @@ class System extends MY_Controller {
 		$tp = array("application/msword");
         $path = "./upload/doc";
         $name = $data['name'];
+        $department = $data['department'];
         $type = end(explode(".",$_FILES['file']['name']));
         //$filename = iconv("UTF-8", "GBK", ($_FILES['file']['name']));
         $filename = $this->session->userdata['id']."_".time().".".$type;
         $file = $path."/".$filename;
         $result = move_uploaded_file($_FILES["file"]["tmp_name"],$file);
 		if($result){
-			$sql = array("name"=>trim($name),"path"=>$file,"type"=>$type);
+			$sql = array("name"=>trim($name),"path"=>$file,"type"=>$type,"department"=>$department);
 			$result = $this->Role_model->add_doc($sql);
 		}
 		$redirect_url = 'ctl=system&act=doc_list';
