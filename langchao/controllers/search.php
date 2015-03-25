@@ -1,5 +1,5 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
+error_reporting(0);
 header("Content-Type:text/html;charset=utf-8");
 class Search extends MY_Controller {
 
@@ -357,7 +357,9 @@ class Search extends MY_Controller {
                 $weekend_more = $weekend_more+$arrive_int_tmp+$arrive_less_tmp;
                 $arrive = False;
             }
-            $tmp_time = $this->Event_model->get_work_time();
+            //$tmp_time = $this->Event_model->get_work_time();
+            $tmp_where = array("id"=>$event['worktime_id']);
+            $tmp_time = $this->Event_model->get_work_time($tmp_where);
             $week_more_tmp = $this->get_work_more_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
             $week_more = $week_more+$week_more_tmp;
             $work_time_tmp = $this->get_work_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
@@ -531,7 +533,7 @@ class Search extends MY_Controller {
             $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$value['id']));
             foreach ($work_order_list as $k => $val) {
                 if($data['data_type']=="work_time"){
-                    $result[] = $this->do_data_export_worktime($val,$data,$user['name']);
+                    $result[] = $this->do_data_export_worktime($value,$val,$data,$user['name']);
                 }elseif($data['data_type']=="fee"){
                     foreach($val['bill_order_list'] as $m=>$n){
                         $result[] = $this->format_bill_data($n,$user['name']);
@@ -542,11 +544,11 @@ class Search extends MY_Controller {
         if(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="fee"){
             $msg[$this->data['name']] = $result;
             $title = array("使用人","出发时间","到达时间","起始地","目的地","交通费","住宿费","加班餐费","其他费用","备注","单据编号","交通方式","类型");
-            $this->export_xls($msg,$title);  
+            $this->export_xls($this->data['name'],$msg,$title);  
         }elseif(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="work_time"){
             $msg[$this->data['name']] = $result;
             $title = array("使用人","日期","到场时间","离场时间","事件描述","工时","平时加班","周末加班","节日加班");
-            $this->export_xls($msg,$title);  
+            $this->export_xls($this->data['name'],$msg,$title);  
         }
         $this->pages_conf(count($result));
         $info_list = array();
@@ -588,7 +590,7 @@ class Search extends MY_Controller {
 
 
 
-    public function export_xls($msg,$title){
+    public function export_xls($name,$msg,$title){
         require_once dirname(__FILE__) . '/../libraries/PHPExcel.php';
         $objPHPExcel = new PHPExcel();
         $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
@@ -619,7 +621,7 @@ class Search extends MY_Controller {
             $objPHPExcel->getActiveSheet()->setTitle($key);
             $i++;
         }
-
+        $filename = $name.'.xlsx';
 
         $objPHPExcel->setActiveSheetIndex(0);
 
@@ -628,7 +630,7 @@ class Search extends MY_Controller {
 
         // Redirect output to a client’s web browser (Excel2007)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="数据导出.xlsx"');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
@@ -644,16 +646,18 @@ class Search extends MY_Controller {
         exit;        
     }
 
-    public function do_data_export_worktime($work_order,$data,$user_name){
+    public function do_data_export_worktime($event,$work_order,$data,$user_name){
         $work = array();
         $worktime_count = $this->do_data_export_worktime_count($work_order);
         $work['user_name'] = $user_name;
-        $work['date'] = $work_order['date'];
+        //$work['date'] = $work_order['date'];
+        $work['date'] = $event['event_time'];
         $work['arrive_time'] = $work_order['arrive_time'];
         $work['back_time'] = $work_order['back_time'];
         $work['desc'] = $work_order['desc'];
-        $work['worktime_count'] = $worktime_count;
-        list($week_more,$weekend_more,$holiday_more) = $this->do_data_export_worktime_more($work_order);
+        //$work['worktime_count'] = $worktime_count;
+        list($work_time,$week_more,$weekend_more,$holiday_more) = $this->do_data_export_worktime_more($event,$work_order);
+        $work['work_time'] = $work_time;
         $work['week_more'] = $week_more;
         $work['weekend_more'] = $weekend_more;
         $work['holiday_more'] = $holiday_more;
@@ -677,7 +681,8 @@ class Search extends MY_Controller {
         return $worktime_count;
     }
 
-    public function do_data_export_worktime_more($work_order){
+/**
+    public function do_data_export_worktime_more($event,$work_order){
         $week_more = 0;
         $weekend_more = 0;
         $holiday_more = 0;
@@ -710,6 +715,60 @@ class Search extends MY_Controller {
         $res[] = $holiday_more;
         return $res;
     }
+**/
+
+   public function do_data_export_worktime_more($event,$work_order){
+        $arrive = True;
+        $back = True;
+        $week_more = 0;
+        $weekend_more = 0;
+        $holiday_more = 0;
+        $work_time = 0;
+
+
+        $back_date = substr($work_order['back_time'],0,10);
+        $arrive_date = substr($work_order['arrive_time'],0,10);
+        $day = (strtotime($back_date." 00:00:00") - strtotime($arrive_date." 00:00:00"))/(3600*24);
+        $holiday_list = $this->Event_model->get_holiday_list();
+        $weekend_list = explode('_', WEEKEND);
+        if (in_array($arrive_date, $holiday_list)){
+            $arrive_tmp = strtotime($arrive_date." 00:00:00") + (3600*24) -strtotime($work_order['arrive_time']);
+            list($arrive_int_tmp,$arrive_less_tmp) = $this->get_time_format($arrive_tmp);
+            $holiday_more = $holiday_more+$arrive_int_tmp+$arrive_less_tmp;
+            $arrive = False;
+        }
+        if (in_array($back_date, $holiday_list)){
+            $back_tmp = strtotime($work_order['back_time']) - strtotime($back_date." 00:00:00");
+            list($abackint_tmp,$back_less_tmp) = $this->get_time_format($back_tmp);
+            $holiday_more = $holiday_more+$back_int_tmp+$back_less_tmp;
+            $back = False;
+        }            
+        if(in_array(date("N",strtotime($back_date)), $weekend_list)){
+            $back_tmp = strtotime($work_order['back_time']) - strtotime($back_date." 00:00:00");
+            list($back_int_tmp,$back_less_tmp) = $this->get_time_format($back_tmp);
+            $weekend_more = $weekend_more+$back_int_tmp+$back_less_tmp;
+            $back = False;
+        }
+        if(in_array(date("N",strtotime($arrive_date)), $weekend_list)){
+            $arrive_tmp = strtotime($arrive_date." 00:00:00") + (3600*24) -strtotime($work_order['arrive_time']);
+            list($arrive_int_tmp,$arrive_less_tmp) = $this->get_time_format($arrive_tmp);
+            $weekend_more = $weekend_more+$arrive_int_tmp+$arrive_less_tmp;
+            $arrive = False;
+        }
+        $tmp_where = array("id"=>$event['worktime_id']);
+        $tmp_time = $this->Event_model->get_work_time($tmp_where);
+        $week_more_tmp = $this->get_work_more_time($work_order['arrive_time'],$work_order['back_time'],$arrive,$back,$tmp_time,$day);
+        $week_more = $week_more+$week_more_tmp;
+        $work_time_tmp = $this->get_work_time($work_order['arrive_time'],$work_order['back_time'],$arrive,$back,$tmp_time,$day);
+        $work_time = $work_time+$work_time_tmp; 
+
+        
+        $res[] = $work_time;        
+        $res[] = $week_more;
+        $res[] = $weekend_more;
+        $res[] = $holiday_more;
+        return $res;
+    }    
 
 }
 

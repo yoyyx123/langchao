@@ -122,7 +122,7 @@ $(function() {
                 return false;
                 }
             url = url+"&is_search=1&search="+$('#search').val();                
-            window.location.href = url;            
+            window.location.href = url;
         })
 
         $(".dodelete").click(function() {

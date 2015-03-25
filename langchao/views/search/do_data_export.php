@@ -42,7 +42,7 @@
                 <td><? echo $value['arrive_time'];?></td>
                 <td><? echo $value['back_time'];?></td>
                 <td><? echo $value['desc'];?></td>
-                <td><? echo $value['worktime_count'];?></td>
+                <td><? echo $value['work_time'];?></td>
                 <td><?echo $value['week_more'];?></td>
                 <td><?echo $value['weekend_more'];?></td>
                 <td><?echo $value['holiday_more'];?></td>

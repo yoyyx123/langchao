@@ -5,29 +5,36 @@
         </li>
     </ul>
 </div>
-
+<div class="row" style="text-align:center;">
+     <h2>客户管理</h2>
+</div>
 <div class="row">
     <div class="box col-md-12">
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th colspan="10" style="text-align:center;"><h4>客户管理</h4></th>
-                </tr>
-                <tr>
-                    <th>客户列表</th>
-                    <th colspan="3"></th>
-                    <th>搜索</th>
-                    <th>
+                    <th colspan="5"></th>
+                    <th><input class="form-control" id="search" name="search" type="text" placeholder="客户简称" value="<?if(isset($search)){echo $search;}?>">
                     </th>
-                    <th>查询</th>
-                </tr>                
+                    <th><a class="btn btn-info do_search">搜索</a></th>
+                </tr> 
+                <tr>
+                    <th colspan="7"></th>
+                </tr>                               
                 <tr>
                     <th>序号</th>
                     <th>客户编号</th>
                     <th>客户简称</th>
                     <th>客户联系人</th>
                     <th>联系电话</th>
-                    <th>客户属性</th>
+                    <th>
+                        <select class="form-control member_type">
+                            <option value="all" <?if($member_type=='all'){echo "selected=selected";}?>>全部</option>
+                            <?foreach ($member_type_list as $key => $value) {?>
+                              <option value="<?echo $value['id'];?>" <?if($member_type==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>  
+                            <?}?>
+                    </select>
+                    </th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -62,6 +69,29 @@
 
 <script type="text/javascript">
 $(function() {
+
+        $(".member_type").change(function(){
+            _self = this;
+            var url = '<?php echo site_url("ctl=member&act=manage");?>';
+            url = url+"&member_type="+$('.member_type').val();
+            window.location.href = url;
+        })
+
+        $(".do_search").click(function(){
+            var url = '<?php echo site_url("ctl=member&act=manage");?>';
+            if ($('#search').val() == '' ) {
+                var n = noty({
+                  text: "搜索内容必填",
+                  type: 'error',
+                  layout: 'center',
+                  timeout: 1000,
+                });
+                return false;
+                }
+            url = url+"&is_search=1&search="+$('#search').val();                
+            window.location.href = url;
+        })
+
         $(".dodelete").click(function() {
          if(confirm("确认删除吗")){
             _self = this;

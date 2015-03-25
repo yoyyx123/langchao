@@ -61,7 +61,23 @@ class Member extends MY_Controller {
     }
 
     public function manage(){
+        $data = $this->security->xss_clean($_GET);        
         $where = array();
+        if(isset($data['member_type'])&&!empty($data['member_type'])){
+            $this->data['member_type'] = $data['member_type'];
+        }else{
+            $this->data['member_type'] = 'all';
+        }
+        if(isset($data['member_type'])&&($data['member_type'] !="all")){
+            $where = array("member_type"=>$data['member_type']);
+        }
+        if(isset($data['is_search'])){
+            $where['where_like']['value'] = $data['search'];
+            $where['where_like']['key'] = 'short_name';
+            $this->data['search'] = $data['search'];
+        }
+        $member_type_list = $this->Role_model->get_setting_list(array("type"=>"membertype"));
+        $this->data['member_type_list'] = $member_type_list['info'];
         $member = $this->Member_model->get_member_list($where,$this->per_page);
         $this->pages_conf($member['count']);
         $this->data['member_list'] = $member['info'];
@@ -112,19 +128,22 @@ class Member extends MY_Controller {
             $this->data['is_event'] = 1;
             unset($data['is_event']);
         }
-        if(empty($data['short_name'])){
-            unset($data['short_name']);
-        }
-        if(empty($data['code'])){
-            unset($data['code']);
-        }
-        if(empty($data['contacts'])){
-            unset($data['contacts']);
-        }
         $where = array();        
         foreach($data as $k =>$v){
-            $where[$k] = trim($v);
+            if(empty($data[$k])){
+                unset($data[$k]);
+            }else{
+              $where[$k] = trim($v);  
+            }
         }
+        if(isset($where['city'])){
+            $city = $this->Role_model->get_setting_like(array('type'=>'city'),array('key'=>'name','value'=>$where['city']));
+            $where['city'] = @$city['id'];
+        }
+        if(isset($where['member_type'])){
+            $member_type = $this->Role_model->get_setting_like(array('type'=>'membertype'),array('key'=>'name','value'=>$where['member_type']));
+            $where['member_type'] = @$member_type['id'];
+        }        
         $member = $this->Member_model->get_member_info_like($where);
         $this->data['member'] = $member;
         $event_time = date("Y-m-d",time()-7*24*3600);

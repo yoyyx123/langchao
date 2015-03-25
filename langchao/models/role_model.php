@@ -283,7 +283,14 @@ class Role_model extends CI_Model {
     public function get_setting_info($where){
         $query = $this->db->get_where('setting_list', $where);
         $res = $query->row_array();
-        return $res;        	
+        return $res;
+    }
+
+    public function get_setting_like($where,$where_like){
+        $this->db->like($where_like['key'], $where_like['value']);
+        $query = $this->db->get_where('setting_list', $where);
+        $res = $query->row_array();
+        return $res;
     }
     
     public function add_setting($data){
