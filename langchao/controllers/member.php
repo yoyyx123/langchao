@@ -68,9 +68,17 @@ class Member extends MY_Controller {
         }else{
             $this->data['member_type'] = 'all';
         }
+        if(isset($data['city'])&&!empty($data['city'])){
+            $this->data['city'] = $data['city'];
+        }else{
+            $this->data['city'] = 'all';
+        }        
         if(isset($data['member_type'])&&($data['member_type'] !="all")){
             $where = array("member_type"=>$data['member_type']);
         }
+        if(isset($data['city'])&&($data['city'] !="all")){
+            $where = array("city"=>$data['city']);
+        }        
         if(isset($data['is_search'])){
             $where['where_like']['value'] = $data['search'];
             $where['where_like']['key'] = 'short_name';
@@ -78,6 +86,8 @@ class Member extends MY_Controller {
         }
         $member_type_list = $this->Role_model->get_setting_list(array("type"=>"membertype"));
         $this->data['member_type_list'] = $member_type_list['info'];
+        $city_list = $this->Role_model->get_setting_list(array("type"=>"city"));
+        $this->data['city_list'] = $city_list['info'];
         $member = $this->Member_model->get_member_list($where,$this->per_page);
         $this->pages_conf($member['count']);
         $this->data['member_list'] = $member['info'];
@@ -152,6 +162,24 @@ class Member extends MY_Controller {
         $this->data['event_list'] = $event_list;
         $this->load->view('member/do_search',$this->data);
     }
+
+    public function do_look(){
+        $this->data['user_data'] = $this->session->userdata;
+        $data = $this->security->xss_clean($_GET);
+        if(isset($data['is_event']) && $data['is_event']==1){
+            $this->data['is_event'] = 1;
+            unset($data['is_event']);
+        }
+        $where = array('id'=>$data['id']);    
+        $member = $this->Member_model->get_member_info_like($where);
+        $this->data['member'] = $member;
+        //$event_time = date("Y-m-d",time()-7*24*3600);
+        //$ww = array("member_id ="=>$member['id'], 'event_time >=' => $event_time);
+        $ww = array("member_id ="=>$member['id']);
+        $event_list = $this->Event_model->get_member_event_list($ww,7);
+        $this->data['event_list'] = $event_list;
+        $this->layout->view('member/do_look',$this->data);
+    }    
 }
 
 ?>

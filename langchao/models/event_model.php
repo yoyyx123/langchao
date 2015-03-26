@@ -28,8 +28,11 @@ class Event_model extends CI_Model {
         return $res;
     }
 
-    public function get_member_event_list($where){
+    public function get_member_event_list($where,$limit=false){
         $this->db->order_by("event_time", "desc");
+        if(isset($limit)){
+            $this->db->limit($limit);
+        }
         $this->db->from('event_list');
         $this->db->where($where);
         $query = $this->db->get();

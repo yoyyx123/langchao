@@ -27,6 +27,14 @@
                     <th>客户简称</th>
                     <th>客户联系人</th>
                     <th>联系电话</th>
+                     <th>
+                        <select class="form-control city">
+                            <option value="all" <?if($city=='all'){echo "selected=selected";}?>>全部</option>
+                            <?foreach ($city_list as $key => $value) {?>
+                              <option value="<?echo $value['id'];?>" <?if($city==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>  
+                            <?}?>
+                        </select>
+                    </th>                    
                     <th>
                         <select class="form-control member_type">
                             <option value="all" <?if($member_type=='all'){echo "selected=selected";}?>>全部</option>
@@ -46,9 +54,14 @@
                     <td><?php echo $value['short_name'];?></td>
                     <td><?php echo $value['contacts'];?></td>
                     <td><?php echo $value['mobile'];?></td>
+                    <td><?php echo $value['city_name'];?></td>
                     <td><?php echo $value['member_type_name'];?></td>
-                    <td><a class="btn btn-info doedit" member_id='<?php echo $value['id'];?>'>修改</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <td>
+                        <a class="btn btn-primary dolook" href="<?php echo site_url('ctl=member&act=do_look').'&id='.$value['id'];?>" target="_blank">查看</a>&nbsp;&nbsp;&nbsp;&nbsp;                      
+                        <?if($user_data['position2'] == '3' || $user_data['position2'] == '4'){?>
+                        <a class="btn btn-info doedit" member_id='<?php echo $value['id'];?>'>修改</a>&nbsp;&nbsp;&nbsp;&nbsp;
                         <a class="btn btn-danger dodelete" member_id='<?php echo $value['id'];?>'>删除</a>
+                        <?}?>
                     </td>
                 </tr>
                 <?php $i++;} ?>
@@ -76,6 +89,12 @@ $(function() {
             url = url+"&member_type="+$('.member_type').val();
             window.location.href = url;
         })
+        $(".city").change(function(){
+            _self = this;
+            var url = '<?php echo site_url("ctl=member&act=manage");?>';
+            url = url+"&city="+$('.city').val();
+            window.location.href = url;
+        })        
 
         $(".do_search").click(function(){
             var url = '<?php echo site_url("ctl=member&act=manage");?>';

@@ -32,11 +32,11 @@ class Member_model extends CI_Model {
             $city_id = $res['city'];
             $query2 = $this->db->get_where('setting_list', array('id'=>$city_id));
             $res2 = $query2->row_array();
-            $res['city_name'] = $res2['name'];
+            $res['city_name'] = @$res2['name'];
             $member_type = $res['member_type'];
             $query3 = $this->db->get_where('setting_list', array('id'=>$member_type));
             $res3 = $query3->row_array();
-            $res['member_type_name'] = $res3['name'];
+            $res['member_type_name'] = @$res3['name'];
         }
         return $res;        
     }

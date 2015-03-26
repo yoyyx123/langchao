@@ -1,3 +1,11 @@
+<style type="text/css">
+
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
+
+</style>
+
 <div>
     <ul class="breadcrumb">
         <li>
@@ -117,8 +125,9 @@
     </p>
 </div>
 </form>
-<div class="row col-sm-12 col-md-12">
-    <table class="table-bordered table-striped table-condensed" width="300">
+<div class="row">
+<div class="col-sm-12 col-md-12">
+    <table class="table-bordered table-striped table-condensed">
         <thead>
             <tr class="CaseRow">
                 <th align="center" colspan="14">去程费用</th>
@@ -194,7 +203,7 @@
         </tbody>
     </table>
     </p>
-        <table class="table-bordered table-striped table-condensed" width="300">
+        <table class="table-bordered table-striped table-condensed">
         <thead>
             <tr class="CaseRow">
                 <th align="center" colspan="14">返程费用</th>
@@ -272,7 +281,7 @@
     </table>
     
 </div>
-
+</div>
 <?}?>
 
 
@@ -313,7 +322,7 @@ function add_td(atable){
         id = 0;
     }
     var NId = parseInt(id)+1;
-    var TrContent = '<tr align="center" id="'+NId+'"><td>'+NId+'</td><td><input type="text" name="go_time" id="go_time" class="format_time"></td><td><input type="text" name="arrival_time" id="arrival_time" class="format_time"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select id="transportation" name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" selected=selected><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee"></td><td><input type="text" name="hotel_fee" id="hotel_fee"></td><td><input type="text" name="food_fee" id="food_fee"></td><td><input type="text" name="other_fee" id="other_fee"></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
+    var TrContent = '<tr id="'+NId+'"><td>'+NId+'</td><td><input type="text" name="go_time" id="go_time" class="format_time"></td><td><input type="text" name="arrival_time" id="arrival_time" class="format_time"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select id="transportation" name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" selected=selected><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee"></td><td><input type="text" name="hotel_fee" id="hotel_fee"></td><td><input type="text" name="food_fee" id="food_fee"></td><td><input type="text" name="other_fee" id="other_fee"></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
     $(atable).parent().parent().parent().parent().find("tbody").append(TrContent);
     $('.format_time').datetimepicker({
         format: "yyyy-mm-dd hh:ii:ss", 

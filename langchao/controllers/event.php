@@ -462,12 +462,21 @@ class Event extends MY_Controller {
         $time = $event['event_time'];
         $x = strtotime($time);
         $n = strtotime(date("Y-m-d"));
-        $r = round(($x+5*24*3600-$n)/(24*3600));
+        $tmp = $this->Role_model->get_expire_date();
+        if(!$tmp){
+            $m = 0;
+        }else{
+            $m = $tmp['name'];
+        }
+        $r = round(($x+$m*24*3600-$n)/(24*3600));
+        $this->data['event_less_time'] = $r;
+        /**
         if($r>=0){
             $this->data['event_less_time'] = 1;
         }else{
             $this->data['event_less_time'] = 0;
         }
+        **/
         //$event['event_less_time'] = $r;
         $this->data['event'] = $event;
         $check = $this->Event_model->get_check_event_info(array('id'=>$data['event_id']));
@@ -605,7 +614,6 @@ class Event extends MY_Controller {
 
         if($astatus && ($start_date <$end_date) && ($start_time >=$work_start)  && ($start_time <=$work_end)){
             $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$start_time);
-            echo $tmp_int;
 
         }
 
@@ -923,7 +931,7 @@ class Event extends MY_Controller {
             foreach ($value['bill_order_list'] as $k => $val) {
                 $total = $total + $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];
                 if($val['status'] == 2){
-                    if($val['rel_fee']){
+                    if($val['rel_fee'] && $val['rel_fee']>0){
                         $rel_total += $val['rel_fee'];
                     }else{
                         $rel_total = $rel_total + $val['transportation_fee']+$val['hotel_fee']+$val['food_fee']+$val['other_fee'];

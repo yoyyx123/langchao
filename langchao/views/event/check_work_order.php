@@ -43,8 +43,9 @@
                     </td>
                 </tr>
                 <tr align="center">
-                    <th>是否超时</th>
-                    <td><?php if($event_less_time==0){echo "已超时";}elseif($event_less_time==1){echo "未超时";}?></td>
+                    <th>有效期状态</th>
+                    <!--<td><?php if($event_less_time==0){echo "已超时";}elseif($event_less_time==1){echo "未超时";}?></td>-->
+                    <td><?php echo $event_less_time;?></td>
                 </tr>                                                                      
             </tbody>
         </table>
@@ -110,8 +111,9 @@ $(function () {
 
 
 function do_add(){
-    is_complain = $("#is_complain").val();
-    event_status = $("#event_status").val();
+    is_complain = $('input[name="is_complain"]:checked').val()
+    //event_status = $("#event_status").val();
+    event_status = $('input[name="event_status"]:checked').val()
     performance_id = $("#performance_id").val();
     memo = $("#memo").val();
     event_id = $("#event_id").val();
