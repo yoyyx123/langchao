@@ -35,7 +35,7 @@
             <tr>
                 <th>保修症状</th>
                 <td colspan="3">
-                    <textarea  name="symptom" rows="1" cols="50"></textarea>
+                    <textarea  name="symptom" rows="3" cols="50"></textarea>
                 </td>
             </tr>            
             <tr>
@@ -65,25 +65,25 @@
             <tr>
                 <th>故障分析</th>
                 <td colspan="3">
-                    <textarea name="failure_analysis" id="failure_analysis" class="failure_analysis" rows="1" cols="50"></textarea>
+                    <textarea name="failure_analysis" id="failure_analysis" class="failure_analysis" rows="3" cols="50"></textarea>
                 </td>
             </tr>
             <tr>
                 <th>风险预测</th>
                 <td colspan="3">
-                    <textarea  name="risk_profile" id="risk_profile" class="risk_profile"rows="1" cols="50"></textarea>
+                    <textarea  name="risk_profile" id="risk_profile" class="risk_profile"rows="3" cols="50"></textarea>
                 </td>
             </tr>
             <tr>
                 <th>解决方案</th>
                 <td colspan="3">
-                    <textarea  name="solution" id="solution" class="solution"rows="1" cols="50"></textarea>
+                    <textarea  name="solution" id="solution" class="solution"rows="3" cols="50"></textarea>
                 </td>
             </tr>
             <tr>
                 <th>使用人描述</th>
                 <td colspan="3">
-                    <textarea  name="desc" id="desc" class="desc" rows="1" cols="50"></textarea>
+                    <textarea  name="desc" id="desc" class="desc" rows="3" cols="50"></textarea>
                 </td>
             </tr>
             <tr>
@@ -101,7 +101,7 @@
             <tr>
                 <th>备注</th>
                 <td colspan="3">
-                    <textarea  name="memo" id="memo" class="memo" rows="1" cols="50"></textarea>
+                    <textarea  name="memo" id="memo" class="memo" rows="3" cols="50"></textarea>
                 </td>
             </tr>
 

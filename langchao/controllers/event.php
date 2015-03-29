@@ -153,6 +153,8 @@ class Event extends MY_Controller {
             $this->data['user_id'] = $data['user_id'];
             $this->data['event_month'] = $data['event_month'];
             $this->data['status'] = $data['status'];
+            $this->data['department_id'] = $data['department_id'];            
+            unset($data['department_id']);
             $where = array();        
             foreach($data as $k =>$v){
                 if(!empty($data[$k])){
@@ -170,7 +172,8 @@ class Event extends MY_Controller {
             $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
             $this->data['user'] = $user;            
         }
-
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['department_list'] = $department_list['info'];
         //$where = array();
         //$work_order = $this->Event_model->get_event_list($where);
         $user = $this->User_model->get_user_list();
@@ -369,7 +372,9 @@ class Event extends MY_Controller {
             unset($data['per_page']);
             $this->data['user_id'] = $data['user_id'];
             $this->data['event_month'] = $data['event_month'];
-            $this->data['status'] = $data['status'];                      
+            $this->data['status'] = $data['status'];
+            $this->data['department_id'] = $data['department_id'];            
+            unset($data['department_id']);                               
             if(empty($data['event_time'])){
                 unset($data['event_time']);
             }
@@ -381,7 +386,7 @@ class Event extends MY_Controller {
                 if(!empty($data[$k])){
                     $where[$k] = trim($v);
                 }
-            }
+            }         
             $event_list = $this->Event_model->get_event_list($where,$this->per_page);
             $this->pages_conf($event_list['count']);
             foreach ($event_list['info'] as $key => $value) {
@@ -394,7 +399,8 @@ class Event extends MY_Controller {
             $this->data['user'] = $user;
         }
         
-
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['department_list'] = $department_list['info'];
         $user_list = $this->User_model->get_user_list();
         $this->data['user_list'] = $user_list['info'];
         $this->data['user_data'] = $this->session->userdata;
@@ -755,6 +761,8 @@ class Event extends MY_Controller {
             $this->data['event_month'] = $data['event_month'];
             $this->data['short_name'] = $data['short_name'];            
             $this->data['title'] = 'member';
+            $this->data['department_id'] = $data['department_id'];
+            unset($data['department_id']);            
             foreach($data as $key=>$value){
                 if(empty($data[$key])){
                     unset($data[$key]);                
@@ -784,10 +792,8 @@ class Event extends MY_Controller {
             $this->pages_conf($event_list['count']);
             $this->data['event_list'] = $event_list['info'];            
         }
-
-
-
-
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
+        $this->data['department_list'] = $department_list['info'];
         $user_list = $this->User_model->get_user_list();
         $this->data['user_list'] = $user_list['info'];
         $this->data['user_data'] = $this->session->userdata;
@@ -841,6 +847,8 @@ class Event extends MY_Controller {
             $this->data['user_id'] = $data['user_id'];
             $this->data['event_month'] = $data['event_month'];
             $this->data['cost_status'] = $data['cost_status'];
+            $this->data['department_id'] = $data['department_id'];            
+            unset($data['department_id']);            
             $where = $data;
             foreach($where as $key=>$value){
                 if(empty($where[$key])){
@@ -878,6 +886,8 @@ class Event extends MY_Controller {
         }
 
         $where = array();
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['department_list'] = $department_list['info'];        
         $user_list = $this->User_model->get_user_list();
         $this->data['user_list'] = $user_list['info'];
         $this->data['user_data'] = $this->session->userdata;

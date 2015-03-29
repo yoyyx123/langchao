@@ -193,23 +193,28 @@ class Search extends MY_Controller {
             $this->data['is_search'] = 1;
             $this->data['data_type'] = $data['data_type'];
             $this->data['user_id'] = $data['user_id'];
-            if($data['user_id'] !='all'){
+            if($data['user_id'] !='all' && $data['department_id'] !='all'){
                 $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
                 $this->data['name'] = $user['name'];
+            }
+            if($data['department_id'] =='all'){
+                $this->data['user_id'] = 'all';
             }
             $this->data['department_id'] = $data['department_id'];
             $this->data['event_month'] = $data['event_month'];
 
             $where = array('event_month'=>$data['event_month']);
-            if($data['user_id'] != "all"){
+            if($data['user_id'] != "all" && $data['department_id'] !='all'){
                 $where['where_in']['value'][] = $data['user_id'];
-            }else{
+                $where['where_in']['key'] = 'user_id';
+            }else if($data['department_id'] !='all'){
                 $user_list = $this->User_model->get_user_list(array('department'=>$data['department_id']));
                 foreach ($user_list['info'] as $key => $value) {
                     $where['where_in']['value'][] = $value['id'];
                 }
+                $where['where_in']['key'] = 'user_id';
             }
-            $where['where_in']['key'] = 'user_id';
+            
             $result = array();
             $event_list = $this->Event_model->get_event_list($where);
             foreach($event_list['info'] as $key=>$val){
@@ -232,7 +237,7 @@ class Search extends MY_Controller {
             $this->data['info_list'] = $info_list;
         }
         $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
-        $this->data['department_list'] = $department_list['info'];        
+        $this->data['department_list'] = $department_list['info'];
         $this->data['user_data'] = $this->session->userdata;        
         $this->layout->view('search/data_export',$this->data);
     }
@@ -516,6 +521,64 @@ class Search extends MY_Controller {
         return $worktime_count;        
     }
 
+
+    public function do_data_export_all(){
+        $data = $this->security->xss_clean($_GET);
+        $this->data['is_search'] = 1;
+        $this->data['data_type'] = $data['data_type'];
+        $this->data['user_id'] = $data['user_id'];
+        $this->data['department_id'] = $data['department_id'];
+        $this->data['event_month'] = $data['event_month'];
+        
+        $where = array('user_id'=>$data['user_id'],'event_month'=>$data['event_month']);
+        if($data['department_id'] =='all'){
+            unset($where['user_id']);
+        }else if($data['user_id']=='all'){
+            $users = $this->Event_model->get_user_list(array('department_id'=>$data['department_id']));
+            foreach ($users['info'] as $key => $value) {
+                $user_list[] = $value['id'];
+            }
+            unset($where['user_id']);
+            $where['where_in'] = array('key'=>'user_id','value'=>$user_list);
+        }
+        $result = array();
+        $event_list = $this->Event_model->get_event_list($where);
+        foreach ($event_list['info'] as $key => $value) {
+            $user = $this->User_model->get_user_info(array("id"=>$value['user_id']));
+            $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$value['id']));
+            foreach ($work_order_list as $k => $val) {
+                if($data['data_type']=="work_time"){
+                    $result[] = $this->do_data_export_worktime($value,$val,$data,$user['name']);
+                }elseif($data['data_type']=="fee"){
+                    foreach($val['bill_order_list'] as $m=>$n){
+                        $result[] = $this->format_bill_data($n,$user['name']);
+                    }
+                }
+            }
+        }
+        foreach ($result as $key => $value) {
+            $res[$value['user_name']][] = $value;
+        }        
+
+        if(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="fee"){
+            $title = array("使用人","出发时间","到达时间","起始地","目的地","交通费","住宿费","加班餐费","其他费用","备注","单据编号","交通方式","类型");
+            $this->export_xls_all('费用',$res,$title);  
+        }elseif(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="work_time"){
+            $title = array("使用人","日期","到场时间","离场时间","事件描述","工时","平时加班","周末加班","节日加班");
+            $this->export_xls_all('工时',$res,$title);  
+        }
+        $this->pages_conf(count($result));
+        $info_list = array();
+        foreach ($result as $key => $value) {
+            if($key>=$this->per_page && $key<($this->per_page+ROW_SHOW_NUM)){
+                $info_list[] = $value;
+            }
+        }
+        $this->data['info_list'] = $info_list;
+        $this->data['user_data'] = $this->session->userdata; 
+        $this->layout->view('search/do_data_export',$this->data);
+    }
+
     public function do_data_export(){
         $data = $this->security->xss_clean($_GET);
         $this->data['is_search'] = 1;
@@ -525,7 +588,6 @@ class Search extends MY_Controller {
         $this->data['name'] = $user['name'];
         $this->data['department_id'] = $data['department_id'];
         $this->data['event_month'] = $data['event_month'];
-        
         $where = array('user_id'=>$data['user_id'],'event_month'=>$data['event_month']);
         $result = array();
         $event_list = $this->Event_model->get_event_list($where);
@@ -588,7 +650,61 @@ class Search extends MY_Controller {
         return $res;
     }
 
+    public function export_xls_all($name,$msg,$title){
+        require_once dirname(__FILE__) . '/../libraries/PHPExcel.php';
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
+                                     ->setLastModifiedBy("Maarten Balliauw")
+                                     ->setTitle("Office 2007 XLSX Test Document")
+                                     ->setSubject("Office 2007 XLSX Test Document")
+                                     ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
+                                     ->setKeywords("office 2007 openxml php")
+                                     ->setCategory("Test result file");
+        $i=0;
+        foreach ($msg as $key => $value) {
+            $objPHPExcel->createSheet($i);            
+            $objPHPExcel->setActiveSheetIndex($i)
+                ->fromArray(
+                    $title,
+                    NULL,
+                    'A1'
+                );            
+            $arrayData = $value;
+            $objPHPExcel->setActiveSheetIndex($i)
+                ->fromArray(
+                    $arrayData,
+                    NULL,
+                    'A2'
+                );
+            // Rename worksheet
+            //$objPHPExcel->getActiveSheet()->setTitle(iconv("UTF-8", "GB2312//IGNORE", $key) );
+            $objPHPExcel->getActiveSheet()->setTitle($key);
+            $i++;
+        }
+        $filename = $name.'.xlsx';
 
+        $objPHPExcel->setActiveSheetIndex(0);
+
+        // Set active sheet index to the first sheet, so Excel opens this as the first sheet
+
+
+        // Redirect output to a client’s web browser (Excel2007)
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Cache-Control: max-age=0');
+        // If you're serving to IE 9, then the following may be needed
+        header('Cache-Control: max-age=1');
+
+        // If you're serving to IE over SSL, then the following may be needed
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+        exit;        
+    }
 
     public function export_xls($name,$msg,$title){
         require_once dirname(__FILE__) . '/../libraries/PHPExcel.php';

@@ -10,7 +10,9 @@
             <div class="input-group">
             <div class="input-group-addon">部门</div>
               <select  class="form-control department_id" name="department_id" id="department_id">
-                <option value="">无</option>
+                <?if($user_data['position2']==3||$user_data['position2']==4){?>
+                <option value="all">全部</option>
+                <?}?>
                 <?php foreach ($department_list as $key => $value) {
                 if(($user_data['position2']==1||$user_data['position2']==2)&&$user_data['department']==$value['id']){
                 ?>
@@ -116,6 +118,7 @@
         <tbody>
             <tr>
                 <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                <td><a class="btn btn-info do_export">全部导出</a></td>
             </tr>
         </tbody>
     </table>
@@ -156,8 +159,10 @@
           <tbody>
               <tr>
                   <td colspan="10"><?php $this->load->view('elements/pager'); ?></td>
+                  <td><a class="btn btn-info do_export">全部导出</a></td>
               </tr>
           </tbody>
+
       </table>      
     <?}?>
   <?php }elseif(isset($is_search)){?>
@@ -194,7 +199,7 @@ var sel_time_data = function (per_page) {
     $.ajax({
         type: "POST",
         url: "<?php echo site_url(array('ctl'=>'user', 'act'=>'get_user_list'))?>",
-        data: "&department_id="+<?echo $department_id;?>,
+        data: "&department_id=<?echo $department_id;?>",
         success: function(result){
             var data = eval("("+result+")");
             $(".user_id").empty();
@@ -202,7 +207,7 @@ var sel_time_data = function (per_page) {
               $(".user_id").append('<option value="all">全部</option>');
             }
             $.each(data, function(key,value){
-                if(value['id']==<?echo$user_id;?>){
+                if(value['id']=='<?echo$user_id;?>'){
                 $(".user_id").append('<option value="'+value['id']+'" selected=selected>'+value['name']+'</option>');
                 }else{
                 $(".user_id").append('<option value="'+value['id']+'">'+value['name']+'</option>');                  
@@ -273,7 +278,7 @@ $(function() {
                     });
                     return false;
                 }
-            if (user_id == '') {
+            if (user_id == '' && department_id !='all') {
                     var n = noty({
                       text: "使用人必选",
                       type: 'error',
@@ -323,6 +328,18 @@ $(function() {
             window.location.href = url;
         });
 
+$(function() {
+        $(".do_export").click(function() {
+            _self = this;
+            user_id = $('#user_id').val();
+            department_id = $('#department_id').val();
+            event_month = $('#event_month').val();
+            data_type = $('#data_type').val();
+            is_search = $('#is_search').val();            
+            var url = "<?php echo site_url(array('ctl'=>'search', 'act'=>'do_data_export_all'))?>"+"&is_export=1&is_search=1&user_id="+user_id+"&department_id="+department_id+"&event_month="+event_month+"&data_type="+data_type;
+            window.location.href = url;
+          })
+})
 
 })
 </script>
