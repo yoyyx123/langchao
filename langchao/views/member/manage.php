@@ -27,7 +27,7 @@
                     <th>客户简称</th>
                     <th>客户联系人</th>
                     <th>联系电话</th>
-                     <th>
+                    <th>
                         <select class="form-control city">
                             <option value="all" <?if($city=='all'){echo "selected=selected";}?>>全部</option>
                             <?foreach ($city_list as $key => $value) {?>
@@ -94,7 +94,7 @@ $(function() {
             var url = '<?php echo site_url("ctl=member&act=manage");?>';
             url = url+"&city="+$('.city').val();
             window.location.href = url;
-        })        
+        })
 
         $(".do_search").click(function(){
             var url = '<?php echo site_url("ctl=member&act=manage");?>';

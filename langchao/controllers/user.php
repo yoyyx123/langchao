@@ -243,13 +243,23 @@ class User extends MY_Controller {
 
     public function manage(){
         $data = $this->security->xss_clean($_GET);
+        $where = array();        
         if(isset($data['status'])){
             $this->data['status'] = $data['status'];
         }
-        $where = array();
+        if(isset($data['department'])&&!empty($data['department'])){
+            $this->data['department'] = $data['department'];
+        }else{
+            $this->data['department'] = 'all';
+        }
+        if(isset($data['department'])&&($data['department'] !="all")){
+            $where = array("department"=>$data['department']);
+        }                
         $users = $this->User_model->get_user_list($where,$this->per_page);
         $this->pages_conf($users['count']);        
         $this->data['user_list'] = $users['info'];
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
+        $this->data['department_list'] = $department_list['info'];        
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('user/manage',$this->data);
     }

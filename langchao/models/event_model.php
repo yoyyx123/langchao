@@ -175,6 +175,10 @@ class Event_model extends CI_Model {
         return $res;
     }
 
+    public function delete_work_order($where){
+        $this->db->delete('work_order_list', $where); 
+    }
+
     public function get_work_order_list($where){
         $query = $this->db->get_where('work_order_list', $where);
         $res = $query->result_array();
