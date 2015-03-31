@@ -44,7 +44,7 @@
             <tr>
                 <th>保修症状</th>
                 <td colspan="3">
-                    <textarea  name="symptom" rows="1" cols="50"><?echo $value['symptom'];?></textarea>
+                    <textarea  name="symptom" rows="4" cols="50"><?echo $value['symptom'];?></textarea>
                 </td>
             </tr>            
             <tr>
@@ -74,25 +74,25 @@
             <tr>
                 <th>故障分析</th>
                 <td colspan="3">
-                    <textarea name="failure_analysis" id="failure_analysis" rows="1" cols="50"><?echo $value['failure_analysis'];?></textarea>
+                    <textarea name="failure_analysis" id="failure_analysis" rows="4" cols="50"><?echo $value['failure_analysis'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>风险预测</th>
                 <td colspan="3">
-                    <textarea  name="risk_profile" id="risk_profile" rows="1" cols="50" ><?echo $value['risk_profile'];?></textarea>
+                    <textarea  name="risk_profile" id="risk_profile" rows="4" cols="50" ><?echo $value['risk_profile'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>解决方案</th>
                 <td colspan="3">
-                    <textarea  name="solution" id="solution" rows="1" cols="50" ><?echo $value['solution'];?></textarea>
+                    <textarea  name="solution" id="solution" rows="4" cols="50" ><?echo $value['solution'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>使用人描述</th>
                 <td colspan="3">
-                    <textarea  name="desc" id="desc" rows="1" cols="50" ><?echo $value['desc'];?></textarea>
+                    <textarea  name="desc" id="desc" rows="4" cols="50" ><?echo $value['desc'];?></textarea>
                 </td>
             </tr>
             <tr>
@@ -110,7 +110,7 @@
             <tr>
                 <th>备注</th>
                 <td colspan="3">
-                    <textarea  name="memo" id="memo" rows="1" cols="50"><?echo $value['memo'];?></textarea>
+                    <textarea  name="memo" id="memo" rows="4" cols="50"><?echo $value['memo'];?></textarea>
                 </td>
             </tr>
 
@@ -500,5 +500,69 @@ function do_save(atable){
 
 }
 
+
+function do_add(){
+    arrive_time = $('#arrive_time').val();
+    back_time = $('#back_time').val();
+    failure_mode = $('#failure_mode').val();
+    desc = $('#desc').val();
+    schedule = $('input[name="schedule"]:checked').val();
+    memo = $('#memo').val();
+    if (arrive_time== '') {
+            var n = noty({
+              text: "请输入到达时间",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (back_time== '') {
+            var n = noty({
+              text: "请输入离场时间",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (failure_mode== '') {
+            var n = noty({
+              text: "请选择故障分类",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (desc== '') {
+            var n = noty({
+              text: "请输入使用人描述",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (schedule== '') {
+            var n = noty({
+              text: "请选择事件反馈",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }
+    if (memo== '' &&(schedule=='1'||schedule=='2')) {
+            var n = noty({
+              text: "备注必填",
+              type: 'error',
+              layout: 'center',
+              timeout: 1000,
+            });
+            return false;
+        }        
+    return true;                             
+}
 
 </script>
