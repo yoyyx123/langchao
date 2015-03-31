@@ -467,7 +467,12 @@ class Event extends MY_Controller {
         $event['holiday_more'] = $more_work['holiday_more'];
         $time = $event['event_time'];
         $x = strtotime($time);
-        $n = strtotime(date("Y-m-d"));
+        $work_order = $this->Event_model->get_work_order_info(array('event_id'=>$event['id']));
+        if($work_order){
+            $n = strtotime($work_order['date']);
+        }else{
+            $n = strtotime(date("Y-m-d"));
+        }
         $tmp = $this->Role_model->get_expire_date();
         if(!$tmp){
             $m = 0;

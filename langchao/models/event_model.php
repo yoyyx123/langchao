@@ -166,7 +166,14 @@ class Event_model extends CI_Model {
         $this->db->where($where);
         $res = $this->db->update('work_order_list', $params); 
         return $res;              
-    }    
+    }
+
+    public function get_work_order_info($where){
+        $this->db->order_by("date", "desc"); 
+        $query = $this->db->get_where('work_order_list', $where);
+        $res = $query->row_array();
+        return $res;
+    }
 
     public function get_work_order_list($where){
         $query = $this->db->get_where('work_order_list', $where);
