@@ -72,7 +72,7 @@ class Member extends MY_Controller {
             $this->data['city'] = $data['city'];
         }else{
             $this->data['city'] = 'all';
-        }        
+        }
         if(isset($data['member_type'])&&($data['member_type'] !="all")){
             $where = array("member_type"=>$data['member_type']);
         }

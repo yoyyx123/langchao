@@ -307,9 +307,8 @@ class Search extends MY_Controller {
                 $week_more += $more_work['week_more'];
                 $weekend_more += $more_work['weekend_more'];
                 $holiday_more += $more_work['holiday_more'];
-                $worktime_count += $this->get_event_worktime_count($v);
-            }
-            
+                $worktime_count += $more_work['worktime_count'];;
+            }            
             $info[$key]['worktime_count'] =  $worktime_count;
             $info[$key]['work_time'] = $work_time;
             $info[$key]['week_more'] = $week_more;
@@ -374,6 +373,35 @@ class Search extends MY_Controller {
         $res['week_more'] = $week_more;
         $res['weekend_more'] = $weekend_more;
         $res['holiday_more'] = $holiday_more;
+        $worktime_count_tmp = $work_time+$week_more+$weekend_more+$holiday_more;
+
+        $time = $event['event_time'];
+        $x = strtotime($time);
+        $work_order = $this->Event_model->get_work_order_info(array('event_id'=>$event['id']));
+        if($work_order){
+            $n = strtotime($work_order['date']);
+        }else{
+            $n = strtotime(date("Y-m-d"));
+        }
+        $tmp = $this->Role_model->get_expire_date();
+        if(!$tmp){
+            $m = 0;
+        }else{
+            $m = $tmp['name'];
+        }
+        $r = round(($x+$m*24*3600-$n)/(24*3600));
+        if($r>=0){
+            $date = 1;
+        }else{
+            $date = 1 +(0.1*$r);
+        }
+        if($date<=0.5){
+            $date = 0.5;
+        }
+        $performance = $this->Role_model->get_setting_info(array("id"=>$event['performance_id']));        
+        $worktime_count = $worktime_count_tmp*$performance['name']/100*$date;
+
+        $res['worktime_count'] = $worktime_count;
         return $res;
     }
 
@@ -518,7 +546,32 @@ class Search extends MY_Controller {
             }
             $worktime_count = $worktime_count+$int_tmp+$less_tmp;
         }
-        return $worktime_count;        
+        $time = $event['event_time'];
+        $x = strtotime($time);
+        $work_order = $this->Event_model->get_work_order_info(array('event_id'=>$event['id']));
+        if($work_order){
+            $n = strtotime($work_order['date']);
+        }else{
+            $n = strtotime(date("Y-m-d"));
+        }
+        $tmp = $this->Role_model->get_expire_date();
+        if(!$tmp){
+            $m = 0;
+        }else{
+            $m = $tmp['name'];
+        }
+        $r = round(($x+$m*24*3600-$n)/(24*3600));
+        if($r>=0){
+            $date = 1;
+        }else{
+            $date = 1 +(0.1*$r);
+        }
+        if($date<=0.5){
+            $date = 0.5;
+        }
+        $performance = $this->Role_model->get_setting_info(array("id"=>$event['performance_id']));        
+        $time = $worktime_count*$performance['name']/100*$date;
+        return $time;
     }
 
 
@@ -564,7 +617,7 @@ class Search extends MY_Controller {
             $title = array("使用人","出发时间","到达时间","起始地","目的地","交通费","住宿费","加班餐费","其他费用","备注","单据编号","交通方式","类型");
             $this->export_xls_all('费用',$res,$title);  
         }elseif(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="work_time"){
-            $title = array("使用人","日期","到场时间","离场时间","事件描述","工时","平时加班","周末加班","节日加班");
+            $title = array("使用人","日期","到场时间","离场时间","事件描述","工时","工作时间工时","平时加班","周末加班","节日加班");
             $this->export_xls_all('工时',$res,$title);  
         }
         $this->pages_conf(count($result));
@@ -609,7 +662,7 @@ class Search extends MY_Controller {
             $this->export_xls($this->data['name'],$msg,$title);  
         }elseif(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="work_time"){
             $msg[$this->data['name']] = $result;
-            $title = array("使用人","日期","到场时间","离场时间","事件描述","工时","平时加班","周末加班","节日加班");
+            $title = array("使用人","日期","到场时间","离场时间","事件描述","工时","工作日工时","平时加班","周末加班","节日加班");
             $this->export_xls($this->data['name'],$msg,$title);  
         }
         $this->pages_conf(count($result));
@@ -773,6 +826,34 @@ class Search extends MY_Controller {
         $work['desc'] = $work_order['desc'];
         //$work['worktime_count'] = $worktime_count;
         list($work_time,$week_more,$weekend_more,$holiday_more) = $this->do_data_export_worktime_more($event,$work_order);
+        $worktime_count_tmp = $work_time+$week_more+$weekend_more+$holiday_more;
+
+        $time = $event['event_time'];
+        $x = strtotime($time);
+        $work_order = $this->Event_model->get_work_order_info(array('event_id'=>$event['id']));
+        if($work_order){
+            $n = strtotime($work_order['date']);
+        }else{
+            $n = strtotime(date("Y-m-d"));
+        }
+        $tmp = $this->Role_model->get_expire_date();
+        if(!$tmp){
+            $m = 0;
+        }else{
+            $m = $tmp['name'];
+        }
+        $r = round(($x+$m*24*3600-$n)/(24*3600));
+        if($r>=0){
+            $date = 1;
+        }else{
+            $date = 1 +(0.1*$r);
+        }
+        if($date<=0.5){
+            $date = 0.5;
+        }
+        $performance = $this->Role_model->get_setting_info(array("id"=>$event['performance_id']));        
+        $worktime_count = $worktime_count_tmp*$performance['name']/100*$date;
+        $work['worktime_count'] = $worktime_count;
         $work['work_time'] = $work_time;
         $work['week_more'] = $week_more;
         $work['weekend_more'] = $weekend_more;

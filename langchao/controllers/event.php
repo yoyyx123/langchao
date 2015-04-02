@@ -228,6 +228,9 @@ class Event extends MY_Controller {
         }else{
             $back_url = site_url(array('ctl'=>'event', 'act'=>'event_list'));
         }
+        if(isset($data['status'])&&!empty($data['status'])){
+            $this->data['status'] = $data['status'];
+        }
         $this->data['back_url'] = $back_url;
         $where = array("id"=>trim($data['event_id']));
         $event = $this->Event_model->get_event_info($where);
@@ -327,7 +330,17 @@ class Event extends MY_Controller {
         $where = array("id"=>$work_order_id);
         $res = $this->Event_model->update_work_order_info($data,$where);
         $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id."&status=succ";
-        redirect($redirect_url);         
+        redirect($redirect_url);
+    }
+
+    public function delete_work_order(){
+        $data = $this->security->xss_clean($_GET);
+        $work_order_id = $data['work_order_id'];
+        $event_id = $data['event_id'];
+        $where = array('id'=>$work_order_id);
+        $this->Event_model->delete_work_order($where);
+        $redirect_url = 'ctl=event&act=add_work_order&event_id='.$event_id."&status=succ";
+        redirect($redirect_url);
     }
 
     public function add_biil_order(){
@@ -424,7 +437,32 @@ class Event extends MY_Controller {
             }
             $worktime_count = $worktime_count+$int_tmp+$less_tmp;
         }
-        return $worktime_count;        
+        $time = $event['event_time'];
+        $x = strtotime($time);
+        $work_order = $this->Event_model->get_work_order_info(array('event_id'=>$event['id']));
+        if($work_order){
+            $n = strtotime($work_order['date']);
+        }else{
+            $n = strtotime(date("Y-m-d"));
+        }
+        $tmp = $this->Role_model->get_expire_date();
+        if(!$tmp){
+            $m = 0;
+        }else{
+            $m = $tmp['name'];
+        }
+        $r = round(($x+$m*24*3600-$n)/(24*3600));
+        if($r>=0){
+            $date = 1;
+        }else{
+            $date = 1 +(0.1*$r);
+        }
+        if($date<=0.5){
+            $date = 0.5;
+        }
+        $performance = $this->Role_model->get_setting_info(array("id"=>$event['performance_id']));        
+        $time = $worktime_count*$performance['name']/100*$date;
+        return $time;        
     }
 
     public function do_check_search(){

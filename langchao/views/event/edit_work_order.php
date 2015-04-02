@@ -121,6 +121,7 @@ select{width:60px;}
 <div class="col-lg-7 col-md-4">
     <p class="center col-md-12">
         <button type="submit" class="btn btn-primary">编辑</button>&nbsp&nbsp&nbsp
+        <button type="button" class="btn btn-info delete_work_order">删除</button>
     </p>
 </div>
 </form>
@@ -308,6 +309,21 @@ $(function() {
       timeout: 1000,
     });
     <?}?>
+     
+    $(".delete_work_order").click(function() {
+        work_order_id = $('#work_order_id').val();
+        event_id = $('#event_id').val();
+        $('#arrive_time').val();
+     if(confirm("确认删除工单吗")){
+        _self = this;
+        url = "<?php echo site_url(array('ctl'=>'event', 'act'=>'delete_work_order'))?>"+"&work_order_id="+work_order_id+"&event_id="+event_id;
+        alert(url);
+        window.location.href=url;
+     }else{
+        return;
+     }
+    });
+
      
 
 })

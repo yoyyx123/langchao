@@ -149,6 +149,15 @@ $(function() {
 
     });
 
+    <?if(isset($status) && $status=="succ"){?>
+    var n = noty({
+      text: "工单删除成功",
+      type: 'success',
+      layout: 'center',
+      timeout: 1000,
+    });
+    <?}?>    
+
 })        
 
 

@@ -90,6 +90,7 @@
                 <th>使用人</th>
                 <th>状态</th>
                 <th>工时</th>
+                <th>工作日工时</th>
                 <th>平时加班时间</th>
                 <th>周末加班时间</th>
                 <th>节日加班时间</th>
@@ -106,6 +107,7 @@
                 <td><?php echo $value['event_month'];?></td>
                 <td><?php echo $value['name'];?></td>
                 <td></td>
+                <td><?php echo $value['worktime_count'];?></td>
                 <td><?php echo $value['work_time'];?></td>
                 <td><?echo $value['week_more'];?></td>
                 <td><?echo $value['weekend_more'];?></td>

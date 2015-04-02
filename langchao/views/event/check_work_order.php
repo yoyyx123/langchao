@@ -75,7 +75,7 @@
                         <select name="performance_id" id="performance_id">
                             <option value="">请选择</option>
                             <?foreach ($performance_list as $key => $value) {?>
-                                <option value="<?echo $value['id'];?>" <?if(isset($check['performance_id'])&&$check['performance_id']==$value['id']){echo "selected='selected'";}?>><?echo $value['name'];?></option>
+                                <option value="<?echo $value['id'];?>" <?if(isset($check['performance_id'])&&$check['performance_id']==$value['id']){echo "selected='selected'";}?>><?echo $value['name'];?>%</option>
                             <?}?>
                         </select>
                     </td>

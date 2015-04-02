@@ -21,7 +21,14 @@
                     <th>账户</th>
                     <th>使用人</th>
                     <th>短号</th>
-                    <th>部门</th>
+                    <th>
+                        <select class="form-control department">
+                            <option value="all" <?if($department=='all'){echo "selected=selected";}?>>全部</option>
+                            <?foreach ($department_list as $key => $value) {?>
+                              <option value="<?echo $value['id'];?>" <?if($department==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>  
+                            <?}?>
+                        </select>
+                    </th>                     
                     <th>状态</th>
                     <th>工作地点</th>
                     <th>工作类型</th>
@@ -70,6 +77,13 @@ $(function() {
     });
 
     <?}?>
+
+    $(".department").change(function(){
+        _self = this;
+        var url = '<?php echo site_url("ctl=user&act=manage");?>';
+        url = url+"&department="+$('.department').val();
+        window.location.href = url;
+    })
 
     $(".do_delete").click(function() {
      if(confirm("确认删除吗")){
