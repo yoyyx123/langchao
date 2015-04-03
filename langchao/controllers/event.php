@@ -285,7 +285,7 @@ class Event extends MY_Controller {
         }
         $traffic_list = $this->Role_model->get_setting_list(array("type"=>"traffic"));
         $this->data['traffic_list'] = $traffic_list['info'];
-        $this->layout->view('event/edit_work_order',$this->data); 
+        $this->load->view('event/edit_work_order',$this->data); 
     }
 
     public function look_work_order(){
@@ -339,6 +339,10 @@ class Event extends MY_Controller {
         $event_id = $data['event_id'];
         $where = array('id'=>$work_order_id);
         $this->Event_model->delete_work_order($where);
+        $work_order = $this->Event_model->get_work_order_info(array("event_id"=>$event_id));
+        if(!$work_order){
+            $this->Event_model->update_check_event_info(array('status'=>'1'),array('id'=>$event_id));        
+        }
         $redirect_url = 'ctl=event&act=add_work_order&event_id='.$event_id."&status=succ";
         redirect($redirect_url);
     }

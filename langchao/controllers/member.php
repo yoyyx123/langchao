@@ -91,6 +91,9 @@ class Member extends MY_Controller {
         $member = $this->Member_model->get_member_list($where,$this->per_page);
         $this->pages_conf($member['count']);
         $this->data['member_list'] = $member['info'];
+        if(!$this->data['member_list']){
+            $this->data['result'] = 'false';
+        }
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('member/manage',$this->data);
     }

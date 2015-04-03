@@ -83,6 +83,17 @@
 <script type="text/javascript">
 $(function() {
 
+
+
+    <?if(isset($result) && $result=="false"){?>
+    var n = noty({
+      text: "查询客户不存在",
+      type: 'error',
+      layout: 'center',
+      timeout: 1000,
+    });
+    <?}?>
+
         $(".member_type").change(function(){
             _self = this;
             var url = '<?php echo site_url("ctl=member&act=manage");?>';
