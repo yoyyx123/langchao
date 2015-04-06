@@ -285,7 +285,7 @@ class Event extends MY_Controller {
         }
         $traffic_list = $this->Role_model->get_setting_list(array("type"=>"traffic"));
         $this->data['traffic_list'] = $traffic_list['info'];
-        $this->load->view('event/edit_work_order',$this->data); 
+        $this->layout->view('event/edit_work_order',$this->data); 
     }
 
     public function look_work_order(){

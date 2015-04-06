@@ -21,8 +21,9 @@
                     <td><?php echo $value['look'];?></td>
                     <td><?php echo $value['download'];?></td>
                     <td>
-                        <!--<a class="btn btn-info dolook" doc_id='<?php echo $value['id'];?>'>预览</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                        <?if ($value['type'] != 'doc'){?>
                         <a class="btn btn-info" href="<?php echo site_url(array('ctl'=>'cloud', 'act'=>'doc_look')).'&id='.$value['id'] ?>" target="_blank" doc_id='<?php echo $value['id'];?>'>预览</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <?}?>                        
                         <a class="btn btn-primary download" doc_id='<?php echo $value['id'];?>'>下载</a>
                     </td>
                 </tr>

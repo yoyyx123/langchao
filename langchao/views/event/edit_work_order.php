@@ -1,25 +1,23 @@
-
 <style type="text/css">
-input{width:60px;}
-select{width:60px;}
+@-moz-document url-prefix() {
+  fieldset { display: table-cell; }
+}
 </style>
-<link id="bs-css" href="statics/css/bootstrap-cerulean.min.css" rel="stylesheet">
-<link href='statics/css/bootstrap-datetimepicker.min.css' rel='stylesheet'>
 
+<div>
+    <ul class="breadcrumb">
+        <li>
+            <a class="btn btn-info" href="<?php echo $back_url;?>">返回</a>
+        </li>
+    </ul>
+</div>
 
-<script src="statics/bower_components/jquery/jquery.min.js"></script>
-
-<script src="statics/js/jquery-ui.js"></script>
-<script src="statics/js/bootstrap-datetimepicker.js"></script>
-<script src="statics/js/bootstrap-datetimepicker.zh-CN.js"></script>
-
-
-
-<div class="row">
+<? foreach ($work_order_list as $key => $value) {
+?>
 <form class="form-horizontal" action="<?php echo site_url('ctl=event&act=do_edit_work_order');?>" method="post"  onsubmit="return do_add();">
 
 <div class="box col-lg-12 col-md-12">
-    <table class="">
+    <table class="table table-bordered">
         <tbody>
             <tr>
                 <th>事件类型</th>
@@ -28,23 +26,23 @@ select{width:60px;}
                 </td>
                 <th>客户部门</th>
                 <td>
-                    <input type="text" style="width:160px" name="custom_department" id="custom_department" value="<?echo $value['custom_department'];?>">
+                    <input type="text" name="custom_department" id="custom_department" value="<?echo $value['custom_department'];?>">
                 </td>
             </tr>
             <tr>
                 <th>到达时间(签到)</th>
                 <td>
-                    <input type="text" style="width:160px" class="format_time" name="arrive_time" id="arrive_time" value="<?echo $value['arrive_time'];?>">
+                    <input type="text" class="format_time" name="arrive_time" id="arrive_time" value="<?echo $value['arrive_time'];?>">
                 </td>
                 <th>离场时间(签退)</th>
                 <td>
-                    <input type="text" style="width:160px" class="format_time" name="back_time" id="back_time" value="<?echo $value['back_time'];?>">
+                    <input type="text" class="format_time" name="back_time" id="back_time" value="<?echo $value['back_time'];?>">
                 </td>                
             </tr>
             <tr>
                 <th>保修症状</th>
                 <td colspan="3">
-                    <textarea  name="symptom" rows="4" cols="50"><?echo $value['symptom'];?></textarea>
+                    <textarea  name="symptom" rows="1" cols="50"><?echo $value['symptom'];?></textarea>
                 </td>
             </tr>            
             <tr>
@@ -74,25 +72,25 @@ select{width:60px;}
             <tr>
                 <th>故障分析</th>
                 <td colspan="3">
-                    <textarea name="failure_analysis" id="failure_analysis" rows="4" cols="50"><?echo $value['failure_analysis'];?></textarea>
+                    <textarea name="failure_analysis" id="failure_analysis" rows="1" cols="50"><?echo $value['failure_analysis'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>风险预测</th>
                 <td colspan="3">
-                    <textarea  name="risk_profile" id="risk_profile" rows="4" cols="50" ><?echo $value['risk_profile'];?></textarea>
+                    <textarea  name="risk_profile" id="risk_profile" rows="1" cols="50" ><?echo $value['risk_profile'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>解决方案</th>
                 <td colspan="3">
-                    <textarea  name="solution" id="solution" rows="4" cols="50" ><?echo $value['solution'];?></textarea>
+                    <textarea  name="solution" id="solution" rows="1" cols="50" ><?echo $value['solution'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>使用人描述</th>
                 <td colspan="3">
-                    <textarea  name="desc" id="desc" rows="4" cols="50" ><?echo $value['desc'];?></textarea>
+                    <textarea  name="desc" id="desc" rows="1" cols="50" ><?echo $value['desc'];?></textarea>
                 </td>
             </tr>
             <tr>
@@ -110,7 +108,7 @@ select{width:60px;}
             <tr>
                 <th>备注</th>
                 <td colspan="3">
-                    <textarea  name="memo" id="memo" rows="4" cols="50"><?echo $value['memo'];?></textarea>
+                    <textarea  name="memo" id="memo" rows="1" cols="50"><?echo $value['memo'];?></textarea>
                 </td>
             </tr>
 
@@ -119,17 +117,15 @@ select{width:60px;}
     <input type="hidden" id="work_order_id" name="work_order_id" value="<?echo $value['id']; ?>">
     <input type="hidden" id="event_id" name="event_id" value="<?echo $event['id']; ?>">
 </div>
-<div class="box col-lg-7 col-md-4">
+<div class="col-lg-7 col-md-4">
     <p class="center col-md-12">
         <button type="submit" class="btn btn-primary">编辑</button>&nbsp&nbsp&nbsp
-        <button type="button" class="btn btn-info delete_work_order">删除</button>
     </p>
 </div>
 </form>
-</div>
 <div class="row">
-<div class="box col-sm-12 col-md-12">
-    <table class="">
+<div class="col-sm-12 col-md-12">
+    <table class="table-bordered table-striped table-condensed">
         <thead>
             <tr class="CaseRow">
                 <th align="center" colspan="14">去程费用</th>
@@ -151,10 +147,37 @@ select{width:60px;}
             </tr>
         </thead>
         <tbody>
-
+            <?if (isset($value['bill_order_list']) && !empty($value['bill_order_list'])){?>
+                <? $i=1; foreach ($value['bill_order_list'] as $key => $val) {?>
+                <?if($val['type']==0){?>
+                <tr align="center" id="<?echo $i;?>">
+                    <td><?echo$i;?></td>
+                    <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
+                    <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
+                    <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
+                    <td><input type="text" name="arrival_place" id="arrival_place" value="<?echo $val['arrival_place'];?>"></td>
+                    <td>
+                        <select name="transportation" id="transportation">
+                            <?foreach ($traffic_list as $k => $tmp) {?>
+                            <option value="<?echo $tmp['id'];?>" <?if($val['transportation']==$tmp['id']){echo "selected=selected";}?>><?echo $tmp['name'];?></option>
+                            <?}?>
+                        </select>
+                    </td>
+                    <td><input type="text" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
+                    <td><input type="text" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
+                    <td><input type="text" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
+                    <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
+                    <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
+                    <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
+                    <td><a class="btn btn-primary do_save" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
+                    <td><a class="btn btn-primary" id = "do_delete" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_delete(this)">删除</a></td>
+                </tr>
+                <?}$i++;}}else{?>
+                <?}?>
         </tbody>
     </table>
-        <table class="">
+    </p>
+        <table class="table-bordered table-striped table-condensed">
         <thead>
             <tr class="CaseRow">
                 <th align="center" colspan="14">返程费用</th>
@@ -176,7 +199,34 @@ select{width:60px;}
             </tr>
         </thead>
         <tbody>
-
+            <?if (isset($value['bill_order_list']) && !empty($value['bill_order_list'])){?>
+            <?$n=1;foreach ($value['bill_order_list'] as $key => $val) {
+            ?>
+            <?if($val['type']==1){?>
+            <tr align="center" id="<?echo $n;?>">
+                <td><?echo $n;?></td>
+                <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
+                <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
+                <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
+                <td><input type="text" name="arrival_place" id="arrival_place" value="<?echo $val['arrival_place'];?>"></td>
+                <td>
+                    <select name="transportation" id="transportation">
+                        <?foreach ($traffic_list as $k => $tmp) {?>
+                        <option value="<?echo $tmp['id'];?>" <?if($val['transportation']==$tmp['id']){echo "selected=selected";}?>><?echo $tmp['name'];?></option>
+                        <?}?>
+                    </select>
+                </td>
+                <td><input type="text" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
+                <td><input type="text" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
+                <td><input type="text" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
+                <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
+                <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
+                <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
+                <td><a class="btn btn-primary do_save" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
+                <td><a class="btn btn-primary" id = "do_delete" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_delete(this)">删除</a></td>
+            </tr>
+            <?}$n++;}}else{?>
+            <?}?>
         </tbody>
     </table>
     
@@ -184,7 +234,14 @@ select{width:60px;}
 </div>
 
 
+
+<div class="row">
+</div>
+<?}?>
+
+
 <script type="text/javascript">
+laydate.skin('danlan')
 $(function() {
     $('.format_time').datetimepicker({
         format: "yyyy-mm-dd hh:ii:ss", 
@@ -197,6 +254,7 @@ $(function() {
         forceParse: 0,
         showMeridian: 1,
     });
+
     <?if(isset($status) && $status=="succ"){?>
     var n = noty({
       text: "事件添加成功",
@@ -205,20 +263,6 @@ $(function() {
       timeout: 1000,
     });
     <?}?>
-     
-    $(".delete_work_order").click(function() {
-        work_order_id = $('#work_order_id').val();
-        event_id = $('#event_id').val();
-        $('#arrive_time').val();
-     if(confirm("确认删除工单吗")){
-        _self = this;
-        url = "<?php echo site_url(array('ctl'=>'event', 'act'=>'delete_work_order'))?>"+"&work_order_id="+work_order_id+"&event_id="+event_id;
-        alert(url);
-        window.location.href=url;
-     }else{
-        return;
-     }
-    });
      
 })
 function add_td(atable){
@@ -229,9 +273,11 @@ function add_td(atable){
         id = 0;
     }
     var NId = parseInt(id)+1;
-    var TrContent = '<tr id="'+NId+'"><td>'+NId+'</td><td><input style="width:135px" type="text" name="go_time" id="go_time" class="format_time"></td><td><input style="width:135px" type="text" name="arrival_time" id="arrival_time" class="format_time"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select id="transportation" name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" selected=selected><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee"></td><td><input type="text" name="hotel_fee" id="hotel_fee"></td><td><input type="text" name="food_fee" id="food_fee"></td><td><input type="text" name="other_fee" id="other_fee"></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
+    var str = 'onclick="laydate({istime: true, format: "YYYY-MM-DD hh:mm:ss"})"';
+    var TrContent = '<tr id="'+NId+'"><td>'+NId+'</td><td><input onclick="laydate({istime: true, format: <?echo "YYYY-MM-DD hh:mm:ss";?>})" type="text" name="go_time" id="go_time" class="format_time11"></td><td><input type="text" name="arrival_time" id="arrival_time" class="format_time"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select id="transportation" name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" selected=selected><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee"></td><td><input type="text" name="hotel_fee" id="hotel_fee"></td><td><input type="text" name="food_fee" id="food_fee"></td><td><input type="text" name="other_fee" id="other_fee"></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
     $(atable).parent().parent().parent().parent().find("tbody").append(TrContent);
-    $('.format_time').datetimepicker({
+
+    $('#format_time').datetimepicker({
         format: "yyyy-mm-dd hh:ii:ss", 
         language:  'zh-CN',
         weekStart: 1,
@@ -241,6 +287,7 @@ function add_td(atable){
         startView: 2,
         forceParse: 0,
         showMeridian: 1,
+        pickerPosition: 'bottom-right',
     });
 }
 function do_delete(atable){
@@ -398,68 +445,5 @@ function do_save(atable){
         });
         return false
     }
-}
-function do_add(){
-    arrive_time = $('#arrive_time').val();
-    back_time = $('#back_time').val();
-    failure_mode = $('#failure_mode').val();
-    desc = $('#desc').val();
-    schedule = $('input[name="schedule"]:checked').val();
-    memo = $('#memo').val();
-    if (arrive_time== '') {
-            var n = noty({
-              text: "请输入到达时间",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if (back_time== '') {
-            var n = noty({
-              text: "请输入离场时间",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if (failure_mode== '') {
-            var n = noty({
-              text: "请选择故障分类",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if (desc== '') {
-            var n = noty({
-              text: "请输入使用人描述",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if (schedule== '') {
-            var n = noty({
-              text: "请选择事件反馈",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }
-    if (memo== '' &&(schedule=='1'||schedule=='2')) {
-            var n = noty({
-              text: "备注必填",
-              type: 'error',
-              layout: 'center',
-              timeout: 1000,
-            });
-            return false;
-        }        
-    return true;                             
 }
 </script>

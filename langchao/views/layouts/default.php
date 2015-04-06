@@ -28,7 +28,7 @@
 
 
     <link href='<?php echo base_url('/statics/css/bootstrap-datetimepicker.min.css'); ?>' rel='stylesheet'>
-
+    <link rel="stylesheet/less" type="text/css" href="<?php echo base_url('/statics/css/build_standalone.less'); ?>">
     <!-- jQuery -->
     <script src="<?php echo base_url('/statics/bower_components/jquery/jquery.min.js'); ?>"></script>
     <script src="<?php echo base_url('/statics/js/jquery-ui.js'); ?>"></script>
@@ -37,6 +37,7 @@
 
    <script src="<?php echo base_url('/statics/js/bootstrap-datetimepicker.js');?>"></script>
    <script src="<?php echo base_url('/statics/js/bootstrap-datetimepicker.zh-CN.js');?>"></script>
+   <script src="<?php echo base_url('/statics/js/laydate/laydate.js');?>"></script>
 
     
     <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->

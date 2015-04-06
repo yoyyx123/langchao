@@ -221,7 +221,7 @@ class MY_Controller extends CI_Controller {
 	 * 分页设置
 	 *
 	 */
-	public function pages_conf($total_rows,$id=FALSE) {
+	public function pages_conf($total_rows,$id=FALSE,$row_num=FALSE) {
 		/*分页处理*/
 		$tmp = $this->getdata;
 		unset($tmp['per_page']);
@@ -230,12 +230,17 @@ class MY_Controller extends CI_Controller {
         }
 		$config['base_url'] = site_url(http_build_query($tmp, '', '&'));
 		$config['total_rows'] = $total_rows;
-		$config['per_page'] = ROW_SHOW_NUM;
 		$config['first_link'] = '首页';
 		$config['last_link'] = '未页';
 		$config['next_link'] = '下页';
 		$config['prev_link'] = '上页';
-		$this->data['page_count'] = ceil($total_rows / ROW_SHOW_NUM);
+		if(isset($row_num)&& !empty($row_num)){
+			$config['per_page'] = $row_num;		
+			$this->data['page_count'] = ceil($total_rows / $row_num);
+		}else{
+			$config['per_page'] = ROW_SHOW_NUM;		
+			$this->data['page_count'] = ceil($total_rows / ROW_SHOW_NUM);
+		}
 		$this->data['total_rows'] = $total_rows;
 		$this->pagination->initialize($config);
 	}

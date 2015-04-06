@@ -37,6 +37,7 @@ class Cloud extends MY_Controller {
 
     public function doc_look(){
         $data = $this->security->xss_clean($_GET);
+         $this->data['id'] = $data['id'];
         $doc = $this->Cloud_model->get_doc_info(array("id"=>$data['id']));
         $file = $doc['path'];
         $this->Cloud_model->add_doc_look_num(array("id"=>$data['id']));
@@ -46,12 +47,26 @@ class Cloud extends MY_Controller {
             readfile($file);            
         }elseif ($doc['type'] == 'xlsx') {
             require_once dirname(__FILE__) . '/../libraries/PHPExcel/IOFactory.php';
+            require_once dirname(__FILE__) . '/../libraries/PHPExcel.php';
+            //$objPHPExcel = new PHPExcel();
             $objPHPExcel = PHPExcel_IOFactory::load($file);
             $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
-            $objWriter->setSheetIndex(0);
-            $objWriter->save(str_replace('.xlsx', '.htm', $file));
-            //$look_file = str_replace('.xlsx', '.htm', $file);
-            $this->data['path'] = $file;
+            $count = $objPHPExcel->getSheetCount();
+            //echo $count;exit;
+            $this->pages_conf($count,FALSE,1);
+            for($i=0;$i<$count;$i++){
+                $objWriter->setSheetIndex($i);
+                $f = "_".$i.".htm";
+                $objWriter->save(str_replace('.xlsx', $f, $file));
+            }
+            $this->data['row_num'] = 1;
+            if(isset($data['per_page']) && !empty($data['per_page'])){
+                $num = $data['per_page'];
+                $f = "_".$num.".htm";
+                $this->data['path'] = str_replace('.xlsx', $f, $file);
+            }else{
+                $this->data['path'] = str_replace('.xlsx', '_0.htm', $file);
+            }
             $this->load->view('cloud/doc_look',$this->data);
         }
 
