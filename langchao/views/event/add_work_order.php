@@ -59,7 +59,7 @@
                    二级<input type="radio" name="failure_level" id="failure_level" class="work_type" value="1">
                 </td>
                 <td>
-                   三级<input type="radio" name="failure_level" id="failure_level" class="work_type" value="2">
+                   三级<input type="radio" name="failure_level" id="failure_level" class="work_type" value="2" checked="checked">
                 </td>
             </tr>
             <tr>

@@ -59,13 +59,13 @@
                     <th>是否投诉</th>
                     <td>
                         是<input type="radio" name="is_complain" id="is_complain" value="1" <?if(isset($check)&&$check['is_complain']==1){echo "checked='checked'";}?>>
-                        否<input type="radio" name="is_complain" id="is_complain" value="0" <?if(isset($check)&&$check['is_complain']==0){echo "checked='checked'";}?>>
+                        否<input type="radio" name="is_complain" id="is_complain" value="0" <?if(isset($check)&&$check['is_complain']==0){echo "checked='checked'";} if(!isset($check)||empty($check['is_complain'])){echo "checked='checked'";}?> >
                     </td>
                 </tr>
                 <tr align="center">
                     <th>是否生效</th>
                     <td>
-                        是<input type="radio" name="event_status" id="event_status" value="1" <?if(isset($check)&&$check['event_status']==1){echo "checked='checked'";}?>>
+                        是<input type="radio" name="event_status" id="event_status" value="1" <?if(isset($check)&&$check['event_status']==1){echo "checked='checked'";}if(!isset($check)||empty($check['event_status'])){echo "checked='checked'";}?>>
                         否<input type="radio" name="event_status" id="event_status" value="0" <?if(isset($check)&&$check['event_status']==0){echo "checked='checked'";}?>>
                     </td>
                 </tr>

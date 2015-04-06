@@ -16,7 +16,14 @@
                 <tr>
                     <th>序号</th>
                     <th>类型</th>
-                    <th>适用部门</th>
+                    <th>
+                        <select class="form-control department">
+                            <option value="all" <?if($department=='all'){echo "selected=selected";}?>>全部</option>
+                            <?foreach ($department_list as $key => $value) {?>
+                              <option value="<?echo $value['id'];?>" <?if($department==$value['id']){echo "selected=selected";}?>><?echo $value['name'];?></option>  
+                            <?}?>
+                        </select>
+                    </th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -62,6 +69,14 @@ var sel_time_data = function (per_page) {
 }
 
 $(function() {
+
+        $(".department").change(function(){
+            _self = this;
+            var url = '<?php echo site_url("ctl=system&act=event_list");?>';
+            url = url+"&department="+$('.department').val();
+            window.location.href = url;
+        })
+
         $(".dodelete").click(function() {
          if(confirm("确认删除吗")){
             _self = this;

@@ -284,10 +284,22 @@ class System extends MY_Controller {
     public function event_list()
 	{
 		$this->data['user_data'] = $this->session->userdata;		
-		$where = array();
+        $data = $this->security->xss_clean($_GET);        
+        $where = array();
+        if(isset($data['department'])&&!empty($data['department'])){
+            $this->data['department'] = $data['department'];
+        }else{
+            $this->data['department'] = 'all';
+        }
+        if(isset($data['department'])&&($data['department'] !="all")){
+            $where = array("department_id"=>$data['department']);
+            $where['where_or'] = array('key'=>'department_id','value'=>'all');
+        }        
 		$event_list = $this->Role_model->get_event_list($where,$this->per_page);
 		$this->pages_conf($event_list['count']);
 		$this->data['list'] = $event_list['info'];
+		$department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
+        $this->data['department_list'] = $department_list['info'];		
         $this->layout->view('system/event_list',$this->data);
 	}
 
