@@ -238,8 +238,8 @@ class Role_model extends CI_Model {
         }
         $this->db->where($where);
         if(isset($where_or) && !empty($where_or)){
-            $this->db->like($where_or['key'], $where_or['value']);
-        }        
+            $this->db->or_where($where_or['key'], $where_or['value']);
+        }
         $this->db->from('event_type_list');
         $count = $this->db->count_all_results();
         return array('count'=>$count,"info"=>$res);

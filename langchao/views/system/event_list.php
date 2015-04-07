@@ -37,7 +37,6 @@
                         <a class="btn btn-danger dodelete" event_id='<?php echo $value['id'];?>'>删除</a>
                     </td>
                 </tr>
-                <div class="clearfix"></div><br>
                 <?php $i++;} ?>
 
             </tbody>
