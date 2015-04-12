@@ -173,8 +173,12 @@ function do_add(){
           layout: 'center',
           timeout: 1000,
         });
-        $(".do_add").html("已审核");
-        return true;
+        var url = "<?echo $back_url;?>";
+        url = url+"&is_status=succ";
+        alert(url);
+        window.location.href = url;
+        //$(".do_add").html("已审核");
+        //return true;
     }
 
     if ("succ" == data.status && status==2){

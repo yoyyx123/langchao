@@ -8,14 +8,27 @@ class Cloud_model extends CI_Model {
 
     public function get_doc_list($where,$offset=false){
         $this->db->order_by("date", "desc");
+        if(isset($where['where_or'])){
+            $where_or = $where['where_or'];
+            unset($where['where_or']);
+        }          
         if($offset!==false){
-            $query = $this->db->get_where('doc_list', $where,ROW_SHOW_NUM,$offset);
+            //$query = $this->db->get_where('doc_list', $where,ROW_SHOW_NUM,$offset);
+            $this->db->where($where,ROW_SHOW_NUM,$offset);
 
         }else{
-            $query = $this->db->get_where('doc_list', $where);
+            //$query = $this->db->get_where('doc_list', $where);
+            $this->db->where($where);
         }
+        if(isset($where_or)){
+            $this->db->or_where($where_or['key'], $where_or['value']);
+        }
+        $query = $this->db->get('doc_list');
         $res = $query->result_array();
         $this->db->where($where);
+        if(isset($where_or) && !empty($where_or)){
+            $this->db->or_where($where_or['key'], $where_or['value']);
+        }        
         $this->db->from('doc_list');
         $count = $this->db->count_all_results();
         return array('count'=>$count,"info"=>$res); 

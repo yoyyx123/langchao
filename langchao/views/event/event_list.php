@@ -37,7 +37,7 @@
           <div class="form-group">
             <div class="input-group">
               <div class="input-group-addon">月份</div>
-              <input id="event_month" class="form-control date-picker" type="text" value="<?if(isset($event_month)){echo $event_month;}?>" name="event_month">
+              <input id="event_month" class="form-control format_time" type="text" value="<?if(isset($event_month)){echo $event_month;}?>" name="event_month">
             </div>
           </div>&nbsp&nbsp
           <div class="form-group">
@@ -91,11 +91,14 @@
                 <td><?php echo $value['work_order_num'];?></td>
                 <td><?echo $value['cost_fee'];?></td>
                 <td><?php echo $value['event_less_time'];?></td>
+                <?if($user_data['id']==$user_id){?>
                 <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=add_work_order')."&event_id=".$value['id']."&back_url=".urlencode($back_url);?>" >添加工单</a></td>
                 <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=edit_work_order')."&event_id=".$value['id']."&back_url=".urlencode($back_url);;?>">查看</a></td>
-                <?if($user_data['position2']==4 || $user_data['position2']==3){?>
+                
+                <!--<?if($user_data['position2']==4 || $user_data['position2']==3){?>-->
                     <td><a class="btn btn-primary edit_event" event_id="<?echo $value['id'];?>">编辑</a></td>
                     <td><a class="btn btn-info delete_event" event_id="<?echo $value['id'];?>">删除</a></td>
+                <!--<?}?>-->
                 <?}?>
             </tr>
             <? } ?>
@@ -167,13 +170,17 @@ $(function() {
         });
         <?}?>
 
-        $('.date-picker').datepicker({
-            format: 'yyyy-mm',
-            autoclose:true,
-            startView: "year",
-            language:"zh-CN",
-            minViewMode:"months"
-          })
+    $('.format_time').datetimepicker({
+        format: "yyyy-mm", 
+        language:  'zh-CN',
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 3,
+        forceParse: 0,
+        showMeridian: 1,
+        minView:3
+    });
 
         $(".department_id").change(function() {
             _self = this;
@@ -270,7 +277,6 @@ $(function() {
                 }
              });
           **/
-        });        
-
+        });
 })
 </script>

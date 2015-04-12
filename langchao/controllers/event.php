@@ -381,6 +381,10 @@ class Event extends MY_Controller {
 
     public function event_check(){
         $data = $this->security->xss_clean($_GET);
+        if(isset($data['is_status']) && !empty($data['is_status'])){
+            $this->data['is_status'] = $data['is_status'];
+            unset($data['is_status']);
+        }
         if(isset($data['is_event']) && $data['is_event']==1){
             $this->data['is_event'] = 1;
             unset($data['is_event']);
@@ -493,8 +497,24 @@ class Event extends MY_Controller {
     }
 
     public function check_work_order(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_GET);
+        $back_url = site_url('ctl=event&act=event_check')."&is_event=1";
+        if(isset($data['user_id']) && !empty($data['user_id'])){
+            $back_url.= "&user_id=".$data['user_id'];
+        }
+        if(isset($data['event_month']) && !empty($data['event_month'])){
+            $back_url.= "&event_month=".$data['event_month'];
+        }
+        if(isset($data['status']) && !empty($data['status'])){
+            $back_url.= "&status=".$data['status'];
+        }
+        if(isset($data['department_id']) && !empty($data['department_id'])){
+            $back_url.= "&department_id=".$data['department_id'];
+        }
+        $this->data['back_url'] = $back_url;
+
+
         if(isset($data['work_order_id'])){
             $this->data['work_order_id'] = $data['work_order_id']; 
         }

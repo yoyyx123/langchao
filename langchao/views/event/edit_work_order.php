@@ -1,5 +1,5 @@
 <style type="text/css">
-input{width:60px;}
+input{width:95px;}
 select{width:60px;}
 </style>
 
@@ -119,6 +119,7 @@ select{width:60px;}
 <div class="col-lg-7 col-md-4">
     <p class="center col-md-12">
         <button type="submit" class="btn btn-primary">编辑</button>&nbsp&nbsp&nbsp
+        <button type="button" class="btn btn-info delete_work_order">删除</button>
     </p>
 </div>
 </form>
@@ -151,8 +152,8 @@ select{width:60px;}
                 <?if($val['type']==0){?>
                 <tr align="center" id="<?echo $i;?>">
                     <td><?echo$i;?></td>
-                    <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
-                    <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
+                    <td><input type="text" name="go_time" class="format_time" style="width:135px" id="go_time" value="<?echo $val['go_time'];?>"></td>
+                    <td><input type="text" name="arrival_time" class="format_time" style="width:135px" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
                     <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
                     <td><input type="text" name="arrival_place" id="arrival_place" value="<?echo $val['arrival_place'];?>"></td>
                     <td>
@@ -162,10 +163,10 @@ select{width:60px;}
                             <?}?>
                         </select>
                     </td>
-                    <td><input type="text" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
-                    <td><input type="text" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
-                    <td><input type="text" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
-                    <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
+                    <td><input type="text" name="transportation_fee" id="transportation_fee" style="width:45px" value="<?echo $val['transportation_fee'];?>"></td>
+                    <td><input type="text" name="hotel_fee" id="hotel_fee" style="width:45px" value="<?echo $val['hotel_fee'];?>"></td>
+                    <td><input type="text" name="food_fee" id="food_fee" style="width:45px" value="<?echo $val['food_fee'];?>"></td>
+                    <td><input type="text" name="other_fee" id="other_fee" style="width:45px" value="<?echo $val['other_fee'];?>"></td>
                     <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                     <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
                     <td><a class="btn btn-primary do_save" type_id ="0" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
@@ -204,8 +205,8 @@ select{width:60px;}
             <?if($val['type']==1){?>
             <tr align="center" id="<?echo $n;?>">
                 <td><?echo $n;?></td>
-                <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
-                <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
+                <td><input type="text" name="go_time" style="width:135px" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
+                <td><input type="text" name="arrival_time" style="width:135px" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
                 <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
                 <td><input type="text" name="arrival_place" id="arrival_place" value="<?echo $val['arrival_place'];?>"></td>
                 <td>
@@ -215,10 +216,10 @@ select{width:60px;}
                         <?}?>
                     </select>
                 </td>
-                <td><input type="text" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
-                <td><input type="text" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
-                <td><input type="text" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
-                <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
+                <td><input type="text" name="transportation_fee" id="transportation_fee" style="width:45px" value="<?echo $val['transportation_fee'];?>"></td>
+                <td><input type="text" name="hotel_fee" id="hotel_fee" style="width:45px" value="<?echo $val['hotel_fee'];?>"></td>
+                <td><input type="text" name="food_fee" id="food_fee" style="width:45px" value="<?echo $val['food_fee'];?>"></td>
+                <td><input type="text" name="other_fee" id="other_fee" style="width:45px" value="<?echo $val['other_fee'];?>"></td>
                 <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                 <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
                 <td><a class="btn btn-primary do_save" type_id ="1" bill_id="<?echo $val['id'];?>" onclick="do_save(this)">编辑</a></td>
@@ -263,6 +264,21 @@ $(function() {
     });
     <?}?>
      
+
+    $(".delete_work_order").click(function() {
+        work_order_id = $('#work_order_id').val();
+        event_id = $('#event_id').val();
+        $('#arrive_time').val();
+     if(confirm("确认删除工单吗")){
+        _self = this;
+        url = "<?php echo site_url(array('ctl'=>'event', 'act'=>'delete_work_order'))?>"+"&work_order_id="+work_order_id+"&event_id="+event_id;
+        window.location.href=url;
+     }else{
+        return;
+     }
+    });
+
+
 })
 function add_td(atable){
     var type_id = $(atable).attr('type_id');
@@ -273,10 +289,8 @@ function add_td(atable){
     }
     var NId = parseInt(id)+1;
     //var str = 'onclick="laydate({istime: true, format: "YYYY-MM-DD hh:mm:ss"})"';
-    var TrContent = '<tr id="'+NId+'"><td>'+NId+'</td><td><input type="text" style="width:135px" name="go_time" id="go_time" class="format_time2"></td><td><input style="width:135px" type="text" name="arrival_time" id="arrival_time" class="format_time2"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select id="transportation" name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" selected=selected><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee"></td><td><input type="text" name="hotel_fee" id="hotel_fee"></td><td><input type="text" name="food_fee" id="food_fee"></td><td><input type="text" name="other_fee" id="other_fee"></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
+    var TrContent = '<tr id="'+NId+'"><td>'+NId+'</td><td><input type="text" style="width:135px" name="go_time" id="go_time" class="format_time"></td><td><input style="width:135px" type="text" name="arrival_time" id="arrival_time" class="format_time"></td><td><input type="text" name="start_place" id="start_place"></td><td><input type="text" name="arrival_place" id="arrival_place"></td><td><select id="transportation" name="transportation"><?foreach ($traffic_list as $k => $tmp) {?><option value="<?echo $tmp["id"];?>" selected=selected><?echo $tmp["name"];?></option><?}?></select></td><td><input type="text" name="transportation_fee" id="transportation_fee" style="width:45px" ></td><td><input type="text" name="hotel_fee" id="hotel_fee" style="width:45px" ></td><td><input type="text" name="food_fee" id="food_fee" style="width:45px" ></td><td><input type="text" name="other_fee" id="other_fee" style="width:45px" ></td><td><input type="text" name="memo" id="memo"></td><td><input type="text" name="bill_no" id="bill_no"></td><td><a class="btn btn-primary do_save" type_id="'+type_id+'" bill_id="" onclick="do_save(this)">保存</a></td><td><a class="btn btn-primary" id="do_delete" type_id="'+type_id+'" bill_id="" onclick="do_delete(this)">删除</a></td></tr>';
     $(atable).parent().parent().parent().parent().find("tbody").append(TrContent);
-    $(".format_time2").attr("onclick","laydate({istime: true, format: 'YYYY-MM-DD hh:mm:ss'})");
-    /**
     $('#format_time').datetimepicker({
         format: "yyyy-mm-dd hh:ii:ss", 
         language:  'zh-CN',
@@ -289,7 +303,6 @@ function add_td(atable){
         showMeridian: 1,
         pickerPosition: 'bottom-right',
     });
-    **/
 }
 function do_delete(atable){
     var bill_id = $(atable).attr('bill_id');
@@ -447,4 +460,6 @@ function do_save(atable){
         return false
     }
 }
+
+
 </script>

@@ -621,6 +621,34 @@ class Search extends MY_Controller {
             $this->export_xls_all('费用',$res,$title);  
         }elseif(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="work_time"){
             $title = array("使用人","日期","客户简称","事件类型","到场时间","离场时间","事件描述","工时","工作时间工时","平时加班","周末加班","节日加班");
+            foreach ($res as $k => $v) {
+                $worktime_count = 0;
+                $work_time = 0;
+                $week_more = 0;
+                $weekend_more = 0;
+                $holiday_more = 0;                
+                foreach ($v as $key => $value) {
+                    $worktime_count += $value['worktime_count'];
+                    $work_time += $value['work_time'];
+                    $week_more += $value['week_more'];
+                    $weekend_more += $value['weekend_more'];
+                    $holiday_more += $value['holiday_more'];
+                }
+                $all['user_name'] = '合计';
+                $all['date'] = '';
+                $all['short_name'] = '';
+                $all['event_type_name'] = '';
+                $all['arrive_time'] = '';
+                $all['back_time'] = '';
+                $all['desc'] = '';        
+                $all['worktime_count'] = $worktime_count;
+                $all['work_time'] = $work_time;
+                $all['week_more'] = $week_more;
+                $all['weekend_more'] = $weekend_more;
+                $all['holiday_more'] = $holiday_more;
+                $v[] = $all;
+                $res[$k] = $v;
+            }
             $this->export_xls_all('工时',$res,$title);  
         }
         $this->pages_conf(count($result));
@@ -664,6 +692,31 @@ class Search extends MY_Controller {
             $title = array("使用人","出发时间","到达时间","起始地","目的地","交通费","住宿费","加班餐费","其他费用","备注","单据编号","交通方式","类型");
             $this->export_xls($this->data['name'],$msg,$title);  
         }elseif(isset($data['is_export']) && $data['is_export'] && $data['data_type']=="work_time"){
+            $worktime_count = 0;
+            $work_time = 0;
+            $week_more = 0;
+            $weekend_more = 0;
+            $holiday_more = 0;
+            foreach ($result as $key => $value) {
+                $worktime_count += $value['worktime_count'];
+                $work_time += $value['work_time'];
+                $week_more += $value['week_more'];
+                $weekend_more += $value['weekend_more'];
+                $holiday_more += $value['holiday_more'];
+            }
+            $all['user_name'] = '合计';
+            $all['date'] = '';
+            $all['short_name'] = '';
+            $all['event_type_name'] = '';
+            $all['arrive_time'] = '';
+            $all['back_time'] = '';
+            $all['desc'] = '';        
+            $all['worktime_count'] = $worktime_count;
+            $all['work_time'] = $work_time;
+            $all['week_more'] = $week_more;
+            $all['weekend_more'] = $weekend_more;
+            $all['holiday_more'] = $holiday_more;
+            $result[] = $all;
             $msg[$this->data['name']] = $result;
             $title = array("使用人","日期","客户简称","事件类型","到场时间","离场时间","事件描述","工时","工作日工时","平时加班","周末加班","节日加班");
             $this->export_xls($this->data['name'],$msg,$title);  

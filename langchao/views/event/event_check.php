@@ -92,7 +92,7 @@
                 <td><?php echo $value['work_order_num'];?></td>
                 <td><? echo $value['worktime_count'];?></td>
                 <td><?php if($value['status']==1){echo "待添加";}elseif($value['status']==2){echo "待审核";}elseif($value['status']==3){echo "已审核";}?></td>
-                <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=check_work_order')."&event_id=".$value['id'];?>">查看</a></td>
+                <td><a class="btn btn-primary" href="<?php echo site_url('ctl=event&act=check_work_order')."&event_id=".$value['id']."&user_id=".$user_id."&department_id=".$department_id."&event_month=".$event_month."&status=".$status;?>">查看</a></td>
             </tr>
             <? } ?>
         </tbody>
@@ -156,6 +156,16 @@ var sel_time_data = function (per_page) {
 
 $(function() {
   
+
+        <?if(isset($is_status) && $is_status=="succ"){?>
+            var n = noty({
+              text: "审核成功",
+              type: 'success',
+              layout: 'center',
+              timeout: 1000,
+            });
+        <?}?>
+
         $('.date-picker').datepicker({
             format: 'yyyy-mm',
             autoclose:true,

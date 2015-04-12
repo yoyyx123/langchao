@@ -76,11 +76,34 @@ class Event_model extends CI_Model {
         }
         $res = $query->result_array();
         foreach ($res as $key => $value) {
+
+            /**
             $time = $value['event_time'];
             $x = strtotime($time);
             $n = strtotime(date("Y-m-d"));
             $r = round(($x+EXPIRE_DATE*24*3600-$n)/(24*3600));
             $value['event_less_time'] = $r;
+            **/
+
+            $time = $value['event_time'];
+            $x = strtotime($time);
+            $work_order = $this->get_work_order_info(array('event_id'=>$value['id']));
+            if($work_order){
+                $n = strtotime($work_order['date']);
+            }else{
+                $n = strtotime(date("Y-m-d"));
+            }
+            $tmp = $this->Role_model->get_expire_date();
+            if(!$tmp){
+                $m = 0;
+            }else{
+                $m = $tmp['name'];
+            }
+            $r = round(($x+$m*24*3600-$n)/(24*3600));
+            $value['event_less_time'] = $r;
+
+
+
             $query2 = $this->db->get_where('work_order_list', array('event_id'=>$value['id']));
             $res2 = $query2->result_array();
             $value['work_order_num'] = count($res2);

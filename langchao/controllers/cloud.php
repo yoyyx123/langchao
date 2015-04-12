@@ -25,9 +25,13 @@ class Cloud extends MY_Controller {
             readfile($file);
         }
         $this->data['user_data'] = $this->session->userdata;
+        $guanlibu = $this->Role_model->get_setting_info(array("type"=>"department","name"=>"管理部"));
         $where = array();
         if($this->data['user_data']['position2'] == '1'){
             $where = array("department"=>$this->data['user_data']['department']);
+            if(isset($guanlibu) && !empty($guanlibu)){
+                $where['where_or'] = array('key'=>'department','value'=>$guanlibu['id']);
+            }            
         }
         $doc_list = $this->Cloud_model->get_doc_list($where,$this->per_page);
         $this->pages_conf($doc_list['count']);
