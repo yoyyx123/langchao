@@ -24,6 +24,7 @@
                 </tr>                
                 <tr>
                 <th>序号</th>
+                <th>日期、时间</th>
                 <th>出发时间</th>
                 <th>到达时间</th>
                 <th>起始地</th>
@@ -45,6 +46,7 @@
                 <? $i=1; foreach ($bill_list as $key => $val) {?>
                 <tr align="center" id="1">
                     <td><?echo $i;?></td>
+                    <td><?echo $val['date2'];?></td>
                     <td><?echo $val['go_time'];?></td>
                     <td><?echo $val['arrival_time'];?></td>
                     <td><?echo $val['start_place'];?></td>
