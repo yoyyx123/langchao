@@ -480,6 +480,7 @@ class Event extends MY_Controller {
         if(isset($data['event_month']) && !empty($data['event_month'])){
             $back_url.= "&event_month=".$data['event_month'];
         }
+
         if(isset($data['status']) && !empty($data['status'])){
             $back_url.= "&status=".$data['status'];
         }
