@@ -41,7 +41,7 @@ select{width:60px;}
             <tr>
                 <th>保修症状</th>
                 <td colspan="3">
-                    <textarea  name="symptom" rows="1" cols="50"><?echo $value['symptom'];?></textarea>
+                    <textarea  name="symptom"  rows="3" cols="50"><?echo $value['symptom'];?></textarea>
                 </td>
             </tr>            
             <tr>
@@ -71,25 +71,25 @@ select{width:60px;}
             <tr>
                 <th>故障分析</th>
                 <td colspan="3">
-                    <textarea name="failure_analysis" id="failure_analysis" rows="1" cols="50"><?echo $value['failure_analysis'];?></textarea>
+                    <textarea name="failure_analysis" id="failure_analysis" rows="3" cols="50"><?echo $value['failure_analysis'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>风险预测</th>
                 <td colspan="3">
-                    <textarea  name="risk_profile" id="risk_profile" rows="1" cols="50" ><?echo $value['risk_profile'];?></textarea>
+                    <textarea  name="risk_profile" id="risk_profile" rows="3" cols="50" ><?echo $value['risk_profile'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>解决方案</th>
                 <td colspan="3">
-                    <textarea  name="solution" id="solution" rows="1" cols="50" ><?echo $value['solution'];?></textarea>
+                    <textarea  name="solution" id="solution" rows="3" cols="50" ><?echo $value['solution'];?></textarea>
                 </td>
             </tr>
             <tr>
                 <th>使用人描述</th>
                 <td colspan="3">
-                    <textarea  name="desc" id="desc" rows="1" cols="50" ><?echo $value['desc'];?></textarea>
+                    <textarea  name="desc" id="desc" rows="3" cols="50" ><?echo $value['desc'];?></textarea>
                 </td>
             </tr>
             <tr>
@@ -107,7 +107,7 @@ select{width:60px;}
             <tr>
                 <th>备注</th>
                 <td colspan="3">
-                    <textarea  name="memo" id="memo" rows="1" cols="50"><?echo $value['memo'];?></textarea>
+                    <textarea  name="memo" id="memo" rows="3" cols="50"><?echo $value['memo'];?></textarea>
                 </td>
             </tr>
 
