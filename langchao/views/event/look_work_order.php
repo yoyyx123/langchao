@@ -1,8 +1,3 @@
-<style type="text/css">
-input{width:95px;}
-select{width:60px;}
-</style>
-
 <div>
     <ul class="breadcrumb">
         <li>
@@ -25,17 +20,17 @@ select{width:60px;}
                 </td>
                 <th>客户部门</th>
                 <td>
-                    <input type="text" style="width:160px" name="custom_department" id="custom_department" value="<?echo $value['custom_department'];?>">
+                    <input type="text" name="custom_department" id="custom_department" value="<?echo $value['custom_department'];?>">
                 </td>
             </tr>
             <tr>
                 <th>到达时间(签到)</th>
                 <td>
-                    <input type="text" style="width:160px" class="format_time" name="arrive_time" id="arrive_time" value="<?echo $value['arrive_time'];?>">
+                    <input type="text" class="format_time" name="arrive_time" id="arrive_time" value="<?echo $value['arrive_time'];?>">
                 </td>
                 <th>离场时间(签退)</th>
                 <td>
-                    <input type="text" style="width:160px" class="format_time" name="back_time" id="back_time" value="<?echo $value['back_time'];?>">
+                    <input type="text" class="format_time" name="back_time" id="back_time" value="<?echo $value['back_time'];?>">
                 </td>                
             </tr>
             <tr>
@@ -148,8 +143,8 @@ select{width:60px;}
                 <?if($val['type']==0){?>
                 <tr align="center" id="<?echo $i;?>">
                     <td><?echo$i;?></td>
-                    <td><input type="text" style="width:140px" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
-                    <td><input type="text" style="width:140px" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
+                    <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
+                    <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
                     <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
                     <td><input type="text" name="arrival_place" id="arrival_place" value="<?echo $val['arrival_place'];?>"></td>
                     <td>
@@ -159,10 +154,10 @@ select{width:60px;}
                             <?}?>
                         </select>
                     </td>
-                    <td><input type="text" style="width:55px" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
-                    <td><input type="text" style="width:55px" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
-                    <td><input type="text" style="width:55px" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
-                    <td><input type="text" style="width:55px" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
+                    <td><input type="text" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
+                    <td><input type="text" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
+                    <td><input type="text" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
+                    <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
                     <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                     <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
                 </tr>
@@ -198,8 +193,8 @@ select{width:60px;}
             <?if($val['type']==1){?>
             <tr align="center" id="<?echo $n;?>">
                 <td><?echo $n;?></td>
-                <td><input type="text" style="width:140px" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
-                <td><input type="text" style="width:140px" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
+                <td><input type="text" name="go_time" class="format_time" id="go_time" value="<?echo $val['go_time'];?>"></td>
+                <td><input type="text" name="arrival_time" class="format_time" id="arrival_time" value="<?echo $val['arrival_time'];?>"></td>
                 <td><input type="text" name="start_place" id="start_place" value="<?echo $val['start_place'];?>"></td>
                 <td><input type="text" name="arrival_place" id="arrival_place" value="<?echo $val['arrival_place'];?>"></td>
                 <td>
@@ -209,10 +204,10 @@ select{width:60px;}
                         <?}?>
                     </select>
                 </td>
-                <td><input type="text" style="width:55px" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
-                <td><input type="text" style="width:55px" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
-                <td><input type="text" style="width:55px" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
-                <td><input type="text" style="width:55px" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
+                <td><input type="text" name="transportation_fee" id="transportation_fee" value="<?echo $val['transportation_fee'];?>"></td>
+                <td><input type="text" name="hotel_fee" id="hotel_fee" value="<?echo $val['hotel_fee'];?>"></td>
+                <td><input type="text" name="food_fee" id="food_fee" value="<?echo $val['food_fee'];?>"></td>
+                <td><input type="text" name="other_fee" id="other_fee" value="<?echo $val['other_fee'];?>"></td>
                 <td><input type="text" name="memo" id="memo" value="<?echo $val['memo'];?>"></td>
                 <td><input type="text" name="bill_no" id="bill_no" value="<?echo $val['bill_no'];?>"></td>
             </tr>

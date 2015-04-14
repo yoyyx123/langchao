@@ -443,12 +443,9 @@ class Event extends MY_Controller {
         if($date<=0.5){
             $date = 0.5;
         }
+
         $performance = $this->Role_model->get_setting_info(array("id"=>$event['performance_id']));
-        if($performance['name'] || $performance['name']!=0){
-            $time = $worktime_count*$performance['name']/100*$date;
-        }else{
-            $time = $worktime_count*$date;
-        }
+        $time = $worktime_count*$performance['name']/100*$date;
         return $time;
     }
     public function do_check_search(){

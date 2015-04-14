@@ -504,17 +504,9 @@ class System extends MY_Controller {
 			$where['department'] = $data['department'];
 			$this->data['department'] = $data['department'];
 		}
-        if($this->data['user_data']['position2'] == '1' || $this->data['user_data']['position2'] == '2'){
-            $where = array("department"=>$this->data['user_data']['department']);          
-        }		
 		$list = $this->Role_model->get_doc_list($where,$this->per_page);
 		$this->pages_conf($list['count']);
-        if($this->data['user_data']['position2'] == '1' || $this->data['user_data']['position2'] == '2'){
-            $where2 = array("id"=>$this->data['user_data']['department']);          
-        }else{
-        	$where2 = array("type"=>"department");
-        }
-		$department_list = $this->Role_model->get_setting_list($where2);		
+		$department_list = $this->Role_model->get_setting_list(array("type"=>"department"));		
 		$this->data['department_list'] = $department_list['info'];
 		$list = $list['info'];
 		foreach ($list as $key => $value) {
