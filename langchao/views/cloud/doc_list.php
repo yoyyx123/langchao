@@ -3,7 +3,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th colspan="10" style="text-align:center;"><h4>文档下载</h4></th>
+                    <th colspan="10" style="text-align:center;"><h4>文档管理</h4></th>
                 </tr>               
                 <tr>
                     <th>序号</th>

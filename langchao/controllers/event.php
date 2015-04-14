@@ -443,6 +443,7 @@ class Event extends MY_Controller {
         if($date<=0.5){
             $date = 0.5;
         }
+<<<<<<< HEAD
         $performance = $this->Role_model->get_setting_info(array("id"=>$event['performance_id']));
         if($performance['name'] || $performance['name']!=0){
             $time = $worktime_count*$performance['name']/100*$date;
@@ -450,6 +451,11 @@ class Event extends MY_Controller {
             $time = $worktime_count*$date;
         }
         return $time;
+=======
+        $performance = $this->Role_model->get_setting_info(array("id"=>$event['performance_id']));        
+        $time = $worktime_count*$performance['name']/100*$date;
+        return $time;        
+>>>>>>> parent of 60d7043... 4-13修改
     }
     public function do_check_search(){
         $data = $this->security->xss_clean($_POST);
