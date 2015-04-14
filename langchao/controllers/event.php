@@ -1,8 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 header("Content-Type:text/html;charset=utf-8");
 class Event extends MY_Controller {
-
     public function __construct()
     {
         parent::__construct();
@@ -12,7 +10,6 @@ class Event extends MY_Controller {
         $this->load->model('Event_model');
         $this->load->model('User_model');
     }
-
     public function index(){
         $where = array();
         $member = $this->Member_model->get_member_list($where,$this->per_page);
@@ -21,22 +18,20 @@ class Event extends MY_Controller {
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('event/index',$this->data);
     }
-
     public function add_event(){
         $data = $this->security->xss_clean($_POST);
         $where = array("id"=>trim($data['id']));
         $member = $this->Member_model->get_member_info($where);
         $this->data['user_data'] = $this->session->userdata;
-        $this->data['member'] = $member;    
-        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['member'] = $member;
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
         $this->data['department_list'] = $department_list['info'];
-        $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
-        $this->data['worktime_list'] = $worktime_list['info'];        
-        $event_list = $this->Role_model->get_event_list(array("display"=>"1"));      
+        $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));
+        $this->data['worktime_list'] = $worktime_list['info'];
+        $event_list = $this->Role_model->get_event_list(array("display"=>"1"));
         $this->data['event_list'] = $event_list['info'];
         $this->load->view('event/add_event',$this->data);
     }
-
     public function get_info_by_department(){
         $data = $this->security->xss_clean($_POST);
         $this->data['user_data'] = $this->session->userdata;
@@ -53,11 +48,10 @@ class Event extends MY_Controller {
         $sql2 = array('department_id'=>'all');
         $event2 = $this->Role_model->get_event_list($sql2);
         $result['event'] = array_merge($event['info'],$event2['info']);
-        echo json_encode($result);        
+        echo json_encode($result);
     }
-
     public function edit_event(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_POST);
         $this->data['event_month'] = $data['event_month'];
         $where = array("id"=>trim($data['id']));
@@ -66,28 +60,26 @@ class Event extends MY_Controller {
         $member = $this->Member_model->get_member_info(array('id'=>$event['member_id']));
         $this->data['member'] = $member;
         $user = $this->User_model->get_user_info(array("id"=>$event['user_id']));
-        $this->data['user'] = $user;        
-        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $this->data['user'] = $user;
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
         $this->data['department_list'] = $department_list['info'];
-        $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));      
+        $worktime_list = $this->Role_model->get_setting_list(array("type"=>"worktime"));
         $this->data['worktime_list'] = $worktime_list['info'];
-        $event_list = $this->Role_model->get_event_list(array("display"=>"1"));      
+        $event_list = $this->Role_model->get_event_list(array("display"=>"1"));
         $this->data['event_list'] = $event_list['info'];
         $this->load->view('event/edit_event',$this->data);
     }
-
     public function do_edit_event(){
         $data = $this->security->xss_clean($_POST);
         $where = array("id"=>trim($data['id']));
         $params = $data;
         unset($params['id']);
-        unset($params['event_month']);        
+        unset($params['event_month']);
         $event = $this->Event_model->update_event_info($params,$where);
-        
+
         $redirect_url = 'ctl=event&act=event_list&is_event=1&user_id='.$data['user_id']."&event_month=".$data['event_month']."&status=1&res_status=修改成功";
         redirect($redirect_url);
     }
-
     public function do_add_event(){
         $data = $this->security->xss_clean($_POST);
         $params = $data;
@@ -98,7 +90,7 @@ class Event extends MY_Controller {
             $start =  strtotime($data['event_time_start']);
             $end = strtotime($data['event_time_end']);
             $num = ($end - $start)/(3600*24);
-            for ($i=0; $i <= $num; $i++) { 
+            for ($i=0; $i <= $num; $i++) {
                 $event_time =  date('Y-m-d', ($start + $i*24*3600));
                 if($this->is_valid_date($event_time)){
                     $params['event_time'] = $event_time;
@@ -108,15 +100,13 @@ class Event extends MY_Controller {
                 }
             }
         }else{
-
             $event_month = substr($params['event_time'],0,7);
             $params['event_month'] = $event_month;
-            $res = $this->Event_model->add_event_info($params);            
+            $res = $this->Event_model->add_event_info($params);
         }
         $redirect_url = 'ctl=event&act=index';
-        redirect($redirect_url);    
+        redirect($redirect_url);
     }
-
     public function is_valid_date($date){
         $holiday_list = $this->Event_model->get_holiday_list();
         $weekend_list = explode('_', WEEKEND);
@@ -128,7 +118,6 @@ class Event extends MY_Controller {
             return true;
         }
     }
-
     public function delete_event(){
         $data = $this->security->xss_clean($_GET);
         $event_id = $data['event_id'];
@@ -136,7 +125,6 @@ class Event extends MY_Controller {
         $redirect_url = 'ctl=event&act=event_list&is_event='.$data['is_event']."&user_id=".$data['user_id']."&event_month=".$data['event_month']."&status=".$data['status']."&res_status=删除成功";
         redirect($redirect_url);
     }
-
     public function event_list(){
         $data = $this->security->xss_clean($_GET);
         $this->data['back_url'] = "index.php?".http_build_query($data);
@@ -145,7 +133,7 @@ class Event extends MY_Controller {
             if(isset($data['res_status'])){
                 $this->data['res_status'] = $data['res_status'];
                 unset($data['res_status']);
-            }            
+            }
             unset($data['is_event']);
             unset($data['ctl']);
             unset($data['act']);
@@ -153,9 +141,9 @@ class Event extends MY_Controller {
             $this->data['user_id'] = $data['user_id'];
             $this->data['event_month'] = $data['event_month'];
             $this->data['status'] = $data['status'];
-            $this->data['department_id'] = $data['department_id'];            
+            $this->data['department_id'] = $data['department_id'];
             unset($data['department_id']);
-            $where = array();        
+            $where = array();
             foreach($data as $k =>$v){
                 if(!empty($data[$k])){
                     $where[$k] = trim($v);
@@ -168,11 +156,11 @@ class Event extends MY_Controller {
                 $event_list['info'][$key] = $value;
             }
             $this->pages_conf($event_list['count']);
-            $this->data['event_list'] = $event_list['info'];        
+            $this->data['event_list'] = $event_list['info'];
             $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
-            $this->data['user'] = $user;            
+            $this->data['user'] = $user;
         }
-        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
         $this->data['department_list'] = $department_list['info'];
         //$where = array();
         //$work_order = $this->Event_model->get_event_list($where);
@@ -180,9 +168,8 @@ class Event extends MY_Controller {
         $this->data['user_list'] = $user['info'];
         //$this->data['work_order_list'] = $work_order;
         $this->data['user_data'] = $this->session->userdata;
-        $this->layout->view('event/event_list',$this->data);        
+        $this->layout->view('event/event_list',$this->data);
     }
-
     public function get_event_cost_fee($event){
         $cost_fee = 0;
         $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$event['id']));
@@ -193,7 +180,6 @@ class Event extends MY_Controller {
         }
         return $cost_fee;
     }
-
     public function do_search(){
         $data = $this->security->xss_clean($_GET);
         if(isset($data['is_event']) && $data['is_event']==1){
@@ -206,7 +192,7 @@ class Event extends MY_Controller {
         $this->data['user_id'] = $data['user_id'];
         $this->data['event_month'] = $data['event_month'];
         $this->data['status'] = $data['status'];
-        $where = array();        
+        $where = array();
         foreach($data as $k =>$v){
             if(!empty($data[$k])){
                 $where[$k] = trim($v);
@@ -214,14 +200,13 @@ class Event extends MY_Controller {
         }
         $event_list = $this->Event_model->get_event_list($where);
         $this->pages_conf($event_list['count']);
-        $this->data['event_list'] = $event_list['info'];        
-        $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));        
+        $this->data['event_list'] = $event_list['info'];
+        $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
         $this->data['user'] = $user;
         $this->load->view('event/do_search',$this->data);
     }
-
     public function add_work_order(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_GET);
         if(isset($data['back_url'])&&!empty($data['back_url'])){
             $back_url = $_GET['back_url'];
@@ -234,42 +219,39 @@ class Event extends MY_Controller {
         $this->data['back_url'] = $back_url;
         $where = array("id"=>trim($data['event_id']));
         $event = $this->Event_model->get_event_info($where);
-        $this->data['event'] = $event;    
-        $this->layout->view('event/add_work_order',$this->data);        
+        $this->data['event'] = $event;
+        $this->layout->view('event/add_work_order',$this->data);
     }
-
     public function do_add_work_order(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_POST);
         if(isset($data['back_url'])&&!empty($data['back_url'])){
             $back_url = $data['back_url'];
             unset($data['back_url']);
         }else{
             $back_url = site_url(array('ctl'=>'event', 'act'=>'index'));
-        }        
+        }
         $event_id = $data['event_id'];
         $res = $this->Event_model->save_work_order_info($data);
         $this->change_event_status($event_id,2);
-
         $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id."&back_url=".urlencode($back_url)."&status=succ";
-        redirect($redirect_url); 
+        redirect($redirect_url);
     }
-
     public function edit_work_order(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_GET);
         if(isset($data['back_url'])&&!empty($data['back_url'])){
             $back_url = $_GET['back_url'];
         }else{
             $back_url = site_url(array('ctl'=>'event', 'act'=>'event_list'));
         }
-        $this->data['back_url'] = $back_url;        
+        $this->data['back_url'] = $back_url;
         if(isset($data['work_order_id'])){
-            $this->data['work_order_id'] = $data['work_order_id']; 
+            $this->data['work_order_id'] = $data['work_order_id'];
         }
         $where = array("id"=>trim($data['event_id']));
         $event = $this->Event_model->get_event_info($where);
-        $this->data['event'] = $event; 
+        $this->data['event'] = $event;
         $where = array("event_id"=>trim($data['event_id']));
         if(isset($data['work_order_id'])&&!empty($data['work_order_id'])){
             $where['id'] = $data['work_order_id'];
@@ -285,24 +267,23 @@ class Event extends MY_Controller {
         }
         $traffic_list = $this->Role_model->get_setting_list(array("type"=>"traffic"));
         $this->data['traffic_list'] = $traffic_list['info'];
-        $this->layout->view('event/edit_work_order',$this->data); 
+        $this->layout->view('event/edit_work_order',$this->data);
     }
-
     public function look_work_order(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_GET);
         if(isset($data['back_url'])&&!empty($data['back_url'])){
             $back_url = $_GET['back_url'];
         }else{
             $back_url = site_url(array('ctl'=>'event', 'act'=>'event_list'));
         }
-        $this->data['back_url'] = $back_url;        
+        $this->data['back_url'] = $back_url;
         if(isset($data['work_order_id'])){
-            $this->data['work_order_id'] = $data['work_order_id']; 
+            $this->data['work_order_id'] = $data['work_order_id'];
         }
         $where = array("id"=>trim($data['event_id']));
         $event = $this->Event_model->get_event_info($where);
-        $this->data['event'] = $event; 
+        $this->data['event'] = $event;
         $where = array("event_id"=>trim($data['event_id']));
         if(isset($data['work_order_id'])&&!empty($data['work_order_id'])){
             $where['id'] = $data['work_order_id'];
@@ -318,11 +299,10 @@ class Event extends MY_Controller {
         }
         $traffic_list = $this->Role_model->get_setting_list(array("type"=>"traffic"));
         $this->data['traffic_list'] = $traffic_list['info'];
-        $this->layout->view('event/look_work_order',$this->data); 
-    }    
-
+        $this->layout->view('event/look_work_order',$this->data);
+    }
     public function do_edit_work_order(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_POST);
         $event_id = $data['event_id'];
         $work_order_id = $data['work_order_id'];
@@ -332,7 +312,6 @@ class Event extends MY_Controller {
         $redirect_url = 'ctl=event&act=edit_work_order&event_id='.$event_id."&status=succ";
         redirect($redirect_url);
     }
-
     public function delete_work_order(){
         $data = $this->security->xss_clean($_GET);
         $work_order_id = $data['work_order_id'];
@@ -341,24 +320,23 @@ class Event extends MY_Controller {
         $this->Event_model->delete_work_order($where);
         $work_order = $this->Event_model->get_work_order_info(array("event_id"=>$event_id));
         if(!$work_order){
-            $this->Event_model->update_check_event_info(array('status'=>'1'),array('id'=>$event_id));        
+            $this->Event_model->update_check_event_info(array('status'=>'1'),array('id'=>$event_id));
         }
         $redirect_url = 'ctl=event&act=add_work_order&event_id='.$event_id."&status=succ";
         redirect($redirect_url);
     }
-
     public function add_biil_order(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_POST);
         unset($data['id']);
         if(isset($data['bill_id']) && !empty($data['bill_id'])){
             $where = array('id'=>$data['bill_id']);
-            unset($data['bill_id']);            
+            unset($data['bill_id']);
             $res = $this->Event_model->save_biil_orderr_info($data,$where);
         }else{
             unset($data['bill_id']);
             $res = $this->Event_model->insert_biil_orderr_info($data);
-            $where = array('work_order_id'=>$data['work_order_id']);            
+            $where = array('work_order_id'=>$data['work_order_id']);
         }
         $result = $this->Event_model->get_biil_orderr_info($where);
         if($result && $result['bill_no']==$data['bill_no']){
@@ -367,7 +345,6 @@ class Event extends MY_Controller {
             echo json_encode(array('status'=>'fail'));
         }
     }
-
     public function delete_biil_order(){
         $data = $this->security->xss_clean($_POST);
         $where = array('id'=>$data['bill_id']);
@@ -378,7 +355,6 @@ class Event extends MY_Controller {
             echo 'fail';
         }
     }
-
     public function event_check(){
         $data = $this->security->xss_clean($_GET);
         if(isset($data['is_status']) && !empty($data['is_status'])){
@@ -394,20 +370,20 @@ class Event extends MY_Controller {
             $this->data['user_id'] = $data['user_id'];
             $this->data['event_month'] = $data['event_month'];
             $this->data['status'] = $data['status'];
-            $this->data['department_id'] = $data['department_id'];            
-            unset($data['department_id']);                               
+            $this->data['department_id'] = $data['department_id'];
+            unset($data['department_id']);
             if(empty($data['event_time'])){
                 unset($data['event_time']);
             }
             if(empty($data['status'])){
                 unset($data['status']);
             }
-            $where = array();        
+            $where = array();
             foreach($data as $k =>$v){
                 if(!empty($data[$k])){
                     $where[$k] = trim($v);
                 }
-            }         
+            }
             $event_list = $this->Event_model->get_event_list($where,$this->per_page);
             $this->pages_conf($event_list['count']);
             foreach ($event_list['info'] as $key => $value) {
@@ -415,19 +391,18 @@ class Event extends MY_Controller {
                 $value['worktime_count'] = $worktime_count;
                 $event_list['info'][$key] = $value;
             }
-            $this->data['event_list'] = $event_list['info'];            
+            $this->data['event_list'] = $event_list['info'];
             $user = $this->User_model->get_user_info(array("id"=>$data['user_id']));
             $this->data['user'] = $user;
         }
-        
-        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
+
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
         $this->data['department_list'] = $department_list['info'];
         $user_list = $this->User_model->get_user_list();
         $this->data['user_list'] = $user_list['info'];
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('event/event_check',$this->data);
     }
-
     public function get_event_worktime_count($event){
         $worktime_count = 0;
         $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$event['id']));
@@ -474,9 +449,8 @@ class Event extends MY_Controller {
         }else{
             $time = $worktime_count*$date;
         }
-        return $time;        
+        return $time;
     }
-
     public function do_check_search(){
         $data = $this->security->xss_clean($_POST);
         if(isset($data['is_event']) && $data['is_event']==1){
@@ -489,7 +463,7 @@ class Event extends MY_Controller {
         if(empty($data['status'])){
             unset($data['status']);
         }
-        $where = array();        
+        $where = array();
         foreach($data as $k =>$v){
             $where[$k] = trim($v);
         }
@@ -499,7 +473,6 @@ class Event extends MY_Controller {
         $this->data['event_list'] = $event_list['info'];
         $this->load->view('event/do_check_search',$this->data);
     }
-
     public function check_work_order(){
         $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_GET);
@@ -517,10 +490,8 @@ class Event extends MY_Controller {
             $back_url.= "&department_id=".$data['department_id'];
         }
         $this->data['back_url'] = $back_url;
-
-
         if(isset($data['work_order_id'])){
-            $this->data['work_order_id'] = $data['work_order_id']; 
+            $this->data['work_order_id'] = $data['work_order_id'];
         }
         $where = array("id"=>trim($data['event_id']));
         $event = $this->Event_model->get_event_info($where);
@@ -558,7 +529,7 @@ class Event extends MY_Controller {
         $this->data['event'] = $event;
         $check = $this->Event_model->get_check_event_info(array('id'=>$data['event_id']));
         if($check['performance_id'] !=0){
-            $this->data['check'] = $check;            
+            $this->data['check'] = $check;
         }
         $where = array("event_id"=>trim($data['event_id']));
         $work_order_list = $this->Event_model->get_work_order_list($where);
@@ -566,14 +537,13 @@ class Event extends MY_Controller {
         $this->data['work_order_num'] = count($work_order_list);
         $performance_list = $this->Role_model->get_setting_list(array("type"=>"performance"));
         $this->data['performance_list'] = $performance_list['info'];
-        $this->layout->view('event/check_work_order',$this->data);         
+        $this->layout->view('event/check_work_order',$this->data);
     }
 /**
     public function get_event_worktime_more($event){
         $week_more = 0;
         $weekend_more = 0;
         $holiday_more = 0;
-
         $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$event['id']));
         foreach ($work_order_list as $key => $value) {
             $tmp = strtotime($value['back_time']) - strtotime($value['arrive_time']);
@@ -601,10 +571,9 @@ class Event extends MY_Controller {
         $res['week_more'] = $week_more;
         $res['weekend_more'] = $weekend_more;
         $res['holiday_more'] = $holiday_more;
-        return $res;         
+        return $res;
     }
 **/
-
    public function get_event_worktime_more($event){
         $arrive = True;
         $back = True;
@@ -612,7 +581,6 @@ class Event extends MY_Controller {
         $weekend_more = 0;
         $holiday_more = 0;
         $work_time = 0;
-
         $work_order_list = $this->Event_model->get_work_order_list(array('event_id'=>$event['id']));
         foreach ($work_order_list as $key => $value) {
             $back_date = substr($value['back_time'],0,10);
@@ -631,7 +599,7 @@ class Event extends MY_Controller {
                 list($abackint_tmp,$back_less_tmp) = $this->get_time_format($back_tmp);
                 $holiday_more = $holiday_more+$back_int_tmp+$back_less_tmp;
                 $back = False;
-            }            
+            }
             if(in_array(date("N",strtotime($back_date)), $weekend_list)){
                 $back_tmp = strtotime($value['back_time']) - strtotime($back_date." 00:00:00");
                 list($back_int_tmp,$back_less_tmp) = $this->get_time_format($back_tmp);
@@ -649,15 +617,14 @@ class Event extends MY_Controller {
             $week_more_tmp = $this->get_work_more_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
             $week_more = $week_more+$week_more_tmp;
             $work_time_tmp = $this->get_work_time($value['arrive_time'],$value['back_time'],$arrive,$back,$tmp_time,$day);
-            $work_time = $work_time+$work_time_tmp;            
+            $work_time = $work_time+$work_time_tmp;
         }
-        $res['work_time'] = $work_time;        
+        $res['work_time'] = $work_time;
         $res['week_more'] = $week_more;
         $res['weekend_more'] = $weekend_more;
         $res['holiday_more'] = $holiday_more;
         return $res;
     }
-
     public function get_work_time($start,$end,$astatus,$bstatus,$worktime,$day){
         $tmp_int = 0;
         $tmp = explode("_",$worktime);
@@ -676,32 +643,25 @@ class Event extends MY_Controller {
         if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time>$work_end) ){
             $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$work_start);
         }
-        if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time<$work_end) && ($end_time<$work_end) ){
+        if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time=<$work_end) && ($end_time<$work_end) ){
             $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$start_time);
         }
         if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time<$work_end) && ($end_time>$work_end) ){
             $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$start_time);
         }
-
-
-
         if($astatus && ($start_date <$end_date) && ($start_time <$work_start)){
             $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$work_start);
         }
-
         if($astatus && ($start_date <$end_date) && ($start_time >=$work_start)  && ($start_time <=$work_end)){
             $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$start_time);
-
         }
-
         if($bstatus && ($start_date < $end_date) && ($end_time>$work_start)&& ($end_time<$work_end)){
             $tmp_int += strtotime($end_date." ".$end_time) - strtotime($end_date." ".$work_start);
         }elseif($bstatus && ($start_date < $end_date) && ($end_time>$work_end)){
             $tmp_int += strtotime($end_date." ".$work_end) - strtotime($end_date." ".$work_start);
         }
-        list($int_tmp,$less_tmp) = $this->get_time_format($tmp_int);  
-        return ($int_tmp+$less_tmp);        
-
+        list($int_tmp,$less_tmp) = $this->get_time_format($tmp_int);
+        return ($int_tmp+$less_tmp);
     }
     public function get_work_more_time($start,$end,$astatus,$bstatus,$worktime,$day){
         $tmp_int = 0;
@@ -722,34 +682,26 @@ class Event extends MY_Controller {
         if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time<$work_start)){
             $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$start_time);
         }
-
         if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>$work_end)){
             $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
             $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
         }
-
         if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time <=$work_end) && ($end_time >$work_end)){
             $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_end);
         }
         if($astatus && ($start_date ==$end_date) && ($start_time >$work_end)){
             $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$start_time);
         }
-
-
         if($astatus && ($start_date <$end_date) && ($start_time <$work_start)){
             $tmp_int += strtotime($start_date." ".$work_start) - strtotime($start_date." ".$start_time);
             $tmp_int += 24*3600 + strtotime($start_date." 00:00:00") - strtotime($start_date." ".$work_end);
-
         }
-
         if($astatus && ($start_date <$end_date) && ($start_time >=$work_start)  && ($start_time <=$work_end)){
             $tmp_int += 24*3600 + strtotime($start_date." 00:00:00") - strtotime($start_date." ".$work_end);
-
         }
         if($astatus && ($start_date <$end_date) &&($start_time >$work_end)){
             $tmp_int += 24*3600 + strtotime($start_date." 00:00:00") - strtotime($start_date." ".$start_time);
         }
-
         if($bstatus && ($start_date < $end_date) && ($end_time<=$work_start)){
             $tmp_int += strtotime($end_date." ".$end_time) - strtotime($end_date." 00:00:00");
         }elseif($bstatus && ($start_date < $end_date) && ($end_time>$work_start) && ($end_time<=$work_end)){
@@ -759,11 +711,9 @@ class Event extends MY_Controller {
             $tmp_int += strtotime($end_date." ".$work_start) - strtotime($end_date." 00:00:00");
             $tmp_int += strtotime($end_date." ".$end_time) - strtotime($end_date." ".$work_end);
         }
-        list($int_tmp,$less_tmp) = $this->get_time_format($tmp_int);  
+        list($int_tmp,$less_tmp) = $this->get_time_format($tmp_int);
         return ($int_tmp+$less_tmp);
     }
-
-
     public function get_time_format($tmp){
         $res = array();
         $int_tmp =  intval($tmp/3600);
@@ -780,9 +730,8 @@ class Event extends MY_Controller {
         $res[] = $less_tmp;
         return $res;
     }
-
     public function add_check_event_info(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_POST);
         $event_id = $data['event_id'];
         $status = $data['status'];
@@ -796,28 +745,24 @@ class Event extends MY_Controller {
         //redirect($redirect_url);
         echo json_encode(array("status"=>"succ"));
     }
-
     public function delete_check_event(){
-        $this->data['user_data'] = $this->session->userdata;        
+        $this->data['user_data'] = $this->session->userdata;
         $data = $this->security->xss_clean($_GET);
         if(isset($data['event_id'])&&!empty($data['event_id'])){
             $where = array('id'=>$data['event_id']);
             $this->Event_model->delete_check_event_info($where);
             $redirect_url = 'ctl=event&act=check_work_order&event_id='.$data['event_id'];
-            $this->change_event_status($data['event_id'],2);          
+            $this->change_event_status($data['event_id'],2);
         }else{
-            $redirect_url = 'ctl=event&act=event_check';  
+            $redirect_url = 'ctl=event&act=event_check';
         }
-
         redirect($redirect_url);
     }
-
     public function change_event_status($event_id,$status){
         $where = array('id'=>$event_id);
         $params = array('status'=>$status);
         $this->Event_model->update_event_info($params,$where);
-    }   
-
+    }
     public function event_search(){
         $data = $this->security->xss_clean($_GET);
         if(isset($data['is_event']) && $data['is_event']==1){
@@ -830,13 +775,13 @@ class Event extends MY_Controller {
             unset($data['per_page']);
             $this->data['user_id'] = $data['user_id'];
             $this->data['event_month'] = $data['event_month'];
-            $this->data['short_name'] = $data['short_name'];            
+            $this->data['short_name'] = $data['short_name'];
             $this->data['title'] = 'member';
             $this->data['department_id'] = $data['department_id'];
-            unset($data['department_id']);            
+            unset($data['department_id']);
             foreach($data as $key=>$value){
                 if(empty($data[$key])){
-                    unset($data[$key]);                
+                    unset($data[$key]);
                 }
             }
             if(isset($data['short_name']) && !empty($data['short_name'])){
@@ -855,22 +800,21 @@ class Event extends MY_Controller {
                 }
                 $this->data['title'] = 'user';
             }
-            $where = array();       
+            $where = array();
             foreach($data as $k =>$v){
                 $where[$k] = trim($v);
             }
             $event_list = $this->Event_model->get_event_list($where,$this->per_page);
             $this->pages_conf($event_list['count']);
-            $this->data['event_list'] = $event_list['info'];            
+            $this->data['event_list'] = $event_list['info'];
         }
         $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
         $this->data['department_list'] = $department_list['info'];
         $user_list = $this->User_model->get_user_list();
         $this->data['user_list'] = $user_list['info'];
         $this->data['user_data'] = $this->session->userdata;
-        $this->layout->view('event/event_search',$this->data);        
+        $this->layout->view('event/event_search',$this->data);
     }
-
     public function do_event_search(){
         $data = $this->security->xss_clean($_POST);
         if(isset($data['is_event']) && $data['is_event']==1){
@@ -879,7 +823,7 @@ class Event extends MY_Controller {
         }
         foreach($data as $key=>$value){
             if(empty($data[$key])){
-                unset($data[$key]);                
+                unset($data[$key]);
             }
         }
         if(isset($data['short_name']) && !empty($data['short_name'])){
@@ -898,15 +842,14 @@ class Event extends MY_Controller {
             }
             $this->data['title'] = 'user';
         }
-        $where = array();       
+        $where = array();
         foreach($data as $k =>$v){
             $where[$k] = trim($v);
         }
         $event_list = $this->Event_model->get_event_list($where);
         $this->data['event_list'] = $event_list['info'];
-        $this->load->view('event/do_event_search',$this->data);        
+        $this->load->view('event/do_event_search',$this->data);
     }
-
     public function cost_check(){
         $data = $this->security->xss_clean($_GET);
         if(isset($data['is_event']) && $data['is_event']==1){
@@ -918,12 +861,12 @@ class Event extends MY_Controller {
             $this->data['user_id'] = $data['user_id'];
             $this->data['event_month'] = $data['event_month'];
             $this->data['cost_status'] = $data['cost_status'];
-            $this->data['department_id'] = $data['department_id'];            
-            unset($data['department_id']);            
+            $this->data['department_id'] = $data['department_id'];
+            unset($data['department_id']);
             $where = $data;
             foreach($where as $key=>$value){
                 if(empty($where[$key])){
-                    unset($where[$key]);                
+                    unset($where[$key]);
                 }
             }
             unset($where['is_event']);
@@ -945,8 +888,8 @@ class Event extends MY_Controller {
                     $rel_total_fee += $v['rel_total'];
                 }
                 $info = array(
-                    'user_name' =>$v['user_name'], 
-                    'user_id' =>$v['user_id'], 
+                    'user_name' =>$v['user_name'],
+                    'user_id' =>$v['user_id'],
                     'cost_status'=>$v['cost_status'],
                     'total_fee' =>$total_fee,
                     'rel_total_fee' => $rel_total_fee,
@@ -955,22 +898,20 @@ class Event extends MY_Controller {
             }
             $this->data['month_list'] = $month_list;
         }
-
         $where = array();
-        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));      
-        $this->data['department_list'] = $department_list['info'];        
+        $department_list = $this->Role_model->get_setting_list(array("type"=>"department"));
+        $this->data['department_list'] = $department_list['info'];
         $user_list = $this->User_model->get_user_list();
         $this->data['user_list'] = $user_list['info'];
         $this->data['user_data'] = $this->session->userdata;
         $this->layout->view('event/cost_check',$this->data);
     }
-
     public function do_event_cost_search(){
         $data = $this->security->xss_clean($_POST);
         $where = $data;
         foreach($where as $key=>$value){
             if(empty($where[$key])){
-                unset($where[$key]);                
+                unset($where[$key]);
             }
         }
         unset($where['is_event']);
@@ -991,8 +932,8 @@ class Event extends MY_Controller {
                 $rel_total_fee += $v['rel_total'];
             }
             $info = array(
-                'user_name' =>$v['user_name'], 
-                'user_id' =>$v['user_id'], 
+                'user_name' =>$v['user_name'],
+                'user_id' =>$v['user_id'],
                 'cost_status'=>$v['cost_status'],
                 'total_fee' =>$total_fee,
                 'rel_total_fee' => $rel_total_fee,
@@ -1002,7 +943,6 @@ class Event extends MY_Controller {
         $this->data['month_list'] = $month_list;
         $this->load->view('event/do_event_cost_search',$this->data);
     }
-
     public function get_cost_fee($event_id){
         $total = 0;
         $rel_total = 0;
@@ -1024,7 +964,6 @@ class Event extends MY_Controller {
         $result[] = $rel_total;
         return $result;
     }
-
     public function get_event_biil_list(){
         $total = 0;
         $bill_list = array();
@@ -1050,9 +989,8 @@ class Event extends MY_Controller {
         $this->data['event_month'] = $data['event_month'];
         $this->data['user_info'] = $user_info;
         $this->data['user_data'] = $this->session->userdata;
-        $this->layout->view('event/get_event_biil_list',$this->data);      
+        $this->layout->view('event/get_event_biil_list',$this->data);
     }
-
     public function check_all_bill_order(){
         $data = $this->security->xss_clean($_POST);
         $where = array('event_month'=>$data['event_month'],'user_id'=>$data['user_id']);
@@ -1064,12 +1002,10 @@ class Event extends MY_Controller {
                 $ww = array("work_order_id"=>$val['id']);
                 $data = array("status"=>$data['status']);
                 $this->Event_model->update_bill_order_status($data,$ww);
-            }          
+            }
         }
         echo json_encode(array('status'=>'succ'));
-
     }
-
     public function get_biil_list($event_id){
         $total = 0;
         $bill_list = array();
@@ -1091,9 +1027,8 @@ class Event extends MY_Controller {
         }
         $result[] = $total;
         $result[] = $bill_list;
-        return $result;        
+        return $result;
     }
-
     public function change_event_cost_status(){
         $data = $this->security->xss_clean($_POST);
         $where = array('event_month'=>$data['event_month'],"user_id"=>$data['user_id']);
@@ -1101,7 +1036,6 @@ class Event extends MY_Controller {
         $this->Event_model->update_event_info($params,$where);
         echo "succ";
     }
-
     public function update_bill_order_status(){
         $data = $this->security->xss_clean($_POST);
         $id = $data['id'];
@@ -1109,7 +1043,6 @@ class Event extends MY_Controller {
         $where = array('id'=>$id);
         $this->Event_model->update_bill_order_status($data,$where);
         echo "succ";
-    }    
+    }
 }
-
 ?>
