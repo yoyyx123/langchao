@@ -640,7 +640,7 @@ class Event extends MY_Controller {
         if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time<=$work_end) ){
             $tmp_int += strtotime($start_date." ".$end_time) - strtotime($start_date." ".$work_start);
         }
-        if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time>$work_end) ){
+        if($astatus && ($start_date ==$end_date) && ($start_time <$work_start) && ($end_time>=$work_start) && ($end_time>=$work_end) ){
             $tmp_int += strtotime($start_date." ".$work_end) - strtotime($start_date." ".$work_start);
         }
         if($astatus && ($start_date ==$end_date) && ($start_time >$work_start) && ($start_time=<$work_end) && ($end_time<$work_end) ){
